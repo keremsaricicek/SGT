@@ -115,4 +115,4 @@ sınırlara bağlıdır.
   MINOR: yeni ilke veya bölüm; PATCH: açıklama ve ifade düzeltmesi.
 - Her PR incelemesi bu anayasaya uyumu kontrol eder.
 
-**Sürüm**: 1.1.0 | **Durum**: Taslak, proje sahibi onayı bekliyor | **Oluşturulma**: 2026-10-26
+**Sürüm**: 1.1.0 | **Durum**: Onaylandı (26.10.2026) | **Oluşturulma**: 2026-10-26

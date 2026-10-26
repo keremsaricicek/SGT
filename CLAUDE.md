@@ -4,7 +4,7 @@ Bu dosya her oturumda okunur; kısa tutulur, ayrıntılar `docs/` altındadır.
 Çelişki olursa öncelik sırası: `.specify/memory/constitution.md` → `docs/kararlar.md` → bu dosya →
 diğer `docs/` dosyaları → `docs/fizibilite-raporu.pdf` (en eski kaynak; kararlarla çelişirse geçersiz).
 
-**Durum: Faz 0 (planlama/Discovery). Henüz kod yazılmaz.** Proje sahibi kod bilmez; açıklamalar sade Türkçe olmalı.
+**Durum: Faz 1 (ortak çekirdek). İskelet kuruldu; her iş spec → test → kod sırasıyla.** Proje sahibi kod bilmez; açıklamalar sade Türkçe olmalı.
 
 ## Proje
 
@@ -93,4 +93,10 @@ Ayrıntılar, örnekler ve platform bazlı uygulama: `docs/kod-kurallari.md`
 
 ## Komutlar
 
-Kod tabanı kurulunca doldurulacak: build, test, mimari test, migration, lokal çalıştırma.
+```bash
+dotnet build Sgt.slnx                                  # derleme (uyarı = hata)
+dotnet test Sgt.slnx                                   # tüm testler
+dotnet test tests/Architecture/Sgt.Tests.Architecture.csproj   # yalnızca mimari kurallar
+dotnet run --project src/Bootstrapper/Sgt.Api          # lokal API; /health
+```
+Migration: veritabanı ADR'si sonrası eklenecek.

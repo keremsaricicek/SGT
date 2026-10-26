@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using NetArchTest.Rules;
 using Xunit;
 
-namespace Platform.Tests.Architecture;
+namespace Sgt.Tests.Architecture;
 
 // K1 (SOLID/OOP) ve K2 (işlev ayrımı + sözleşmeli entegrasyon) kurallarını her build'de denetler.
 // Gerekli paketler: xunit, NetArchTest.Rules. Ayrıntı: docs/kod-kurallari.md bölüm 6.
@@ -18,6 +18,16 @@ public sealed class ArchitectureTests
         "Confluent.Kafka",
         "RabbitMQ.Client",
     };
+
+    [Fact]
+    public void BuildingBlocks_do_not_depend_on_frameworks_or_modules()
+    {
+        var result = Types.InAssembly(typeof(Sgt.BuildingBlocks.Money).Assembly)
+            .ShouldNot().HaveDependencyOnAny(FrameworkNamespaces.Append("Sgt.Modules").ToArray())
+            .GetResult();
+
+        AssertNone(Describe(result, "K1/DIP: BuildingBlocks altyapı ve modül bilmez").ToList());
+    }
 
     [Fact]
     public void Modules_reference_each_other_only_through_contracts()
@@ -130,7 +140,7 @@ public sealed class ArchitectureTests
             ? Enumerable.Empty<string>()
             : (result.FailingTypeNames ?? Array.Empty<string>()).Select(type => $"[{rule}] {type}");
 
-    private static void AssertNone(IReadOnlyCollection<string> violations) =>
+    private static void AssertNone(List<string> violations) =>
         Assert.True(violations.Count == 0,
             "Kod kuralı ihlali:" + Environment.NewLine + string.Join(Environment.NewLine, violations));
 }
@@ -143,7 +153,7 @@ public sealed record ModuleAssemblies(
     Assembly Infrastructure,
     Assembly Api)
 {
-    public string RootNamespace => $"Platform.Modules.{Name}";
+    public string RootNamespace => $"Sgt.Modules.{Name}";
 
     public Assembly[] NonContractAssemblies => new[] { Domain, Application, Infrastructure, Api };
 
@@ -161,12 +171,12 @@ internal static class ModuleCatalog
     // Her modül projesinde boş bir "AssemblyMarker" sınıfı bulunur. Modül eklendikçe satır eklenir:
     //
     // new("Hotel",
-    //     typeof(Platform.Modules.Hotel.Contracts.AssemblyMarker).Assembly,
-    //     typeof(Platform.Modules.Hotel.Domain.AssemblyMarker).Assembly,
-    //     typeof(Platform.Modules.Hotel.Application.AssemblyMarker).Assembly,
-    //     typeof(Platform.Modules.Hotel.Infrastructure.AssemblyMarker).Assembly,
-    //     typeof(Platform.Modules.Hotel.Api.AssemblyMarker).Assembly),
-    public static readonly IReadOnlyList<ModuleAssemblies> All = new ModuleAssemblies[]
-    {
-    };
+    //     typeof(Sgt.Modules.Hotel.Contracts.AssemblyMarker).Assembly,
+    //     typeof(Sgt.Modules.Hotel.Domain.AssemblyMarker).Assembly,
+    //     typeof(Sgt.Modules.Hotel.Application.AssemblyMarker).Assembly,
+    //     typeof(Sgt.Modules.Hotel.Infrastructure.AssemblyMarker).Assembly,
+    //     typeof(Sgt.Modules.Hotel.Api.AssemblyMarker).Assembly),
+    public static readonly IReadOnlyList<ModuleAssemblies> All =
+    [
+    ];
 }

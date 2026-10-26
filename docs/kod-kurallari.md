@@ -271,13 +271,13 @@ Anlamı: her işlevin kodu kendi klasöründe, diğer işlevlerin koduna dokunma
 
 ```text
 src/
-  Bootstrapper/Platform.Api/              tek host; modülleri kaydeder, kendi iş kodu yoktur
+  Bootstrapper/Sgt.Api/              tek host; modülleri kaydeder, kendi iş kodu yoktur
   BuildingBlocks/                         ortak soyutlamalar: Result, Error, Money, IClock, IEventPublisher, Outbox/Inbox
   Modules/
     Hotel/
-      Platform.Modules.Hotel.Contracts/   dışarıya açık TEK yüzey: sorgu arayüzleri, DTO'lar, integration event'ler
-      Platform.Modules.Hotel.Domain/      entity, value object, domain event, policy (altyapı bağımlılığı yok)
-      Platform.Modules.Hotel.Application/
+      Sgt.Modules.Hotel.Contracts/   dışarıya açık TEK yüzey: sorgu arayüzleri, DTO'lar, integration event'ler
+      Sgt.Modules.Hotel.Domain/      entity, value object, domain event, policy (altyapı bağımlılığı yok)
+      Sgt.Modules.Hotel.Application/
         Reservations/
           CreateReservation/
             CreateReservationCommand.cs
@@ -290,8 +290,8 @@ src/
           PostCharge/
           ReversePosting/
         IntegrationEvents/                diğer modüllerden gelen olayların handler'ları
-      Platform.Modules.Hotel.Infrastructure/  EF Core, repository, outbox/inbox, dış istemciler
-      Platform.Modules.Hotel.Api/         endpoint'ler: yalnızca HTTP ↔ komut/sorgu çevirisi
+      Sgt.Modules.Hotel.Infrastructure/  EF Core, repository, outbox/inbox, dış istemciler
+      Sgt.Modules.Hotel.Api/         endpoint'ler: yalnızca HTTP ↔ komut/sorgu çevirisi
     CasinoPlayer/  ...aynı yapı
     Finance/       ...aynı yapı
 tests/
@@ -300,8 +300,8 @@ tests/
   Contracts/                              modüller arası kontrat testleri
 ```
 
-Ad alanı kuralı: `Platform.Modules.{Modül}.{Katman}`. Mimari testler bu kurala dayanır.
-(`Platform` ürün adı belirlenene kadar yer tutucudur.)
+Ad alanı kuralı: `Sgt.Modules.{Modül}.{Katman}`. Mimari testler bu kurala dayanır.
+(Kök ad alanı `Sgt`; bkz. `docs/adr/0001-temel-stack-ve-cozum-yapisi.md`.)
 
 ### 3.3 Bağımlılık kuralları
 
@@ -320,7 +320,7 @@ Casino tarafında comp onaylanır → `CompApprovedV1` olayı outbox'a yazılır
 folio'ya allowance uygular → Audit modülü kaydeder.
 
 ```csharp
-// Platform.Modules.CasinoPlayer.Contracts
+// Sgt.Modules.CasinoPlayer.Contracts
 public sealed record CompApprovedV1(
     Guid EventId,          // idempotency anahtarı
     Guid CorrelationId,
@@ -334,7 +334,7 @@ public sealed record CompApprovedV1(
     string ApprovedBy,
     string ReasonCode) : IIntegrationEvent;
 
-// Platform.Modules.Hotel.Application/IntegrationEvents
+// Sgt.Modules.Hotel.Application/IntegrationEvents
 public sealed class CompApprovedHandler : IIntegrationEventHandler<CompApprovedV1>
 {
     private readonly IFolioRepository _folios;
@@ -375,7 +375,7 @@ Integration event kuralları:
 **B. Senkron sorgu (yalnızca okuma).** Örnek: rezervasyon ekranında oyuncu tier'ı göstermek.
 
 ```csharp
-// Platform.Modules.CasinoPlayer.Contracts
+// Sgt.Modules.CasinoPlayer.Contracts
 public interface IPlayerTierQuery
 {
     Task<PlayerTierDto?> GetTier(Guid playerId, CancellationToken ct);
