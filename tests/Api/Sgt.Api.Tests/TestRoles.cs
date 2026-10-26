@@ -5,7 +5,10 @@ namespace Sgt.Api.Tests;
 /// <summary>Testte süper admine ekran yetkileri veren yardımcı (yönetim dışı ekranlar role verilir).</summary>
 internal static class TestRoles
 {
-    public static async Task Grant(HttpClient admin, params string[] permissions)
+    public static Task Grant(HttpClient admin, params string[] permissions) =>
+        GrantTo(admin, ApiFactory.SuperAdmin, permissions);
+
+    public static async Task GrantTo(HttpClient admin, Sgt.BuildingBlocks.UserId user, params string[] permissions)
     {
         var role = await admin.PostAsJsonAsync("/api/identity/roles", new { name = $"Test {Guid.NewGuid():N}", reasonCode = "TEST" });
         var roleId = (await role.Content.ReadFromJsonAsync<IdResponse>())!.Id;
@@ -19,7 +22,7 @@ internal static class TestRoles
             await admin.PostAsJsonAsync($"/api/identity/roles/{roleId}/permissions", new { permission = p, reasonCode = "TEST" });
         }
 
-        await admin.PostAsJsonAsync($"/api/identity/users/{ApiFactory.SuperAdmin.Value}/roles", new { roleId, reasonCode = "TEST" });
+        await admin.PostAsJsonAsync($"/api/identity/users/{user.Value}/roles", new { roleId, reasonCode = "TEST" });
     }
 
     private sealed record IdResponse(Guid Id);

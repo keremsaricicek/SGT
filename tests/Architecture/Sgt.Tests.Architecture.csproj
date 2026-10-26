@@ -44,6 +44,11 @@
     <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Application\Sgt.Modules.GamingFloor.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Infrastructure\Sgt.Modules.GamingFloor.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Api\Sgt.Modules.GamingFloor.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Contracts\Sgt.Modules.Loyalty.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Domain\Sgt.Modules.Loyalty.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Application\Sgt.Modules.Loyalty.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Infrastructure\Sgt.Modules.Loyalty.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Api\Sgt.Modules.Loyalty.Api.csproj" />
   </ItemGroup>
 
 </Project>

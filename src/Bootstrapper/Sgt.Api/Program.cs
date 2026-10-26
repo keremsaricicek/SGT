@@ -14,6 +14,8 @@ using Sgt.Modules.GamingFloor.Api;
 using Sgt.Modules.GamingFloor.Infrastructure;
 using Sgt.Modules.Configuration.Infrastructure;
 using Sgt.Modules.Identity.Api;
+using Sgt.Modules.Loyalty.Api;
+using Sgt.Modules.Loyalty.Infrastructure;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure;
 
@@ -49,6 +51,7 @@ builder.Services.AddConfigurationModule(connectionString);
 builder.Services.AddCasinoPlayerModule(connectionString);
 builder.Services.AddFinanceModule(connectionString);
 builder.Services.AddGamingFloorModule(connectionString);
+builder.Services.AddLoyaltyModule(connectionString);
 
 // Kişisel veri anahtarları secret manager'dan gelir (ADR-0005).
 builder.Services.AddSingleton<IPersonalDataProtector>(_ => AesGcmPersonalDataProtector.FromBase64(
@@ -67,6 +70,7 @@ app.MapConfigurationEndpoints();
 app.MapCasinoPlayerEndpoints();
 app.MapFinanceEndpoints();
 app.MapGamingFloorEndpoints();
+app.MapLoyaltyEndpoints();
 app.MapOutboxAdminEndpoints();
 
 if (app.Environment.IsDevelopment())
@@ -78,6 +82,7 @@ if (app.Environment.IsDevelopment())
     await scope.ServiceProvider.MigrateCasinoPlayerDatabase(default);
     await scope.ServiceProvider.MigrateFinanceDatabase(default);
     await scope.ServiceProvider.MigrateGamingFloorDatabase(default);
+    await scope.ServiceProvider.MigrateLoyaltyDatabase(default);
 
     var seed = app.Configuration.GetSection("DevelopmentSeed");
     if (Guid.TryParse(seed["TenantId"], out var tenant) && Guid.TryParse(seed["SuperAdminUserId"], out var admin))

@@ -214,5 +214,11 @@ internal static class ModuleCatalog
             typeof(Sgt.Modules.GamingFloor.Application.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.GamingFloor.Infrastructure.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.GamingFloor.Api.AssemblyMarker).Assembly),
+        new("Loyalty",
+            typeof(Sgt.Modules.Loyalty.Contracts.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Loyalty.Domain.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Loyalty.Application.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Loyalty.Infrastructure.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Loyalty.Api.AssemblyMarker).Assembly),
     ];
 }
