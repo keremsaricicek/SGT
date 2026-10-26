@@ -1,0 +1,134 @@
+<!-- Kasiyer vardiyası (K1): vardiya aç, mevcut vardiyaya bağlan, kapanış sayımı. -->
+<UserControl x:Class="Sgt.Windows.App.Features.Cage.CashierShiftView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             xmlns:cage="clr-namespace:Sgt.Windows.Core.Features.Cage;assembly=Sgt.Windows.Core"
+             xmlns:controls="clr-namespace:Sgt.Windows.App.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=cage:CashierShiftViewModel}">
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Content="{x:Static loc:Strings.Cage_CurrentShift}" />
+            <TextBlock Grid.Column="1" Text="{Binding CurrentShiftId}" VerticalAlignment="Center" FontWeight="SemiBold" />
+            <Label Grid.Column="2" Target="{Binding ElementName=ShiftIdBox}" Content="{x:Static loc:Strings.Cage_AttachLabel}" />
+            <TextBox x:Name="ShiftIdBox" Grid.Column="3" Text="{Binding ShiftIdText, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Enter" Command="{Binding AttachCommand}" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button Grid.Column="4" Margin="6,2,0,2" Command="{Binding AttachCommand}">
+                <AccessText Text="{x:Static loc:Strings.Cage_Attach}" />
+            </Button>
+        </Grid>
+        <controls:MessageBar DockPanel.Dock="Top" />
+
+        <TabControl>
+            <TabItem Header="{x:Static loc:Strings.Cage_OpenTab}" DataContext="{Binding Open}"
+                     IsEnabled="{Binding CanOpenShift}">
+                <DockPanel Margin="4">
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="200" />
+                            </Grid.ColumnDefinitions>
+                            <Label Target="{Binding ElementName=OpenReasonBox}" Content="{x:Static loc:Strings.Cage_Reason}" />
+                            <TextBox x:Name="OpenReasonBox" Grid.Column="1" Text="{Binding ReasonCode, UpdateSourceTrigger=PropertyChanged}"
+                                     CharacterCasing="Upper" MaxLength="50" />
+                        </Grid>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Command="{Binding AddLineCommand}">
+                                <AccessText Text="{x:Static loc:Strings.Cage_AddLine}" />
+                            </Button>
+                            <Button Command="{Binding OpenCommand}" Style="{StaticResource PrimaryButton}">
+                                <AccessText Text="{x:Static loc:Strings.Cage_Open}" />
+                            </Button>
+                        </StackPanel>
+                        <controls:MessageBar />
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Lines}">
+                        <DataGrid.Columns>
+                            <DataGridComboBoxColumn Header="{x:Static loc:Strings.Cage_Instrument}" Width="120"
+                                                    ItemsSource="{x:Static cage:DrawerLineViewModel.Instruments}"
+                                                    SelectedItemBinding="{Binding Instrument}" />
+                            <DataGridComboBoxColumn Header="{x:Static loc:Strings.Cage_Currency}" Width="90"
+                                                    ItemsSource="{x:Static cage:DrawerLineViewModel.Currencies}"
+                                                    SelectedItemBinding="{Binding Currency}" DisplayMemberPath="Code" />
+                            <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Amount}" Width="*"
+                                                Binding="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}" />
+                            <DataGridTemplateColumn Width="70">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{x:Static loc:Strings.Cage_RemoveLine}" Margin="0" Padding="4,0" MinWidth="0"
+                                                Command="{Binding DataContext.RemoveLineCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+
+            <TabItem Header="{x:Static loc:Strings.Cage_CloseTab}" DataContext="{Binding Close}"
+                     IsEnabled="{Binding CanCloseShift}">
+                <DockPanel Margin="4">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                        <Button Command="{Binding LoadCommand}">
+                            <AccessText Text="{x:Static loc:Strings.Cage_LoadCounts}" />
+                        </Button>
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="{x:Static loc:Strings.Cage_TotalVariance}" />: <Run Text="{Binding TotalVariance, Mode=OneWay, StringFormat=N2}" FontWeight="SemiBold" />
+                        </TextBlock>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <Border Background="{StaticResource ErrorBackground}" BorderBrush="{StaticResource ErrorBorder}" BorderThickness="1" Padding="6,3"
+                                Visibility="{Binding NoteMissing, Converter={StaticResource BoolToVisibility}}">
+                            <TextBlock Text="{x:Static loc:Strings.Cage_NoteRequired}" />
+                        </Border>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Label Target="{Binding ElementName=NoteBox}" Content="{x:Static loc:Strings.Cage_Note}" />
+                            <TextBox x:Name="NoteBox" Grid.Column="1" Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}"
+                                     AcceptsReturn="True" Height="44" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+                            <Label Grid.Row="1" Target="{Binding ElementName=CloseReasonBox}" Content="{x:Static loc:Strings.Cage_Reason}" />
+                            <TextBox x:Name="CloseReasonBox" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left"
+                                     Text="{Binding ReasonCode, UpdateSourceTrigger=PropertyChanged}" CharacterCasing="Upper" MaxLength="50" />
+                        </Grid>
+                        <Button Command="{Binding CloseCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left">
+                            <AccessText Text="{x:Static loc:Strings.Cage_Close}" />
+                        </Button>
+                        <controls:MessageBar />
+                    </StackPanel>
+                    <DataGrid ItemsSource="{Binding Lines}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Instrument}" Binding="{Binding Instrument}" IsReadOnly="True" Width="100" />
+                            <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Currency}" Binding="{Binding Currency}" IsReadOnly="True" Width="70" />
+                            <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Expected}" Binding="{Binding Expected, StringFormat=N2}" IsReadOnly="True" Width="110" />
+                            <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Counted}" Binding="{Binding CountedText, UpdateSourceTrigger=PropertyChanged}" Width="*" />
+                            <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Variance}" Binding="{Binding Variance, StringFormat=N2}" IsReadOnly="True" Width="110" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>

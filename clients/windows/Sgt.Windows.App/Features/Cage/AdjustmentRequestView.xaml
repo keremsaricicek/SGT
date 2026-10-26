@@ -1,0 +1,56 @@
+<!-- Düzeltme talebi (K5): işlem seçilir, açıklama yazılır; onay ikinci yetkilidedir. Ctrl+Enter gönderir. -->
+<UserControl x:Class="Sgt.Windows.App.Features.Cage.AdjustmentRequestView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             xmlns:cage="clr-namespace:Sgt.Windows.Core.Features.Cage;assembly=Sgt.Windows.Core"
+             xmlns:controls="clr-namespace:Sgt.Windows.App.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=cage:AdjustmentRequestViewModel}">
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding LoadCommand}" />
+        <KeyBinding Key="Enter" Modifiers="Ctrl" Command="{Binding SubmitCommand}" />
+    </UserControl.InputBindings>
+    <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Cage_AdjustmentExplain}" Style="{StaticResource Hint}" />
+        <StackPanel DockPanel.Dock="Bottom">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Target="{Binding ElementName=NoteBox}" Content="{x:Static loc:Strings.Cage_Note}" />
+                <TextBox x:Name="NoteBox" Grid.Column="1" Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="True" Height="44" TextWrapping="Wrap" VerticalContentAlignment="Top" />
+                <Label Grid.Row="1" Target="{Binding ElementName=ReasonBox}" Content="{x:Static loc:Strings.Cage_Reason}" />
+                <TextBox x:Name="ReasonBox" Grid.Row="1" Grid.Column="1" Width="200" HorizontalAlignment="Left"
+                         Text="{Binding ReasonCode, UpdateSourceTrigger=PropertyChanged}" CharacterCasing="Upper" MaxLength="50" />
+            </Grid>
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding SubmitCommand}" Style="{StaticResource PrimaryButton}">
+                    <AccessText Text="{x:Static loc:Strings.Cage_RequestAdjustment}" />
+                </Button>
+                <Button Command="{Binding LoadCommand}">
+                    <AccessText Text="{x:Static loc:Strings.Cage_Refresh}" />
+                </Button>
+            </StackPanel>
+            <controls:MessageBar />
+        </StackPanel>
+        <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Cage_SelectTransaction}" Style="{StaticResource SectionHeader}" />
+        <DataGrid ItemsSource="{Binding Transactions}" SelectedItem="{Binding SelectedTransaction}" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Type}" Binding="{Binding Type}" Width="*" />
+                <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Amount}" Binding="{Binding Amount, StringFormat=N2}" Width="110" />
+                <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Currency}" Binding="{Binding Currency}" Width="60" />
+                <DataGridTextColumn Header="ID" Binding="{Binding TransactionId}" Width="260" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

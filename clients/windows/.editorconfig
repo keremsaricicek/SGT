@@ -1,0 +1,9 @@
+# Windows istemcisi için ek kurallar (kök .editorconfig geçerlidir).
+
+[*.cs]
+# Biçim metinleri dil dosyasından (Strings.resx) gelir ve dile göre değişir; CompositeFormat önbelleği uygun değildir.
+dotnet_diagnostic.CA1863.severity = none
+
+[Sgt.Windows.Core.Tests/**.cs]
+# Test adları okunabilirlik için alt çizgiyle yazılır: Ne_olur_hangi_durumda
+dotnet_diagnostic.CA1707.severity = none

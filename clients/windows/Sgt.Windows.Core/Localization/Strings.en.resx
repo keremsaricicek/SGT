@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arayüz metinleri — İngilizce. Anahtarlar Strings.resx ile aynı olmalıdır. -->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Api_Unreachable" xml:space="preserve"><value>The server could not be reached. Check the network connection and try again.</value></data>
+  <data name="Api_InvalidResponse" xml:space="preserve"><value>The server returned an unexpected response.</value></data>
+  <data name="Api_Unauthorized" xml:space="preserve"><value>Your session has expired. Please sign in again.</value></data>
+  <data name="Api_Forbidden" xml:space="preserve"><value>You are not authorized for this action.</value></data>
+  <data name="Api_NotFound" xml:space="preserve"><value>Record not found.</value></data>
+  <data name="Api_Failed" xml:space="preserve"><value>The request failed (HTTP {0}).</value></data>
+  <data name="Login_Timeout" xml:space="preserve"><value>Sign-in timed out or was cancelled.</value></data>
+  <data name="Login_BrowserDone" xml:space="preserve"><value>Sign-in complete. You can close this tab and return to the SGT application.</value></data>
+  <data name="Login_NotConfigured" xml:space="preserve"><value>Sign-in is not configured (Authentication:Authority).</value></data>
+  <data name="Login_Waiting" xml:space="preserve"><value>The sign-in page is open in your browser; waiting for you to sign in…</value></data>
+  <data name="Login_Failed" xml:space="preserve"><value>Sign-in failed.</value></data>
+  <data name="Login_Cancelled" xml:space="preserve"><value>Sign-in cancelled.</value></data>
+  <data name="Login_ServerUnreachable" xml:space="preserve"><value>The sign-in server could not be reached.</value></data>
+  <data name="Login_Title" xml:space="preserve"><value>SGT — Sign in</value></data>
+  <data name="Login_Heading" xml:space="preserve"><value>S Plus operations</value></data>
+  <data name="Login_Explain" xml:space="preserve"><value>Sign-in, password and verification code are entered on the secure page that opens in your browser.</value></data>
+  <data name="Login_Button" xml:space="preserve"><value>_Sign in</value></data>
+  <data name="Shell_Title" xml:space="preserve"><value>SGT — S Plus</value></data>
+  <data name="Shell_NoShift" xml:space="preserve"><value>no shift</value></data>
+  <data name="Shell_NoScreens" xml:space="preserve"><value>No screens in this application are assigned to this user.</value></data>
+  <data name="Shell_NoAccess" xml:space="preserve"><value>You are not authorized to open this screen.</value></data>
+  <data name="Shell_Menu" xml:space="preserve"><value>Screens</value></data>
+  <data name="Shell_Filter" xml:space="preserve"><value>_Find (Ctrl+F)</value></data>
+  <data name="Shell_Open" xml:space="preserve"><value>_Open</value></data>
+  <data name="Shell_Refresh" xml:space="preserve"><value>_Refresh menu</value></data>
+  <data name="Shell_Logout" xml:space="preserve"><value>Sign _out</value></data>
+  <data name="Shell_User" xml:space="preserve"><value>User</value></data>
+  <data name="Shell_Terminal" xml:space="preserve"><value>Terminal</value></data>
+  <data name="Shell_Shift" xml:space="preserve"><value>Shift</value></data>
+  <data name="Shell_Hint" xml:space="preserve"><value>Select a screen and press Enter; each screen opens in its own window.</value></data>
+  <data name="Group_Cage" xml:space="preserve"><value>Cage</value></data>
+  <data name="Group_Player" xml:space="preserve"><value>Player</value></data>
+  <data name="Group_Live" xml:space="preserve"><value>Live games</value></data>
+  <data name="Group_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Players_NoResults" xml:space="preserve"><value>No results.</value></data>
+  <data name="Players_MinLength" xml:space="preserve"><value>Enter at least 2 characters.</value></data>
+  <data name="Players_Term" xml:space="preserve"><value>Player (name, number, card)</value></data>
+  <data name="Players_Search" xml:space="preserve"><value>_Search</value></data>
+  <data name="Players_OpenProfile" xml:space="preserve"><value>_Open profile</value></data>
+  <data name="Players_Number" xml:space="preserve"><value>No</value></data>
+  <data name="Players_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Players_Card" xml:space="preserve"><value>Card</value></data>
+  <data name="Players_Restricted" xml:space="preserve"><value>Restricted</value></data>
+  <data name="Players_BirthDate" xml:space="preserve"><value>Birth date</value></data>
+  <data name="Players_Nationality" xml:space="preserve"><value>Nationality</value></data>
+  <data name="Players_Document" xml:space="preserve"><value>Document</value></data>
+  <data name="Players_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Players_Restrictions" xml:space="preserve"><value>Active restrictions</value></data>
+  <data name="Players_RestrictionType" xml:space="preserve"><value>Type</value></data>
+  <data name="Players_Until" xml:space="preserve"><value>Until</value></data>
+  <data name="Players_Note" xml:space="preserve"><value>Note</value></data>
+  <data name="Screen_PlayerSearch" xml:space="preserve"><value>Player search</value></data>
+  <data name="Screen_PlayerProfile" xml:space="preserve"><value>Player profile</value></data>
+  <data name="Screen_CageShift" xml:space="preserve"><value>Cashier shift</value></data>
+  <data name="Screen_CageSummary" xml:space="preserve"><value>Cage summary</value></data>
+  <data name="Screen_CageAdjustment" xml:space="preserve"><value>Adjustment request</value></data>
+  <data name="Screen_CageChips" xml:space="preserve"><value>Chip sale / redemption</value></data>
+  <data name="Screen_CageExchange" xml:space="preserve"><value>Currency exchange</value></data>
+  <data name="Screen_Tables" xml:space="preserve"><value>Tables</value></data>
+  <data name="Screen_Rating" xml:space="preserve"><value>Player rating</value></data>
+  <data name="Cage_SellChips" xml:space="preserve"><value>Chip sale</value></data>
+  <data name="Cage_RedeemChips" xml:space="preserve"><value>Chip redemption</value></data>
+  <data name="Cage_ForeignToBase" xml:space="preserve"><value>Buy currency (foreign → base)</value></data>
+  <data name="Cage_BaseToForeign" xml:space="preserve"><value>Sell currency (base → foreign)</value></data>
+  <data name="Cage_NoShift" xml:space="preserve"><value>No open shift. Open or attach a shift in the "Cashier shift" screen first.</value></data>
+  <data name="Cage_TransactionDone" xml:space="preserve"><value>{0} completed: {1}</value></data>
+  <data name="Cage_ShiftOpened" xml:space="preserve"><value>Shift opened.</value></data>
+  <data name="Cage_ShiftClosed" xml:space="preserve"><value>Shift closed.</value></data>
+  <data name="Cage_ShiftAttached" xml:space="preserve"><value>Attached to shift.</value></data>
+  <data name="Cage_AdjustmentRequested" xml:space="preserve"><value>Adjustment request created; waiting for a second approver.</value></data>
+  <data name="Cage_Kind" xml:space="preserve"><value>Transaction</value></data>
+  <data name="Cage_Player" xml:space="preserve"><value>Player</value></data>
+  <data name="Cage_Amount" xml:space="preserve"><value>Amount</value></data>
+  <data name="Cage_Currency" xml:space="preserve"><value>Currency</value></data>
+  <data name="Cage_Reason" xml:space="preserve"><value>Reason code</value></data>
+  <data name="Cage_Submit" xml:space="preserve"><value>_Confirm (Ctrl+Enter)</value></data>
+  <data name="Cage_Pending" xml:space="preserve"><value>Pending transaction (kept on retry)</value></data>
+  <data name="Cage_LastTransaction" xml:space="preserve"><value>Last transaction</value></data>
+  <data name="Cage_Instrument" xml:space="preserve"><value>Instrument</value></data>
+  <data name="Cage_Expected" xml:space="preserve"><value>Expected</value></data>
+  <data name="Cage_Counted" xml:space="preserve"><value>Counted</value></data>
+  <data name="Cage_Variance" xml:space="preserve"><value>Variance</value></data>
+  <data name="Cage_TotalVariance" xml:space="preserve"><value>Total variance</value></data>
+  <data name="Cage_Note" xml:space="preserve"><value>Note</value></data>
+  <data name="Cage_NoteRequired" xml:space="preserve"><value>There is a count variance; a note is required.</value></data>
+  <data name="Cage_OpenTab" xml:space="preserve"><value>Open shift</value></data>
+  <data name="Cage_CloseTab" xml:space="preserve"><value>Close shift (count)</value></data>
+  <data name="Cage_AttachLabel" xml:space="preserve"><value>Open shift number</value></data>
+  <data name="Cage_Attach" xml:space="preserve"><value>_Attach</value></data>
+  <data name="Cage_CurrentShift" xml:space="preserve"><value>Current shift</value></data>
+  <data name="Cage_AddLine" xml:space="preserve"><value>_Add line</value></data>
+  <data name="Cage_RemoveLine" xml:space="preserve"><value>Remove</value></data>
+  <data name="Cage_Open" xml:space="preserve"><value>_Open shift</value></data>
+  <data name="Cage_LoadCounts" xml:space="preserve"><value>_Load expected</value></data>
+  <data name="Cage_Close" xml:space="preserve"><value>_Close shift</value></data>
+  <data name="Cage_Refresh" xml:space="preserve"><value>_Refresh (F5)</value></data>
+  <data name="Cage_Balances" xml:space="preserve"><value>Expected balances</value></data>
+  <data name="Cage_Transactions" xml:space="preserve"><value>Transactions</value></data>
+  <data name="Cage_ClosingCounts" xml:space="preserve"><value>Closing count</value></data>
+  <data name="Cage_Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Cage_Rate" xml:space="preserve"><value>Rate</value></data>
+  <data name="Cage_OpenedAt" xml:space="preserve"><value>Opened</value></data>
+  <data name="Cage_ClosedAt" xml:space="preserve"><value>Closed</value></data>
+  <data name="Cage_Terminal" xml:space="preserve"><value>Terminal</value></data>
+  <data name="Cage_SelectTransaction" xml:space="preserve"><value>Transaction to adjust</value></data>
+  <data name="Cage_RequestAdjustment" xml:space="preserve"><value>_Create request</value></data>
+  <data name="Cage_AdjustmentExplain" xml:space="preserve"><value>Records are never deleted; if approved a reversal is posted (four eyes).</value></data>
+  <data name="Floor_TableOpened" xml:space="preserve"><value>Table {0} opened.</value></data>
+  <data name="Floor_TableClosed" xml:space="preserve"><value>Table {0} closed.</value></data>
+  <data name="Floor_RatingStarted" xml:space="preserve"><value>Rating started for {0} at table {1}.</value></data>
+  <data name="Floor_RatingFinished" xml:space="preserve"><value>Rating finished for {0} ({1}).</value></data>
+  <data name="Floor_Code" xml:space="preserve"><value>Table</value></data>
+  <data name="Floor_Game" xml:space="preserve"><value>Game</value></data>
+  <data name="Floor_MinBet" xml:space="preserve"><value>Min bet</value></data>
+  <data name="Floor_MaxBet" xml:space="preserve"><value>Max bet</value></data>
+  <data name="Floor_Open" xml:space="preserve"><value>Open</value></data>
+  <data name="Floor_OpenTable" xml:space="preserve"><value>_Open table</value></data>
+  <data name="Floor_CloseTable" xml:space="preserve"><value>_Close table</value></data>
+  <data name="Floor_Table" xml:space="preserve"><value>Open table</value></data>
+  <data name="Floor_Start" xml:space="preserve"><value>_Start rating</value></data>
+  <data name="Floor_ActiveRatings" xml:space="preserve"><value>Active ratings on this terminal</value></data>
+  <data name="Floor_AverageBet" xml:space="preserve"><value>Average bet</value></data>
+  <data name="Floor_PlayerResult" xml:space="preserve"><value>Player result (+/−, optional)</value></data>
+  <data name="Floor_Finish" xml:space="preserve"><value>_Finish rating</value></data>
+  <data name="Floor_StartedAt" xml:space="preserve"><value>Started</value></data>
+  <data name="Common_Busy" xml:space="preserve"><value>Working…</value></data>
+</root>

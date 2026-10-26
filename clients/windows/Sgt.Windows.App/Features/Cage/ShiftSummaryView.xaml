@@ -1,0 +1,68 @@
+<!-- Kasa özeti (K6), salt okunur. F5 yeniler. -->
+<UserControl x:Class="Sgt.Windows.App.Features.Cage.ShiftSummaryView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             xmlns:cage="clr-namespace:Sgt.Windows.Core.Features.Cage;assembly=Sgt.Windows.Core"
+             xmlns:controls="clr-namespace:Sgt.Windows.App.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=cage:ShiftSummaryViewModel}">
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
+    </UserControl.InputBindings>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding RefreshCommand}">
+                    <AccessText Text="{x:Static loc:Strings.Cage_Refresh}" />
+                </Button>
+                <TextBlock VerticalAlignment="Center">
+                    <Run Text="{x:Static loc:Strings.Cage_Terminal}" />: <Run Text="{Binding Summary.Terminal, Mode=OneWay}" />
+                    · <Run Text="{x:Static loc:Strings.Cage_OpenedAt}" />: <Run Text="{Binding Summary.OpenedAt, Mode=OneWay, StringFormat=g}" />
+                    · <Run Text="{x:Static loc:Strings.Cage_ClosedAt}" />: <Run Text="{Binding Summary.ClosedAt, Mode=OneWay, StringFormat=g}" />
+                </TextBlock>
+            </StackPanel>
+            <controls:MessageBar />
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Cage_Balances}" Style="{StaticResource SectionHeader}" />
+                <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding Summary.Balances}" IsReadOnly="True" MaxHeight="200">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Instrument}" Binding="{Binding Instrument}" Width="*" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Currency}" Binding="{Binding Currency}" Width="60" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Expected}" Binding="{Binding Expected, StringFormat=N2}" Width="100" />
+                    </DataGrid.Columns>
+                </DataGrid>
+                <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Cage_ClosingCounts}" Style="{StaticResource SectionHeader}" />
+                <DataGrid ItemsSource="{Binding Summary.ClosingCounts}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Instrument}" Binding="{Binding Instrument}" Width="*" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Currency}" Binding="{Binding Currency}" Width="50" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Counted}" Binding="{Binding Counted, StringFormat=N2}" Width="80" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Variance}" Binding="{Binding Variance, StringFormat=N2}" Width="70" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+            <DockPanel Grid.Column="2">
+                <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Cage_Transactions}" Style="{StaticResource SectionHeader}" />
+                <DataGrid ItemsSource="{Binding Summary.Transactions}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Type}" Binding="{Binding Type}" Width="*" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Amount}" Binding="{Binding Amount, StringFormat=N2}" Width="100" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Currency}" Binding="{Binding Currency}" Width="50" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Rate}" Binding="{Binding Rate}" Width="70" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>
