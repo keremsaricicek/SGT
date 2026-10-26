@@ -28,6 +28,7 @@ public sealed class IntegrationEventSerializer
 
         return OutboxMessage.Create(
             integrationEvent.EventId,
+            integrationEvent.TenantId.Value,
             type.FullName!,
             JsonSerializer.Serialize(integrationEvent, type, Options),
             integrationEvent.OccurredAt);

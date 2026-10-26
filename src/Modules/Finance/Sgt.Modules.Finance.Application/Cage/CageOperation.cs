@@ -49,7 +49,9 @@ public sealed class CageOperation(IShiftRepository shifts, IPlayerStatusQuery pl
         var existing = await shifts.FindTransaction(tenantId, transactionId, ct);
         if (existing is not null)
         {
-            return existing.IsSameRequest(type, playerId, amount) ? CageTransactionResult.From(existing) : FinanceErrors.DuplicateKeyMismatch;
+            return existing.ShiftId == shiftId && existing.Transaction.IsSameRequest(type, playerId, amount)
+                ? CageTransactionResult.From(existing.Transaction)
+                : FinanceErrors.DuplicateKeyMismatch;
         }
 
         var player = await players.GetStatus(tenantId, playerId, ct);

@@ -58,8 +58,10 @@ public sealed class OutboxTests(MessagingFixture fx) : IClassFixture<MessagingFi
 
             await using var scope = fx.Services.CreateAsyncScope();
             var store = scope.ServiceProvider.GetRequiredService<IOutboxStore>();
-            Assert.Contains(await store.DeadLetters(10, default), d => d.EventId == e.EventId);
-            Assert.True(await store.Reprocess(e.EventId, default));
+            Assert.Contains(await store.DeadLetters(e.TenantId, 10, default), d => d.EventId == e.EventId);
+            Assert.Empty(await store.DeadLetters(new TenantId(Guid.NewGuid()), 10, default));
+            Assert.False(await store.Reprocess(new TenantId(Guid.NewGuid()), e.EventId, default));
+            Assert.True(await store.Reprocess(e.TenantId, e.EventId, default));
         }
         finally
         {

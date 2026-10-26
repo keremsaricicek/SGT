@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.Loyalty.Application.Ports;
@@ -158,6 +159,10 @@ internal sealed class LoyaltyUnitOfWork(LoyaltyDbContext db, TrackedLoyalty trac
         catch (DbUpdateConcurrencyException e)
         {
             throw new ConcurrencyConflictException("Puan hesabı veya istek aynı anda değişti; tekrar deneyin.", e);
+        }
+        catch (DbUpdateException e) when (e.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            throw new ConcurrencyConflictException("Aynı hesap veya istek aynı anda oluşturuldu; tekrar deneyin.", e);
         }
     }
 

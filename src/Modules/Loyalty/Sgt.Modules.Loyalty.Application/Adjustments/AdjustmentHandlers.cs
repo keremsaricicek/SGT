@@ -1,19 +1,32 @@
 using Sgt.BuildingBlocks;
+using Sgt.Modules.CasinoPlayer.Contracts;
 using Sgt.Modules.Loyalty.Application.Ports;
 using Sgt.Modules.Loyalty.Domain;
 
 namespace Sgt.Modules.Loyalty.Application.Adjustments;
 
-public sealed record RequestPointsAdjustmentCommand(TenantId TenantId, Guid PlayerId, long Points, string Note, AuditContext Audit);
+/// <summary>RequestId istemcinin idempotency anahtarıdır.</summary>
+public sealed record RequestPointsAdjustmentCommand(TenantId TenantId, Guid RequestId, Guid PlayerId, long Points, string Note, AuditContext Audit);
 
 /// <summary>Elle puan düzeltme isteği (Spec 008 KK5).</summary>
-public sealed class RequestPointsAdjustmentHandler(IApprovalRequestRepository requests, ILoyaltyUnitOfWork unitOfWork, IClock clock)
+public sealed class RequestPointsAdjustmentHandler(
+    IApprovalRequestRepository requests, IPlayerStatusQuery players, ILoyaltyUnitOfWork unitOfWork, IClock clock)
     : ICommandHandler<RequestPointsAdjustmentCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(RequestPointsAdjustmentCommand command, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(command);
-        var request = PointsAdjustmentRequest.Create(command.TenantId, command.PlayerId, command.Points, command.Note, command.Audit, clock.UtcNow);
+        if (await requests.GetAdjustment(command.TenantId, command.RequestId, ct) is { } existing)
+        {
+            return existing.PlayerId == command.PlayerId && existing.Points == command.Points ? existing.Id : LoyaltyErrors.DuplicateRequestMismatch;
+        }
+
+        if (await players.GetStatus(command.TenantId, command.PlayerId, ct) is null)
+        {
+            return LoyaltyErrors.PlayerNotFound;
+        }
+
+        var request = PointsAdjustmentRequest.Create(command.RequestId, command.TenantId, command.PlayerId, command.Points, command.Note, command.Audit, clock.UtcNow);
         if (request.IsFailure)
         {
             return request.Error;

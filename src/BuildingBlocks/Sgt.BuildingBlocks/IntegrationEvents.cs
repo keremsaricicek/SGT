@@ -48,9 +48,9 @@ public interface IOutboxStore
 {
     string Module { get; }
 
-    Task<IReadOnlyList<DeadLetter>> DeadLetters(int take, CancellationToken ct);
+    Task<IReadOnlyList<DeadLetter>> DeadLetters(TenantId tenantId, int take, CancellationToken ct);
 
-    Task<bool> Reprocess(Guid eventId, CancellationToken ct);
+    Task<bool> Reprocess(TenantId tenantId, Guid eventId, CancellationToken ct);
 }
 
 public sealed record DeadLetter(string Module, Guid EventId, string Type, int Attempts, string? LastError, DateTimeOffset OccurredAt);

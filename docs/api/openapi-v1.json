@@ -2205,6 +2205,7 @@
       },
       "PointsRequest": {
         "required": [
+          "requestId",
           "playerId",
           "points",
           "text",
@@ -2212,6 +2213,10 @@
         ],
         "type": "object",
         "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "playerId": {
             "type": "string",
             "format": "uuid"

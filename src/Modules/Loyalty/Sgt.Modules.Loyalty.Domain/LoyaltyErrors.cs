@@ -13,4 +13,5 @@ public static class LoyaltyErrors
     public static readonly Error PlayerNotFound = new("Loyalty.PlayerNotFound", "Oyuncu bulunamadı.", ErrorKind.NotFound);
     public static readonly Error PlayerRestricted = new("Loyalty.PlayerRestricted", "Kısıtlı oyuncu comp isteyemez.", ErrorKind.Forbidden);
     public static readonly Error InvalidRule = new("Loyalty.InvalidRule", "Puan oranı sıfırdan büyük ve en çok 2 ondalıklı olmalıdır.");
+    public static readonly Error DuplicateRequestMismatch = new("Loyalty.DuplicateRequestMismatch", "Bu istek anahtarı farklı bir istek için kullanılmış.", ErrorKind.Conflict);
 }

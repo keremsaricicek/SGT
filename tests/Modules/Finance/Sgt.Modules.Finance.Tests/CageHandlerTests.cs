@@ -101,8 +101,9 @@ public sealed class CageHandlerTests
         public Task<bool> HasOpenShift(TenantId tenantId, UserId cashier, string terminal, CancellationToken ct) =>
             Task.FromResult(Items.Any(s => s.TenantId == tenantId && s.IsOpen && (s.CashierId == cashier || s.Terminal == terminal)));
 
-        public Task<CageTransaction?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct) =>
-            Task.FromResult(Items.Where(s => s.TenantId == tenantId).Select(s => s.FindTransaction(transactionId)).OfType<CageTransaction>().SingleOrDefault());
+        public Task<TransactionLookup?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct) =>
+            Task.FromResult(Items.Where(s => s.TenantId == tenantId && s.FindTransaction(transactionId) is not null)
+                .Select(s => new TransactionLookup(s.Id, s.FindTransaction(transactionId)!)).SingleOrDefault());
 
         public void Add(CashierShift shift) => Items.Add(shift);
     }

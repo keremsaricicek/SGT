@@ -8,6 +8,9 @@ public sealed class OutboxMessage
 
     public Guid Id { get; private set; }
 
+    /// <summary>Operatör ekranının tenant kapsamı için.</summary>
+    public Guid TenantId { get; private set; }
+
     public string Type { get; private set; } = string.Empty;
 
     public string Payload { get; private set; } = string.Empty;
@@ -24,9 +27,10 @@ public sealed class OutboxMessage
 
     public bool DeadLettered { get; private set; }
 
-    public static OutboxMessage Create(Guid eventId, string type, string payload, DateTimeOffset occurredAt) => new()
+    public static OutboxMessage Create(Guid eventId, Guid tenantId, string type, string payload, DateTimeOffset occurredAt) => new()
     {
         Id = eventId,
+        TenantId = tenantId,
         Type = type,
         Payload = payload,
         OccurredAt = occurredAt,

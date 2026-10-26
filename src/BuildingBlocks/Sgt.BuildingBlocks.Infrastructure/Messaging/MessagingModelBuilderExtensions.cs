@@ -12,6 +12,8 @@ public static class MessagingModelBuilderExtensions
             e.ToTable("outbox_messages");
             e.HasKey(m => m.Id);
             e.Property(m => m.Id).HasColumnName("id");
+            e.Property(m => m.TenantId).HasColumnName("tenant_id");
+            e.HasIndex(m => new { m.TenantId, m.DeadLettered });
             e.Property(m => m.Type).HasColumnName("type").HasMaxLength(300);
             e.Property(m => m.Payload).HasColumnName("payload").HasColumnType("jsonb");
             e.Property(m => m.OccurredAt).HasColumnName("occurred_at");

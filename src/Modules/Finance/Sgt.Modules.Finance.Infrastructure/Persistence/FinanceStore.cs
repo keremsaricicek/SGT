@@ -43,6 +43,7 @@ internal static class FinanceMapping
         row.OpenedAt = shift.OpenedAt;
         row.ClosedAt = shift.ClosedAt;
         row.ClosingNote = shift.ClosingNote;
+        row.TransactionCount = shift.Transactions.Count;
 
         if (row.Opening.Count == 0)
         {
@@ -107,11 +108,11 @@ internal sealed class ShiftRepository(FinanceDbContext db, TrackedShifts tracked
     public Task<bool> HasOpenShift(TenantId tenantId, UserId cashier, string terminal, CancellationToken ct) =>
         db.Shifts.AnyAsync(s => s.TenantId == tenantId.Value && s.ClosedAt == null && (s.CashierId == cashier.Value || s.Terminal == terminal), ct);
 
-    public async Task<CageTransaction?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct)
+    public async Task<TransactionLookup?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct)
     {
         var row = await db.Transactions.AsNoTracking().Include(t => t.Entries)
             .SingleOrDefaultAsync(t => t.TenantId == tenantId.Value && t.Id == transactionId, ct);
-        return row is null ? null : FinanceMapping.ToDomain(row);
+        return row is null ? null : new TransactionLookup(row.ShiftId, FinanceMapping.ToDomain(row));
     }
 
     public void Add(CashierShift shift) => tracked.Items[shift] = null;

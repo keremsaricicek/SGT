@@ -50,7 +50,7 @@ internal sealed class ScreenCatalog : IScreenCatalog
         new("cage.summary", Product.SPlus, []),
 
         // Loyalty / Host
-        new("loyalty.points", Product.SPlus, ["adjust"]),
+        new("loyalty.points", Product.SPlus, ["adjust", "approve"]),
         new("loyalty.comp", Product.SPlus, ["request", "approve"]),
         new("loyalty.host_portfolio", Product.SPlus, []),
         new("loyalty.rules", Product.SPlus, ["define"]),

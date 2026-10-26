@@ -20,7 +20,7 @@ internal sealed class DailyCageQuery(FinanceDbContext db) : IDailyCageQuery
 
         var reversedIds = transactions.Where(t => t.ReversesId != null).Select(t => t.ReversesId!.Value).ToList();
         var originalTypes = await db.Transactions.AsNoTracking()
-            .Where(t => reversedIds.Contains(t.Id))
+            .Where(t => t.TenantId == tenant && reversedIds.Contains(t.Id))
             .ToDictionaryAsync(t => t.Id, t => t.Type, ct);
 
         // Her işlemi "etkili tür" ve işaretle topla: ters kayıt, asıl türden eksi olarak düşer.

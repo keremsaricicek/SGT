@@ -111,6 +111,9 @@ internal sealed class ShiftRow
 
     public string? ClosingNote { get; set; }
 
+    /// <summary>Her işlemde değişir; eşzamanlı işlemler xmin ile çakışır (aynı çekmecenin iki kez harcanmasını önler).</summary>
+    public int TransactionCount { get; set; }
+
     public uint Version { get; set; }
 
     public List<OpeningAmountRow> Opening { get; set; } = [];

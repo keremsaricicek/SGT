@@ -92,10 +92,10 @@ public sealed class LoyaltyTests
         await Earn(Rated(theoreticalWin: 50_000m)); // 500 puan
         var host = UserId.New();
         var request = await new RequestCompHandler(_requests, _players, _unitOfWork, new FixedClock())
-            .Handle(new RequestCompCommand(Tenant, Player, 300, "Akşam yemeği", Audit(host)), default);
+            .Handle(new RequestCompCommand(Tenant, Guid.NewGuid(), Player, 300, "Akşam yemeği", Audit(host)), default);
         var tooMuch = await new RequestCompHandler(_requests, _players, _unitOfWork, new FixedClock())
-            .Handle(new RequestCompCommand(Tenant, Player, 900, "Oda", Audit(host)), default);
-        var approve = new DecideCompHandler(_requests, _accounts, _unitOfWork, new FixedClock());
+            .Handle(new RequestCompCommand(Tenant, Guid.NewGuid(), Player, 900, "Oda", Audit(host)), default);
+        var approve = new DecideCompHandler(_requests, _accounts, _players, _unitOfWork, new FixedClock());
 
         var self = await approve.Handle(new DecideCompCommand(Tenant, request.Value, Approve: true, Audit(host)), default);
         var other = await approve.Handle(new DecideCompCommand(Tenant, request.Value, Approve: true, Audit()), default);
@@ -108,12 +108,26 @@ public sealed class LoyaltyTests
     }
 
     [Fact]
+    public async Task Same_request_id_does_not_open_second_comp()
+    {
+        var id = Guid.NewGuid();
+        var handler = new RequestCompHandler(_requests, _players, _unitOfWork, new FixedClock());
+
+        var first = await handler.Handle(new RequestCompCommand(Tenant, id, Player, 5, "Bar", Audit()), default);
+        var again = await handler.Handle(new RequestCompCommand(Tenant, id, Player, 5, "Bar", Audit()), default);
+        var other = await handler.Handle(new RequestCompCommand(Tenant, id, Player, 6, "Bar", Audit()), default);
+
+        Assert.Equal(first.Value, again.Value);
+        Assert.Equal(LoyaltyErrors.DuplicateRequestMismatch, other.Error);
+    }
+
+    [Fact]
     public async Task KK6_restricted_player_cannot_request_comp()
     {
         _players.Restricted = true;
 
         var result = await new RequestCompHandler(_requests, _players, _unitOfWork, new FixedClock())
-            .Handle(new RequestCompCommand(Tenant, Player, 10, "Bar", Audit()), default);
+            .Handle(new RequestCompCommand(Tenant, Guid.NewGuid(), Player, 10, "Bar", Audit()), default);
 
         Assert.Equal(LoyaltyErrors.PlayerRestricted, result.Error);
     }

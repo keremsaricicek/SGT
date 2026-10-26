@@ -34,7 +34,7 @@ public sealed class CompRequest
 
     public IReadOnlyList<LoyaltyChange> PendingChanges => _pending;
 
-    public static Result<CompRequest> Create(TenantId tenantId, Guid playerId, long points, string description, AuditContext audit, DateTimeOffset at)
+    public static Result<CompRequest> Create(Guid id, TenantId tenantId, Guid playerId, long points, string description, AuditContext audit, DateTimeOffset at)
     {
         ArgumentNullException.ThrowIfNull(audit);
         if (points <= 0)
@@ -47,7 +47,7 @@ public sealed class CompRequest
             return LoyaltyErrors.DescriptionRequired;
         }
 
-        var request = new CompRequest(Guid.NewGuid(), tenantId, playerId, points, description.Trim(), at, FourEyesDecision.Request(audit.Actor));
+        var request = new CompRequest(id, tenantId, playerId, points, description.Trim(), at, FourEyesDecision.Request(audit.Actor));
         request._pending.Add(new LoyaltyChange(Guid.NewGuid(), playerId, LoyaltyChangeKind.CompRequested, $"{points} puan", audit, at));
         return request;
     }
@@ -120,7 +120,7 @@ public sealed class PointsAdjustmentRequest
 
     public IReadOnlyList<LoyaltyChange> PendingChanges => _pending;
 
-    public static Result<PointsAdjustmentRequest> Create(TenantId tenantId, Guid playerId, long points, string note, AuditContext audit, DateTimeOffset at)
+    public static Result<PointsAdjustmentRequest> Create(Guid id, TenantId tenantId, Guid playerId, long points, string note, AuditContext audit, DateTimeOffset at)
     {
         ArgumentNullException.ThrowIfNull(audit);
         if (points == 0)
@@ -133,7 +133,7 @@ public sealed class PointsAdjustmentRequest
             return LoyaltyErrors.DescriptionRequired;
         }
 
-        var request = new PointsAdjustmentRequest(Guid.NewGuid(), tenantId, playerId, points, note.Trim(), at, FourEyesDecision.Request(audit.Actor));
+        var request = new PointsAdjustmentRequest(id, tenantId, playerId, points, note.Trim(), at, FourEyesDecision.Request(audit.Actor));
         request._pending.Add(new LoyaltyChange(Guid.NewGuid(), playerId, LoyaltyChangeKind.AdjustmentRequested, $"{points} puan", audit, at));
         return request;
     }

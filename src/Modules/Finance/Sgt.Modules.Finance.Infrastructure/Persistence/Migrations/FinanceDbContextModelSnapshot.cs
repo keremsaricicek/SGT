@@ -81,6 +81,10 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("processed_at");
 
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -93,6 +97,9 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence.Migrations
                     b.HasIndex("NextAttemptAt")
                         .HasDatabaseName("ix_outbox_messages_next_attempt_at")
                         .HasFilter("processed_at IS NULL AND dead_lettered = false");
+
+                    b.HasIndex("TenantId", "DeadLettered")
+                        .HasDatabaseName("ix_outbox_messages_tenant_id_dead_lettered");
 
                     b.ToTable("outbox_messages", "finance");
                 });
@@ -385,6 +392,10 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
                         .HasColumnName("terminal");
+
+                    b.Property<int>("TransactionCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("transaction_count");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()

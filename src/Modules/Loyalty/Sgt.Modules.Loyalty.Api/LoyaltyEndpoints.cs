@@ -10,7 +10,8 @@ using Sgt.Modules.Loyalty.Application.Summary;
 
 namespace Sgt.Modules.Loyalty.Api;
 
-public sealed record PointsRequest(Guid PlayerId, long Points, string Text, string ReasonCode);
+/// <summary>RequestId: istemcinin ürettiği idempotency anahtarı; aynı anahtar ikinci istek açmaz.</summary>
+public sealed record PointsRequest(Guid RequestId, Guid PlayerId, long Points, string Text, string ReasonCode);
 
 public sealed record DecisionRequest(bool Approve, string ReasonCode);
 
@@ -29,18 +30,18 @@ public static class LoyaltyEndpoints
 
         api.MapPost("/adjustments", async (PointsRequest body, IRequestContext request, ICommandHandler<RequestPointsAdjustmentCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
-                (await handler.Handle(new RequestPointsAdjustmentCommand(request.TenantId, body.PlayerId, body.Points, body.Text, audit), ct))
+                (await handler.Handle(new RequestPointsAdjustmentCommand(request.TenantId, body.RequestId, body.PlayerId, body.Points, body.Text, audit), ct))
                 .ToHttp(id => Results.Created($"/api/v1/loyalty/adjustments/{id}", new { id }))))
             .RequirePermission("loyalty.points:adjust");
 
         api.MapPost("/adjustments/{requestId:guid}/decision", async (Guid requestId, DecisionRequest body, IRequestContext request, ICommandHandler<DecidePointsAdjustmentCommand> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new DecidePointsAdjustmentCommand(request.TenantId, requestId, body.Approve, audit), ct)).ToHttp()))
-            .RequirePermission("loyalty.points:adjust");
+            .RequirePermission("loyalty.points:approve");
 
         api.MapPost("/comps", async (PointsRequest body, IRequestContext request, ICommandHandler<RequestCompCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
-                (await handler.Handle(new RequestCompCommand(request.TenantId, body.PlayerId, body.Points, body.Text, audit), ct))
+                (await handler.Handle(new RequestCompCommand(request.TenantId, body.RequestId, body.PlayerId, body.Points, body.Text, audit), ct))
                 .ToHttp(id => Results.Created($"/api/v1/loyalty/comps/{id}", new { id }))))
             .RequirePermission("loyalty.comp:request");
 

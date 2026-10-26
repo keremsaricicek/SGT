@@ -5,7 +5,8 @@ using Sgt.Modules.Loyalty.Domain;
 
 namespace Sgt.Modules.Loyalty.Application.Comps;
 
-public sealed record RequestCompCommand(TenantId TenantId, Guid PlayerId, long Points, string Description, AuditContext Audit);
+/// <summary>RequestId istemcinin idempotency anahtarıdır.</summary>
+public sealed record RequestCompCommand(TenantId TenantId, Guid RequestId, Guid PlayerId, long Points, string Description, AuditContext Audit);
 
 /// <summary>Comp isteği (Spec 008 KK6). Kısıtlı oyuncu isteyemez.</summary>
 public sealed class RequestCompHandler(IApprovalRequestRepository requests, IPlayerStatusQuery players, ILoyaltyUnitOfWork unitOfWork, IClock clock)
@@ -14,6 +15,11 @@ public sealed class RequestCompHandler(IApprovalRequestRepository requests, IPla
     public async Task<Result<Guid>> Handle(RequestCompCommand command, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(command);
+        if (await requests.GetComp(command.TenantId, command.RequestId, ct) is { } existing)
+        {
+            return existing.PlayerId == command.PlayerId && existing.Points == command.Points ? existing.Id : LoyaltyErrors.DuplicateRequestMismatch;
+        }
+
         var player = await players.GetStatus(command.TenantId, command.PlayerId, ct);
         if (player is null)
         {
@@ -25,7 +31,7 @@ public sealed class RequestCompHandler(IApprovalRequestRepository requests, IPla
             return LoyaltyErrors.PlayerRestricted;
         }
 
-        var request = CompRequest.Create(command.TenantId, command.PlayerId, command.Points, command.Description, command.Audit, clock.UtcNow);
+        var request = CompRequest.Create(command.RequestId, command.TenantId, command.PlayerId, command.Points, command.Description, command.Audit, clock.UtcNow);
         if (request.IsFailure)
         {
             return request.Error;
@@ -40,7 +46,8 @@ public sealed class RequestCompHandler(IApprovalRequestRepository requests, IPla
 public sealed record DecideCompCommand(TenantId TenantId, Guid RequestId, bool Approve, AuditContext Audit);
 
 /// <summary>Comp onayı/reddi; isteyen kişi karar veremez, onayda puan düşülür (Spec 008 KK6).</summary>
-public sealed class DecideCompHandler(IApprovalRequestRepository requests, ILoyaltyAccountRepository accounts, ILoyaltyUnitOfWork unitOfWork, IClock clock)
+public sealed class DecideCompHandler(
+    IApprovalRequestRepository requests, ILoyaltyAccountRepository accounts, IPlayerStatusQuery players, ILoyaltyUnitOfWork unitOfWork, IClock clock)
     : ICommandHandler<DecideCompCommand>
 {
     public async Task<Result> Handle(DecideCompCommand command, CancellationToken ct)
@@ -50,6 +57,12 @@ public sealed class DecideCompHandler(IApprovalRequestRepository requests, ILoya
         if (request is null)
         {
             return LoyaltyErrors.RequestNotFound;
+        }
+
+        // İstek ile onay arasında oyuncu kısıtlanmış olabilir (KK6).
+        if (command.Approve && (await players.GetStatus(command.TenantId, request.PlayerId, ct))?.IsRestricted != false)
+        {
+            return LoyaltyErrors.PlayerRestricted;
         }
 
         var account = await accounts.Get(command.TenantId, request.PlayerId, ct);

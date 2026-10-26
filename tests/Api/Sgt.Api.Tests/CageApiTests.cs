@@ -167,3 +167,34 @@ public sealed class CageAdjustmentApiTests(ApiFactory api) : IClassFixture<ApiFa
 
     private sealed record IdResponse(Guid Id);
 }
+
+public sealed class CageConcurrencyApiTests(ApiFactory api) : IClassFixture<ApiFactory>
+{
+    [Fact]
+    public async Task Parallel_redemptions_cannot_spend_the_same_drawer_twice()
+    {
+        var cashier = api.ClientFor(ApiFactory.SuperAdmin);
+        await TestRoles.Grant(cashier, "player.profile:create", "cage.shift:open", "cage.summary:view", "cage.chips:redeem");
+        var player = (await (await cashier.PostAsJsonAsync("/api/v1/players", new
+        {
+            firstName = "Yarış", lastName = "Testi", birthDate = "1985-01-01", nationality = "TR", documentType = "NationalId",
+            documentNumber = $"Y{Guid.NewGuid():N}"[..12], reasonCode = "NEW_PLAYER",
+        })).Content.ReadFromJsonAsync<Sgt.Modules.CasinoPlayer.Application.Profile.PlayerRegistered>())!;
+        var shiftId = (await (await cashier.PostAsJsonAsync("/api/v1/cage/shifts", new
+        {
+            opening = new[] { new { instrument = "Cash", currency = "TRY", amount = 100m } }, reasonCode = "SHIFT_START",
+        })).Content.ReadFromJsonAsync<IdResponse>())!.Id;
+
+        var attempts = Enumerable.Range(0, 6).Select(_ => api.ClientFor(ApiFactory.SuperAdmin).PostAsJsonAsync(
+            $"/api/v1/cage/shifts/{shiftId}/chip-redemptions",
+            new { transactionId = Guid.NewGuid(), playerId = player.PlayerId, amount = 100m, currency = "TRY", reasonCode = "REDEEM" }));
+        var results = await Task.WhenAll(attempts);
+        var summary = await cashier.GetFromJsonAsync<ShiftSummary>($"/api/v1/cage/shifts/{shiftId}");
+
+        Assert.Equal(1, results.Count(r => r.StatusCode == HttpStatusCode.OK));
+        Assert.All(results.Where(r => r.StatusCode != HttpStatusCode.OK), r => Assert.Equal(HttpStatusCode.Conflict, r.StatusCode));
+        Assert.Contains(summary!.Balances, b => b.Instrument == "Cash" && b.Currency == "TRY" && b.Expected == 0m);
+    }
+
+    private sealed record IdResponse(Guid Id);
+}

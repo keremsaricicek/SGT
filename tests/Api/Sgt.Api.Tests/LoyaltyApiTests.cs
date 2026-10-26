@@ -34,7 +34,7 @@ public sealed class LoyaltyApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var summary = await WaitForPoints(host, player.PlayerId);
         Assert.True(summary.Balance > 0);
 
-        var comp = await host.PostAsJsonAsync("/api/v1/loyalty/comps", new { playerId = player.PlayerId, points = 1L, text = "Kahve", reasonCode = "COMP" });
+        var comp = await host.PostAsJsonAsync("/api/v1/loyalty/comps", new { requestId = Guid.NewGuid(), playerId = player.PlayerId, points = 1L, text = "Kahve", reasonCode = "COMP" });
         var compId = (await comp.Content.ReadFromJsonAsync<IdResponse>())!.Id;
         var selfApprove = await host.PostAsJsonAsync($"/api/v1/loyalty/comps/{compId}/decision", new { approve = true, reasonCode = "COMP" });
 

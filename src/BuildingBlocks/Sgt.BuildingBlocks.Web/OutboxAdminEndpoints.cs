@@ -14,21 +14,21 @@ public static class OutboxAdminEndpoints
     {
         var api = app.MapGroup("/api/v1/integration").RequireAuthorization(SgtClaims.Policy).WithTags("Integration");
 
-        api.MapGet("/dead-letters", async (int? take, IEnumerable<IOutboxStore> stores, CancellationToken ct) =>
+        api.MapGet("/dead-letters", async (int? take, IRequestContext request, IEnumerable<IOutboxStore> stores, CancellationToken ct) =>
         {
             var all = new List<DeadLetter>();
             foreach (var store in stores)
             {
-                all.AddRange(await store.DeadLetters(take ?? 100, ct));
+                all.AddRange(await store.DeadLetters(request.TenantId, Math.Clamp(take ?? 100, 1, 500), ct));
             }
 
             return Results.Ok(all.OrderByDescending(d => d.OccurredAt));
         }).RequirePermission("admin.integrations:view");
 
-        api.MapPost("/dead-letters/{module}/{eventId:guid}/reprocess", async (string module, Guid eventId, IEnumerable<IOutboxStore> stores, CancellationToken ct) =>
+        api.MapPost("/dead-letters/{module}/{eventId:guid}/reprocess", async (string module, Guid eventId, IRequestContext request, IEnumerable<IOutboxStore> stores, CancellationToken ct) =>
         {
             var store = stores.FirstOrDefault(s => string.Equals(s.Module, module, StringComparison.OrdinalIgnoreCase));
-            return store is not null && await store.Reprocess(eventId, ct)
+            return store is not null && await store.Reprocess(request.TenantId, eventId, ct)
                 ? Results.NoContent()
                 : ResultHttpExtensions.Problem(NotFound);
         }).RequirePermission("admin.integrations:reprocess");

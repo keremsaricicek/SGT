@@ -11,10 +11,13 @@ public interface IShiftRepository
     Task<bool> HasOpenShift(TenantId tenantId, UserId cashier, string terminal, CancellationToken ct);
 
     /// <summary>İdempotency: bu anahtarla daha önce yapılmış işlem (KK5).</summary>
-    Task<CageTransaction?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct);
+    Task<TransactionLookup?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct);
 
     void Add(CashierShift shift);
 }
+
+/// <summary>Daha önce kaydedilmiş işlem ve vardiyası.</summary>
+public sealed record TransactionLookup(Guid ShiftId, CageTransaction Transaction);
 
 public interface ICageAdjustmentRepository
 {
