@@ -2,6 +2,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Sgt.Modules.Identity.Application\Sgt.Modules.Identity.Application.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Sgt.BuildingBlocks.Infrastructure\Sgt.BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.Identity.Contracts\Sgt.Modules.Identity.Contracts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

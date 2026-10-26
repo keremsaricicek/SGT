@@ -11,7 +11,7 @@ public sealed record UndenyUserPermissionCommand(TenantId TenantId, UserId UserI
 public sealed class UndenyUserPermissionHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<UndenyUserPermissionCommand>
 {
     public async Task<Result> Handle(UndenyUserPermissionCommand command, CancellationToken ct)

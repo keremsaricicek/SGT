@@ -5,6 +5,8 @@
     <ProjectReference Include="..\..\BuildingBlocks\Sgt.BuildingBlocks.Web\Sgt.BuildingBlocks.Web.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Api\Sgt.Modules.Identity.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Infrastructure\Sgt.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Api\Sgt.Modules.Audit.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Infrastructure\Sgt.Modules.Audit.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

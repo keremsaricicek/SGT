@@ -10,7 +10,7 @@ public sealed record RevokeRolePermissionCommand(TenantId TenantId, RoleId RoleI
 public sealed class RevokeRolePermissionHandler(
     AdminActorResolver admins,
     IRoleRepository roles,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<RevokeRolePermissionCommand>
 {
     public async Task<Result> Handle(RevokeRolePermissionCommand command, CancellationToken ct)

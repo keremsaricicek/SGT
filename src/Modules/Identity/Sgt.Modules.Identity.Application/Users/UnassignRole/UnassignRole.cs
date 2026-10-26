@@ -10,7 +10,7 @@ public sealed record UnassignRoleCommand(TenantId TenantId, UserId UserId, RoleI
 public sealed class UnassignRoleHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<UnassignRoleCommand>
 {
     public async Task<Result> Handle(UnassignRoleCommand command, CancellationToken ct)

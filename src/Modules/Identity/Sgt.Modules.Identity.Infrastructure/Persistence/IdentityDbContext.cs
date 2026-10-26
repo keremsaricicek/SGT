@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.Identity.Infrastructure.Licensing;
 
 namespace Sgt.Modules.Identity.Infrastructure.Persistence;
@@ -19,6 +20,7 @@ public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> option
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
+        modelBuilder.AddOutboxAndInbox();
 
         modelBuilder.Entity<RoleRow>(e =>
         {

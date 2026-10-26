@@ -11,7 +11,7 @@ public sealed record RevokeUserPermissionCommand(TenantId TenantId, UserId UserI
 public sealed class RevokeUserPermissionHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<RevokeUserPermissionCommand>
 {
     public async Task<Result> Handle(RevokeUserPermissionCommand command, CancellationToken ct)

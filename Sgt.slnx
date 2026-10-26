@@ -9,6 +9,13 @@
     <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks/Sgt.BuildingBlocks.csproj" />
   </Folder>
   <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Audit/">
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Api/Sgt.Modules.Audit.Api.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Application/Sgt.Modules.Audit.Application.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Contracts/Sgt.Modules.Audit.Contracts.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Domain/Sgt.Modules.Audit.Domain.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Infrastructure/Sgt.Modules.Audit.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Identity/">
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Api/Sgt.Modules.Identity.Api.csproj" />
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Application/Sgt.Modules.Identity.Application.csproj" />
@@ -28,6 +35,9 @@
     <Project Path="tests/BuildingBlocks/Sgt.BuildingBlocks.Tests/Sgt.BuildingBlocks.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/Modules/" />
+  <Folder Name="/tests/Modules/Audit/">
+    <Project Path="tests/Modules/Audit/Sgt.Modules.Audit.Tests/Sgt.Modules.Audit.Tests.csproj" />
+  </Folder>
   <Folder Name="/tests/Modules/Identity/">
     <Project Path="tests/Modules/Identity/Sgt.Modules.Identity.IntegrationTests/Sgt.Modules.Identity.IntegrationTests.csproj" />
     <Project Path="tests/Modules/Identity/Sgt.Modules.Identity.Tests/Sgt.Modules.Identity.Tests.csproj" />

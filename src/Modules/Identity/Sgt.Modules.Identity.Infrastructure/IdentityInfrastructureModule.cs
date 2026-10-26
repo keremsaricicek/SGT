@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Sgt.BuildingBlocks;
+using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.Identity.Application.Access;
 using Sgt.Modules.Identity.Application.Administration;
 using Sgt.Modules.Identity.Application.Menu;
@@ -16,6 +17,7 @@ using Sgt.Modules.Identity.Application.Users.GrantUserPermission;
 using Sgt.Modules.Identity.Application.Users.RevokeUserPermission;
 using Sgt.Modules.Identity.Application.Users.UnassignRole;
 using Sgt.Modules.Identity.Application.Users.UndenyUserPermission;
+using Sgt.Modules.Identity.Contracts;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure.Licensing;
 using Sgt.Modules.Identity.Infrastructure.Persistence;
@@ -33,10 +35,13 @@ public static class IdentityInfrastructureModule
             npgsql => npgsql.MigrationsHistoryTable("__ef_migrations", IdentityDbContext.Schema))
             .UseSnakeCaseNamingConvention());
 
+        services.AddOutbox<IdentityDbContext>("Identity");
+        services.AddIntegrationEventType<PermissionChangedV1>();
+
         services.AddScoped<TrackedAggregates>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IUserAccessRepository, UserAccessRepository>();
-        services.AddScoped<IUnitOfWork, IdentityUnitOfWork>();
+        services.AddScoped<IIdentityUnitOfWork, IdentityUnitOfWork>();
         services.AddScoped<IPermissionChangeReader, PermissionChangeReader>();
         services.AddScoped<ILicensedProducts, LicensedProducts>();
         services.AddSingleton<IScreenCatalog, ScreenCatalog>();

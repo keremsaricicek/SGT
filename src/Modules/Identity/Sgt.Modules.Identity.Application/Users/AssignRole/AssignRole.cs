@@ -11,7 +11,7 @@ public sealed class AssignRoleHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
     IRoleRepository roles,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<AssignRoleCommand>
 {
     public async Task<Result> Handle(AssignRoleCommand command, CancellationToken ct)

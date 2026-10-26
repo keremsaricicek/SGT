@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Sgt.BuildingBlocks;
+using Sgt.Modules.Audit.Infrastructure;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure;
 using Sgt.Modules.Identity.Infrastructure.Persistence;
@@ -32,6 +33,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         Database = $"sgt_api_test_{Guid.NewGuid():N}",
     }.ConnectionString;
 
+    public string ConnectionString => _connectionString;
+
     public HttpClient ClientFor(UserId user, TenantId? tenant = null)
     {
         var client = CreateClient();
@@ -46,13 +49,14 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await using var scope = Services.CreateAsyncScope();
         var users = scope.ServiceProvider.GetRequiredService<Sgt.Modules.Identity.Application.Ports.IUserAccessRepository>();
         users.Add(UserAccess.Create(user, Tenant, isSuperAdmin));
-        await scope.ServiceProvider.GetRequiredService<IUnitOfWork>().Commit(default);
+        await scope.ServiceProvider.GetRequiredService<Sgt.Modules.Identity.Application.Ports.IIdentityUnitOfWork>().Commit(default);
     }
 
     public async Task InitializeAsync()
     {
         await using var scope = Services.CreateAsyncScope();
         await scope.ServiceProvider.MigrateIdentityDatabase(default);
+        await scope.ServiceProvider.MigrateAuditDatabase(default);
         await IdentityDevelopmentSeed.Run(scope.ServiceProvider, Tenant, SuperAdmin, [Product.SPlus], default);
     }
 

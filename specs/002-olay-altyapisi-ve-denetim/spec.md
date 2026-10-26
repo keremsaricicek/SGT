@@ -1,6 +1,6 @@
 # Spec 002: Olay altyapısı ve merkezi denetim kaydı
 
-Modül: BuildingBlocks + Audit · Ürün: Çekirdek · Durum: Onaylandı (koordinatör, 26.10.2026)
+Modül: BuildingBlocks + Audit · Ürün: Çekirdek · Durum: Tamamlandı (26.10.2026)
 Kaynak: anayasa II, III, VII; ADR-0004.
 
 ## Amaç

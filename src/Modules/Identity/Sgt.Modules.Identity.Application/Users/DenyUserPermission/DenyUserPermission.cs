@@ -12,7 +12,7 @@ public sealed class DenyUserPermissionHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
     IScreenCatalog screens,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<DenyUserPermissionCommand>
 {
     public async Task<Result> Handle(DenyUserPermissionCommand command, CancellationToken ct)

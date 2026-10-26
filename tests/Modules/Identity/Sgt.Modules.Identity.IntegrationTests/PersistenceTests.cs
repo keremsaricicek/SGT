@@ -36,6 +36,9 @@ public sealed class PersistenceTests(IdentityDatabaseFixture db) : IClassFixture
         Assert.True(role!.Permissions.Contains(PermissionCode.Parse("cage.adjustment:view").Value));
         Assert.Contains(roleId, user!.RoleIds);
         Assert.Equal(3, await Count($"SELECT count(*) FROM identity.permission_changes WHERE target_id IN ('{roleId.Value}', '{staff.Value}')"));
+        Assert.Equal(3, await Count(
+            "SELECT count(*) FROM identity.outbox_messages o JOIN identity.permission_changes c ON c.id = o.id " +
+            $"WHERE o.type = 'Sgt.Modules.Identity.Contracts.PermissionChangedV1' AND c.target_id IN ('{roleId.Value}', '{staff.Value}')"));
     }
 
     [Fact]
@@ -67,7 +70,7 @@ public sealed class PersistenceTests(IdentityDatabaseFixture db) : IClassFixture
         if (await users.Get(Tenant, userId, default) is null)
         {
             users.Add(UserAccess.Create(userId, Tenant, isSuperAdmin));
-            await scope.ServiceProvider.GetRequiredService<IUnitOfWork>().Commit(default);
+            await scope.ServiceProvider.GetRequiredService<Sgt.Modules.Identity.Application.Ports.IIdentityUnitOfWork>().Commit(default);
         }
     }
 

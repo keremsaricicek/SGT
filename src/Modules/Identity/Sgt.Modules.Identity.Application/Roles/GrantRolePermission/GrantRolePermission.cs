@@ -11,7 +11,7 @@ public sealed class GrantRolePermissionHandler(
     AdminActorResolver admins,
     IRoleRepository roles,
     IScreenCatalog screens,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<GrantRolePermissionCommand>
 {
     public async Task<Result> Handle(GrantRolePermissionCommand command, CancellationToken ct)

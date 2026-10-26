@@ -10,7 +10,7 @@ public sealed record CreateRoleCommand(TenantId TenantId, string Name, AuditCont
 public sealed class CreateRoleHandler(
     AdminActorResolver admins,
     IRoleRepository roles,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<CreateRoleCommand, RoleId>
 {
     public async Task<Result<RoleId>> Handle(CreateRoleCommand command, CancellationToken ct)

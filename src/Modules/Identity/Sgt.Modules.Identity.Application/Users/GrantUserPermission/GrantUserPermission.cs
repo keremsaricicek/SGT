@@ -12,7 +12,7 @@ public sealed class GrantUserPermissionHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
     IScreenCatalog screens,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<GrantUserPermissionCommand>
 {
     public async Task<Result> Handle(GrantUserPermissionCommand command, CancellationToken ct)

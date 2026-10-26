@@ -30,7 +30,7 @@ internal sealed class InMemoryUsers : IUserAccessRepository
     public void Add(UserAccess userAccess) => Items.Add(userAccess);
 }
 
-internal sealed class CountingUnitOfWork : IUnitOfWork
+internal sealed class CountingUnitOfWork : IIdentityUnitOfWork
 {
     public int Commits { get; private set; }
 

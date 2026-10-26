@@ -1,13 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using Sgt.BuildingBlocks;
+using Sgt.BuildingBlocks.Infrastructure.Messaging;
+using Sgt.Modules.Identity.Application.Ports;
 
 namespace Sgt.Modules.Identity.Infrastructure.Persistence;
 
 /// <summary>
-/// Değişen aggregate'leri ve onların değişiklik kayıtlarını tek SaveChanges (tek transaction) ile yazar.
+/// Değişen aggregate'leri, değişiklik kayıtlarını ve bunların olaylarını (outbox) tek SaveChanges ile yazar.
 /// Kayıt okunduktan sonra başkası değiştirdiyse hiçbir şey yazılmaz (<see cref="ConcurrencyConflictException"/>).
 /// </summary>
-internal sealed class IdentityUnitOfWork(IdentityDbContext db, TrackedAggregates tracked) : IUnitOfWork
+internal sealed class IdentityUnitOfWork(
+    IdentityDbContext db,
+    TrackedAggregates tracked,
+    IntegrationEventSerializer serializer) : IIdentityUnitOfWork
 {
     public async Task Commit(CancellationToken ct)
     {
@@ -21,7 +26,7 @@ internal sealed class IdentityUnitOfWork(IdentityDbContext db, TrackedAggregates
             }
 
             row.CopyFrom(role);
-            db.PermissionChanges.AddRange(role.PendingChanges.Select(c => c.ToRow()));
+            Record(role.PendingChanges);
         }
 
         foreach (var user in tracked.Users)
@@ -34,7 +39,7 @@ internal sealed class IdentityUnitOfWork(IdentityDbContext db, TrackedAggregates
             }
 
             row.CopyFrom(user);
-            db.PermissionChanges.AddRange(user.PendingChanges.Select(c => c.ToRow()));
+            Record(user.PendingChanges);
         }
 
         try
@@ -54,6 +59,15 @@ internal sealed class IdentityUnitOfWork(IdentityDbContext db, TrackedAggregates
         foreach (var user in tracked.Users)
         {
             user.ClearPendingChanges();
+        }
+    }
+
+    private void Record(IEnumerable<Sgt.Modules.Identity.Domain.PermissionChange> changes)
+    {
+        foreach (var change in changes)
+        {
+            db.PermissionChanges.Add(change.ToRow());
+            db.Set<OutboxMessage>().Add(serializer.ToOutbox(change.ToIntegrationEvent()));
         }
     }
 }

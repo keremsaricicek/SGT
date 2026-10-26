@@ -1,4 +1,5 @@
 using Sgt.BuildingBlocks;
+using Sgt.Modules.Identity.Contracts;
 using Sgt.Modules.Identity.Domain;
 
 namespace Sgt.Modules.Identity.Infrastructure.Persistence;
@@ -50,6 +51,17 @@ internal static class Mapping
         CorrelationId = change.Audit.CorrelationId,
         OccurredAt = change.OccurredAt,
     };
+
+    public static PermissionChangedV1 ToIntegrationEvent(this PermissionChange change) => new(
+        change.Id,
+        change.Audit.CorrelationId,
+        change.OccurredAt,
+        change.TenantId,
+        change.Audit,
+        change.Target.ToString(),
+        change.TargetId,
+        change.Kind.ToString(),
+        change.Item);
 
     private static PermissionSet ToSet(IEnumerable<string> codes) => PermissionSet.FromCodes(codes.Select(ParseStored));
 

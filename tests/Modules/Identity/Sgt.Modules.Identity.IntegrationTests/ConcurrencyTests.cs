@@ -17,7 +17,7 @@ public sealed class ConcurrencyTests(IdentityDatabaseFixture db) : IClassFixture
         await using (var setup = db.Services.CreateAsyncScope())
         {
             setup.ServiceProvider.GetRequiredService<IRoleRepository>().Add(Role.Create(roleId, "Kasiyer", actor, DateTimeOffset.UtcNow).Value);
-            await setup.ServiceProvider.GetRequiredService<IUnitOfWork>().Commit(default);
+            await setup.ServiceProvider.GetRequiredService<Sgt.Modules.Identity.Application.Ports.IIdentityUnitOfWork>().Commit(default);
         }
 
         await using var first = db.Services.CreateAsyncScope();
@@ -26,10 +26,10 @@ public sealed class ConcurrencyTests(IdentityDatabaseFixture db) : IClassFixture
         var roleInSecond = (await second.ServiceProvider.GetRequiredService<IRoleRepository>().Get(Tenant, roleId, default))!;
 
         roleInFirst.Grant(PermissionCode.Parse("cage.cash:view").Value, actor, DateTimeOffset.UtcNow);
-        await first.ServiceProvider.GetRequiredService<IUnitOfWork>().Commit(default);
+        await first.ServiceProvider.GetRequiredService<Sgt.Modules.Identity.Application.Ports.IIdentityUnitOfWork>().Commit(default);
 
         roleInSecond.Grant(PermissionCode.Parse("slot.floor:view").Value, actor, DateTimeOffset.UtcNow);
         await Assert.ThrowsAsync<ConcurrencyConflictException>(
-            () => second.ServiceProvider.GetRequiredService<IUnitOfWork>().Commit(default));
+            () => second.ServiceProvider.GetRequiredService<Sgt.Modules.Identity.Application.Ports.IIdentityUnitOfWork>().Commit(default));
     }
 }

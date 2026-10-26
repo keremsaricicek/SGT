@@ -12,7 +12,7 @@ public sealed class CreateDefaultRolesHandler(
     AdminActorResolver admins,
     IRoleRepository roles,
     IScreenCatalog screens,
-    IUnitOfWork unitOfWork,
+    IIdentityUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<CreateDefaultRolesCommand>
 {
     public async Task<Result> Handle(CreateDefaultRolesCommand command, CancellationToken ct)
