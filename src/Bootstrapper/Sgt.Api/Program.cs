@@ -26,6 +26,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseWindowsService(o => o.ServiceName = "SGT API"); // Windows sunucuda servis olarak çalışır (ADR-0007)
 
 builder.Services.AddProblemDetails();
+// Web paneli farklı adresten çağırır; izinli adresler yapılandırmadan gelir (Cors:AllowedOrigins).
+var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? [];
+builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
+    .WithOrigins(allowedOrigins)
+    .AllowAnyMethod()
+    .WithHeaders("Authorization", "Content-Type", SgtHeaders.Terminal, SgtHeaders.CorrelationId)));
 builder.Services.AddOpenApi("v1"); // sözleşme: docs/api/openapi-v1.json (ADR-0006)
 // Enum'lar API'de okunabilir metin olarak taşınır (ör. "Passport").
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
@@ -65,6 +71,7 @@ builder.Services.AddSingleton<IPersonalDataProtector>(_ => AesGcmPersonalDataPro
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -1675,6 +1675,16 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReprocessRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -2297,6 +2307,17 @@
           "employeeCode": {
             "type": "string"
           },
+          "reasonCode": {
+            "type": "string"
+          }
+        }
+      },
+      "ReprocessRequest": {
+        "required": [
+          "reasonCode"
+        ],
+        "type": "object",
+        "properties": {
           "reasonCode": {
             "type": "string"
           }

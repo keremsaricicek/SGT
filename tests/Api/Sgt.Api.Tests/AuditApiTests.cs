@@ -63,7 +63,7 @@ public sealed class AuditApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var admin = api.ClientFor(ApiFactory.SuperAdmin);
 
         var list = await admin.GetAsync(new Uri("/api/v1/integration/dead-letters", UriKind.Relative));
-        var reprocess = await admin.PostAsync(new Uri($"/api/v1/integration/dead-letters/identity/{Guid.NewGuid()}/reprocess", UriKind.Relative), null);
+        var reprocess = await admin.PostAsJsonAsync($"/api/v1/integration/dead-letters/identity/{Guid.NewGuid()}/reprocess", new { reasonCode = "OPS" });
 
         Assert.Equal(HttpStatusCode.OK, list.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, reprocess.StatusCode);
