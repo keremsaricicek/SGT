@@ -28,7 +28,7 @@ public static class CasinoPlayerEndpoints
 {
     public static IEndpointRouteBuilder MapCasinoPlayerEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/players").RequireAuthorization(SgtClaims.Policy).WithTags("Players");
+        var api = app.MapGroup("/api/v1/players").RequireAuthorization(SgtClaims.Policy).WithTags("Players");
 
         api.MapGet("/", async (string? q, IRequestContext request, IQueryHandler<SearchPlayersQuery, IReadOnlyList<PlayerSummary>> handler, CancellationToken ct) =>
             Results.Ok(await handler.Handle(new SearchPlayersQuery(request.TenantId, q ?? string.Empty), ct)))
@@ -43,7 +43,7 @@ public static class CasinoPlayerEndpoints
         api.MapPost("/", async (PlayerDetailsRequest body, IRequestContext request, ICommandHandler<RegisterPlayerCommand, PlayerRegistered> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new RegisterPlayerCommand(request.TenantId, body.ToDetails(), audit), ct))
-                .ToHttp(r => Results.Created($"/api/players/{r.PlayerId}", r))))
+                .ToHttp(r => Results.Created($"/api/v1/players/{r.PlayerId}", r))))
             .RequirePermission("player.profile:create");
 
         api.MapPut("/{playerId:guid}", async (Guid playerId, PlayerDetailsRequest body, IRequestContext request, ICommandHandler<UpdatePlayerDetailsCommand> handler, CancellationToken ct) =>
@@ -64,7 +64,7 @@ public static class CasinoPlayerEndpoints
         api.MapPost("/{playerId:guid}/restrictions", async (Guid playerId, AddRestrictionRequest body, IRequestContext request, ICommandHandler<AddPlayerRestrictionCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new AddPlayerRestrictionCommand(request.TenantId, new PlayerId(playerId), body.Type, body.Note, body.Until, audit), ct))
-                .ToHttp(id => Results.Created($"/api/players/{playerId}/restrictions/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/players/{playerId}/restrictions/{id}", new { id }))))
             .RequirePermission("player.restrictions:add");
 
         api.MapPost("/{playerId:guid}/restrictions/{restrictionId:guid}/remove", async (Guid playerId, Guid restrictionId, PlayerReasonRequest body, IRequestContext request, ICommandHandler<RemovePlayerRestrictionCommand> handler, CancellationToken ct) =>

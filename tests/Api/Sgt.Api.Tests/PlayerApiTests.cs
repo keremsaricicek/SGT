@@ -21,18 +21,18 @@ public sealed class PlayerApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var desk = api.ClientFor(ApiFactory.SuperAdmin);
         await GrantPlayerScreens(desk);
 
-        var created = await desk.PostAsJsonAsync("/api/players", NewPlayer("PX-123456"));
+        var created = await desk.PostAsJsonAsync("/api/v1/players", NewPlayer("PX-123456"));
         var player = (await created.Content.ReadFromJsonAsync<PlayerRegistered>())!;
-        await desk.PostAsJsonAsync($"/api/players/{player.PlayerId}/cards", new { cardNumber = "880011", reasonCode = "NEW_CARD" });
+        await desk.PostAsJsonAsync($"/api/v1/players/{player.PlayerId}/cards", new { cardNumber = "880011", reasonCode = "NEW_CARD" });
 
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
         foreach (var term in new[] { player.PlayerNumber, "880011", "px 123456", "Testo" })
         {
-            var found = await desk.GetFromJsonAsync<List<PlayerSummary>>($"/api/players?q={Uri.EscapeDataString(term)}");
+            var found = await desk.GetFromJsonAsync<List<PlayerSummary>>($"/api/v1/players?q={Uri.EscapeDataString(term)}");
             Assert.Contains(found!, p => p.PlayerId == player.PlayerId && p.ActiveCardNumber == "880011");
         }
 
-        var view = await desk.GetFromJsonAsync<PlayerView>($"/api/players/{player.PlayerId}");
+        var view = await desk.GetFromJsonAsync<PlayerView>($"/api/v1/players/{player.PlayerId}");
         Assert.Equal("****3456", view!.MaskedDocumentNumber);
         Assert.Equal("CY", view.Nationality);
     }
@@ -42,7 +42,7 @@ public sealed class PlayerApiTests(ApiFactory api) : IClassFixture<ApiFactory>
     {
         var desk = api.ClientFor(ApiFactory.SuperAdmin);
         await GrantPlayerScreens(desk);
-        await desk.PostAsJsonAsync("/api/players", NewPlayer("SECRET987654"));
+        await desk.PostAsJsonAsync("/api/v1/players", NewPlayer("SECRET987654"));
 
         await using var connection = new NpgsqlConnection(api.ConnectionString);
         await connection.OpenAsync();
@@ -57,12 +57,12 @@ public sealed class PlayerApiTests(ApiFactory api) : IClassFixture<ApiFactory>
     {
         var desk = api.ClientFor(ApiFactory.SuperAdmin);
         await GrantPlayerScreens(desk);
-        var player = (await (await desk.PostAsJsonAsync("/api/players", NewPlayer("DUPDOC1"))).Content.ReadFromJsonAsync<PlayerRegistered>())!;
+        var player = (await (await desk.PostAsJsonAsync("/api/v1/players", NewPlayer("DUPDOC1"))).Content.ReadFromJsonAsync<PlayerRegistered>())!;
 
-        var duplicate = await desk.PostAsJsonAsync("/api/players", NewPlayer("dup-doc-1"));
-        var restriction = await desk.PostAsJsonAsync($"/api/players/{player.PlayerId}/restrictions", new { type = "Banned", note = "kavga", reasonCode = "SECURITY" });
+        var duplicate = await desk.PostAsJsonAsync("/api/v1/players", NewPlayer("dup-doc-1"));
+        var restriction = await desk.PostAsJsonAsync($"/api/v1/players/{player.PlayerId}/restrictions", new { type = "Banned", note = "kavga", reasonCode = "SECURITY" });
         var restrictionId = (await restriction.Content.ReadFromJsonAsync<IdResponse>())!.Id;
-        var selfRemove = await desk.PostAsJsonAsync($"/api/players/{player.PlayerId}/restrictions/{restrictionId}/remove", new { reasonCode = "APPEAL" });
+        var selfRemove = await desk.PostAsJsonAsync($"/api/v1/players/{player.PlayerId}/restrictions/{restrictionId}/remove", new { reasonCode = "APPEAL" });
 
         Assert.Equal(HttpStatusCode.Conflict, duplicate.StatusCode);
         Assert.Equal(HttpStatusCode.Created, restriction.StatusCode);
@@ -75,7 +75,7 @@ public sealed class PlayerApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var staff = UserId.New();
         await api.AddUser(staff);
 
-        var response = await api.ClientFor(staff).GetAsync(new Uri("/api/players?q=abc", UriKind.Relative));
+        var response = await api.ClientFor(staff).GetAsync(new Uri("/api/v1/players?q=abc", UriKind.Relative));
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
@@ -84,7 +84,7 @@ public sealed class PlayerApiTests(ApiFactory api) : IClassFixture<ApiFactory>
     private static async Task GrantPlayerScreens(HttpClient admin)
     {
         var self = ApiFactory.SuperAdmin.Value;
-        var role = await admin.PostAsJsonAsync("/api/identity/roles", new { name = $"Resepsiyon {Guid.NewGuid():N}", reasonCode = "TEST" });
+        var role = await admin.PostAsJsonAsync("/api/v1/identity/roles", new { name = $"Resepsiyon {Guid.NewGuid():N}", reasonCode = "TEST" });
         var roleId = (await role.Content.ReadFromJsonAsync<IdResponse>())!.Id;
         foreach (var p in new[]
         {
@@ -92,10 +92,10 @@ public sealed class PlayerApiTests(ApiFactory api) : IClassFixture<ApiFactory>
             "player.restrictions:view", "player.restrictions:add", "player.restrictions:remove",
         })
         {
-            await admin.PostAsJsonAsync($"/api/identity/roles/{roleId}/permissions", new { permission = p, reasonCode = "TEST" });
+            await admin.PostAsJsonAsync($"/api/v1/identity/roles/{roleId}/permissions", new { permission = p, reasonCode = "TEST" });
         }
 
-        await admin.PostAsJsonAsync($"/api/identity/users/{self}/roles", new { roleId, reasonCode = "TEST" });
+        await admin.PostAsJsonAsync($"/api/v1/identity/users/{self}/roles", new { roleId, reasonCode = "TEST" });
     }
 
     private sealed record IdResponse(Guid Id);

@@ -14,7 +14,7 @@ public static class ConfigurationEndpoints
 {
     public static IEndpointRouteBuilder MapConfigurationEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/configuration").RequireAuthorization(SgtClaims.Policy).WithTags("Configuration");
+        var api = app.MapGroup("/api/v1/configuration").RequireAuthorization(SgtClaims.Policy).WithTags("Configuration");
 
         api.MapGet("/exchange-rates/current", async (IRequestContext request, IQueryHandler<GetCurrentRatesQuery, IReadOnlyList<ExchangeRateDto>> handler, CancellationToken ct) =>
             Results.Ok(await handler.Handle(new GetCurrentRatesQuery(request.TenantId), ct)));

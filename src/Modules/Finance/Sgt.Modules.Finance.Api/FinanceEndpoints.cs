@@ -24,12 +24,12 @@ public static class FinanceEndpoints
 {
     public static IEndpointRouteBuilder MapFinanceEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/cage/shifts").RequireAuthorization(SgtClaims.Policy).WithTags("Cage");
+        var api = app.MapGroup("/api/v1/cage/shifts").RequireAuthorization(SgtClaims.Policy).WithTags("Cage");
 
         api.MapPost("/", async (OpenShiftRequest body, IRequestContext request, ICommandHandler<OpenShiftCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new OpenShiftCommand(request.TenantId, body.Opening, audit), ct))
-                .ToHttp(id => Results.Created($"/api/cage/shifts/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/cage/shifts/{id}", new { id }))))
             .RequirePermission("cage.shift:open");
 
         api.MapGet("/{shiftId:guid}", async (Guid shiftId, IRequestContext request, IQueryHandler<GetShiftSummaryQuery, ShiftSummary?> handler, CancellationToken ct) =>
@@ -70,10 +70,10 @@ public static class FinanceEndpoints
         api.MapPost("/{shiftId:guid}/adjustments", async (Guid shiftId, AdjustmentRequest body, IRequestContext request, ICommandHandler<RequestCageAdjustmentCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new RequestCageAdjustmentCommand(request.TenantId, shiftId, body.TransactionId, body.Note, audit), ct))
-                .ToHttp(id => Results.Created($"/api/cage/adjustments/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/cage/adjustments/{id}", new { id }))))
             .RequirePermission("cage.adjustment:request");
 
-        app.MapPost("/api/cage/adjustments/{requestId:guid}/decision", async (Guid requestId, AdjustmentDecisionRequest body, IRequestContext request, ICommandHandler<DecideCageAdjustmentCommand> handler, CancellationToken ct) =>
+        app.MapPost("/api/v1/cage/adjustments/{requestId:guid}/decision", async (Guid requestId, AdjustmentDecisionRequest body, IRequestContext request, ICommandHandler<DecideCageAdjustmentCommand> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new DecideCageAdjustmentCommand(request.TenantId, requestId, body.Approve, audit), ct)).ToHttp()))
             .RequireAuthorization(SgtClaims.Policy)

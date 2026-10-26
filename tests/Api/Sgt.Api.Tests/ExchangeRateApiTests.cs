@@ -15,9 +15,9 @@ public sealed class ExchangeRateApiTests(ApiFactory api) : IClassFixture<ApiFact
         await api.AddUser(staff);
         var admin = api.ClientFor(ApiFactory.SuperAdmin);
 
-        var set = await admin.PostAsJsonAsync("/api/configuration/exchange-rates", new { currency = "EUR", buy = 36.5m, sell = 37.25m, reasonCode = "DAILY_RATE" });
-        var byStaff = await api.ClientFor(staff).PostAsJsonAsync("/api/configuration/exchange-rates", new { currency = "EUR", buy = 1m, sell = 2m, reasonCode = "X" });
-        var current = await api.ClientFor(staff).GetFromJsonAsync<List<ExchangeRateDto>>("/api/configuration/exchange-rates/current");
+        var set = await admin.PostAsJsonAsync("/api/v1/configuration/exchange-rates", new { currency = "EUR", buy = 36.5m, sell = 37.25m, reasonCode = "DAILY_RATE" });
+        var byStaff = await api.ClientFor(staff).PostAsJsonAsync("/api/v1/configuration/exchange-rates", new { currency = "EUR", buy = 1m, sell = 2m, reasonCode = "X" });
+        var current = await api.ClientFor(staff).GetFromJsonAsync<List<ExchangeRateDto>>("/api/v1/configuration/exchange-rates/current");
 
         Assert.Equal(HttpStatusCode.NoContent, set.StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, byStaff.StatusCode);
@@ -34,7 +34,7 @@ public sealed class ExchangeRateApiTests(ApiFactory api) : IClassFixture<ApiFact
     public async Task Invalid_rate_is_rejected()
     {
         var response = await api.ClientFor(ApiFactory.SuperAdmin)
-            .PostAsJsonAsync("/api/configuration/exchange-rates", new { currency = "EUR", buy = 40m, sell = 39m, reasonCode = "DAILY_RATE" });
+            .PostAsJsonAsync("/api/v1/configuration/exchange-rates", new { currency = "EUR", buy = 40m, sell = 39m, reasonCode = "DAILY_RATE" });
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Contains("Configuration.BuyAboveSell", await response.Content.ReadAsStringAsync(), StringComparison.Ordinal);

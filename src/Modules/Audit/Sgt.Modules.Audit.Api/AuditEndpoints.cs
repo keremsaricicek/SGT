@@ -11,7 +11,7 @@ public static class AuditEndpoints
 {
     public static IEndpointRouteBuilder MapAuditEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGroup("/api/audit").RequireAuthorization(SgtClaims.Policy).WithTags("Audit")
+        app.MapGroup("/api/v1/audit").RequireAuthorization(SgtClaims.Policy).WithTags("Audit")
             .MapGet("/entries", async (
                 DateTimeOffset? from,
                 DateTimeOffset? to,

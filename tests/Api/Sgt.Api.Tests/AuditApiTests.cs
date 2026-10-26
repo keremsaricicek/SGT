@@ -15,7 +15,7 @@ public sealed class AuditApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var admin = api.ClientFor(ApiFactory.SuperAdmin);
         admin.DefaultRequestHeaders.Add("X-Correlation-Id", correlationId.ToString());
 
-        var created = await admin.PostAsJsonAsync("/api/identity/roles", new { name = "Denetim deneme", reasonCode = "AUDIT_TEST" });
+        var created = await admin.PostAsJsonAsync("/api/v1/identity/roles", new { name = "Denetim deneme", reasonCode = "AUDIT_TEST" });
         Assert.Equal(HttpStatusCode.Created, created.StatusCode);
 
         var entries = await WaitForEntries(admin, correlationId);
@@ -52,7 +52,7 @@ public sealed class AuditApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var staff = UserId.New();
         await api.AddUser(staff);
 
-        var response = await api.ClientFor(staff).GetAsync(new Uri("/api/audit/entries", UriKind.Relative));
+        var response = await api.ClientFor(staff).GetAsync(new Uri("/api/v1/audit/entries", UriKind.Relative));
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
     }
@@ -62,8 +62,8 @@ public sealed class AuditApiTests(ApiFactory api) : IClassFixture<ApiFactory>
     {
         var admin = api.ClientFor(ApiFactory.SuperAdmin);
 
-        var list = await admin.GetAsync(new Uri("/api/integration/dead-letters", UriKind.Relative));
-        var reprocess = await admin.PostAsync(new Uri($"/api/integration/dead-letters/identity/{Guid.NewGuid()}/reprocess", UriKind.Relative), null);
+        var list = await admin.GetAsync(new Uri("/api/v1/integration/dead-letters", UriKind.Relative));
+        var reprocess = await admin.PostAsync(new Uri($"/api/v1/integration/dead-letters/identity/{Guid.NewGuid()}/reprocess", UriKind.Relative), null);
 
         Assert.Equal(HttpStatusCode.OK, list.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, reprocess.StatusCode);
@@ -74,7 +74,7 @@ public sealed class AuditApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var deadline = DateTime.UtcNow.AddSeconds(15);
         while (true)
         {
-            var entries = await client.GetFromJsonAsync<List<AuditEntryView>>($"/api/audit/entries?correlationId={correlationId}");
+            var entries = await client.GetFromJsonAsync<List<AuditEntryView>>($"/api/v1/audit/entries?correlationId={correlationId}");
             if (entries is { Count: > 0 } || DateTime.UtcNow > deadline)
             {
                 return entries ?? [];

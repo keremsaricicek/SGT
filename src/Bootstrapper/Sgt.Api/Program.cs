@@ -25,6 +25,7 @@ using Sgt.Modules.Identity.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
+builder.Services.AddOpenApi("v1"); // sözleşme: docs/api/openapi-v1.json (ADR-0006)
 // Enum'lar API'de okunabilir metin olarak taşınır (ör. "Passport").
 builder.Services.ConfigureHttpJsonOptions(o => o.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddExceptionHandler<ConcurrencyConflictHandler>();
@@ -65,6 +66,11 @@ var app = builder.Build();
 app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
+
+if (!app.Environment.IsProduction())
+{
+    app.MapOpenApi(); // /openapi/v1.json
+}
 
 app.MapGet("/health", (IClock clock) => Results.Ok(new { Status = "ok", ServerTimeUtc = clock.UtcNow }));
 app.MapIdentityEndpoints();

@@ -34,7 +34,7 @@ public static class GamingFloorEndpoints
 {
     public static IEndpointRouteBuilder MapGamingFloorEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/floor").RequireAuthorization(SgtClaims.Policy).WithTags("GamingFloor");
+        var api = app.MapGroup("/api/v1/floor").RequireAuthorization(SgtClaims.Policy).WithTags("GamingFloor");
 
         api.MapGet("/tables", async (IRequestContext request, IQueryHandler<ListTablesQuery, IReadOnlyList<TableView>> handler, CancellationToken ct) =>
             Results.Ok(await handler.Handle(new ListTablesQuery(request.TenantId), ct)))
@@ -43,7 +43,7 @@ public static class GamingFloorEndpoints
         api.MapPost("/tables", async (DefineTableRequest body, IRequestContext request, ICommandHandler<DefineTableCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new DefineTableCommand(request.TenantId, body.Code, body.GameType, body.Currency, body.MinBet, body.MaxBet, body.HouseEdgePercent, body.HandsPerHour, audit), ct))
-                .ToHttp(id => Results.Created($"/api/floor/tables/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/floor/tables/{id}", new { id }))))
             .RequirePermission("live.tables:define");
 
         api.MapPost("/tables/{tableId:guid}/open", async (Guid tableId, FloorReasonRequest body, IRequestContext request, OpenTableSessionHandler handler, CancellationToken ct) =>
@@ -59,7 +59,7 @@ public static class GamingFloorEndpoints
         api.MapPost("/ratings", async (StartRatingRequest body, IRequestContext request, ICommandHandler<StartRatingCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new StartRatingCommand(request.TenantId, body.TableId, body.PlayerId, audit), ct))
-                .ToHttp(id => Results.Created($"/api/floor/ratings/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/floor/ratings/{id}", new { id }))))
             .RequirePermission("live.rating:start");
 
         api.MapPost("/ratings/{ratingId:guid}/finish", async (Guid ratingId, RatingValuesRequest body, IRequestContext request, ICommandHandler<FinishRatingCommand> handler, CancellationToken ct) =>
@@ -89,7 +89,7 @@ public static class GamingFloorEndpoints
         slots.MapPost("/", async (DefineSlotMachineRequest body, IRequestContext request, ICommandHandler<DefineSlotMachineCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new DefineSlotMachineCommand(request.TenantId, body.AssetNumber, body.Area, body.Manufacturer, body.Model, body.Denomination, body.Currency, audit), ct))
-                .ToHttp(id => Results.Created($"/api/floor/slots/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/floor/slots/{id}", new { id }))))
             .RequirePermission("slot.machines_setup:define");
 
         slots.MapPost("/readings", async (MeterReadingRequest body, IRequestContext request, ICommandHandler<EnterMeterReadingCommand> handler, CancellationToken ct) =>

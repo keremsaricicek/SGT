@@ -21,7 +21,7 @@ public static class LoyaltyEndpoints
 {
     public static IEndpointRouteBuilder MapLoyaltyEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/loyalty").RequireAuthorization(SgtClaims.Policy).WithTags("Loyalty");
+        var api = app.MapGroup("/api/v1/loyalty").RequireAuthorization(SgtClaims.Policy).WithTags("Loyalty");
 
         api.MapGet("/players/{playerId:guid}", async (Guid playerId, IRequestContext request, IQueryHandler<GetLoyaltySummaryQuery, LoyaltySummary> handler, CancellationToken ct) =>
             Results.Ok(await handler.Handle(new GetLoyaltySummaryQuery(request.TenantId, playerId), ct)))
@@ -30,7 +30,7 @@ public static class LoyaltyEndpoints
         api.MapPost("/adjustments", async (PointsRequest body, IRequestContext request, ICommandHandler<RequestPointsAdjustmentCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new RequestPointsAdjustmentCommand(request.TenantId, body.PlayerId, body.Points, body.Text, audit), ct))
-                .ToHttp(id => Results.Created($"/api/loyalty/adjustments/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/loyalty/adjustments/{id}", new { id }))))
             .RequirePermission("loyalty.points:adjust");
 
         api.MapPost("/adjustments/{requestId:guid}/decision", async (Guid requestId, DecisionRequest body, IRequestContext request, ICommandHandler<DecidePointsAdjustmentCommand> handler, CancellationToken ct) =>
@@ -41,7 +41,7 @@ public static class LoyaltyEndpoints
         api.MapPost("/comps", async (PointsRequest body, IRequestContext request, ICommandHandler<RequestCompCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new RequestCompCommand(request.TenantId, body.PlayerId, body.Points, body.Text, audit), ct))
-                .ToHttp(id => Results.Created($"/api/loyalty/comps/{id}", new { id }))))
+                .ToHttp(id => Results.Created($"/api/v1/loyalty/comps/{id}", new { id }))))
             .RequirePermission("loyalty.comp:request");
 
         api.MapPost("/comps/{requestId:guid}/decision", async (Guid requestId, DecisionRequest body, IRequestContext request, ICommandHandler<DecideCompCommand> handler, CancellationToken ct) =>

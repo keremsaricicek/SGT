@@ -12,7 +12,7 @@ public static class OutboxAdminEndpoints
 
     public static IEndpointRouteBuilder MapOutboxAdminEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/integration").RequireAuthorization(SgtClaims.Policy).WithTags("Integration");
+        var api = app.MapGroup("/api/v1/integration").RequireAuthorization(SgtClaims.Policy).WithTags("Integration");
 
         api.MapGet("/dead-letters", async (int? take, IEnumerable<IOutboxStore> stores, CancellationToken ct) =>
         {

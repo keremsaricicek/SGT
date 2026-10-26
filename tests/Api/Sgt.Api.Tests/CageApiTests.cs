@@ -14,14 +14,14 @@ public sealed class CageApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var cashier = api.ClientFor(ApiFactory.SuperAdmin);
         await Grant(cashier,
             "player.profile:create", "cage.shift:open", "cage.shift:close", "cage.summary:view", "cage.chips:sell", "cage.chips:redeem", "cage.exchange:exchange");
-        var player = (await (await cashier.PostAsJsonAsync("/api/players", new
+        var player = (await (await cashier.PostAsJsonAsync("/api/v1/players", new
         {
             firstName = "Kasa", lastName = "Deneme", birthDate = "1985-01-01", nationality = "TR", documentType = "NationalId",
             documentNumber = $"K{Guid.NewGuid():N}"[..12], reasonCode = "NEW_PLAYER",
         })).Content.ReadFromJsonAsync<PlayerRegistered>())!;
-        await cashier.PostAsJsonAsync("/api/configuration/exchange-rates", new { currency = "EUR", buy = 36m, sell = 37m, reasonCode = "DAILY_RATE" });
+        await cashier.PostAsJsonAsync("/api/v1/configuration/exchange-rates", new { currency = "EUR", buy = 36m, sell = 37m, reasonCode = "DAILY_RATE" });
 
-        var opened = await cashier.PostAsJsonAsync("/api/cage/shifts", new
+        var opened = await cashier.PostAsJsonAsync("/api/v1/cage/shifts", new
         {
             opening = new[]
             {
@@ -34,12 +34,12 @@ public sealed class CageApiTests(ApiFactory api) : IClassFixture<ApiFactory>
 
         var key = Guid.NewGuid();
         var sale = new { transactionId = key, playerId = player.PlayerId, amount = 1_500m, currency = "TRY", reasonCode = "CHIP_SALE" };
-        var first = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/chip-sales", sale);
-        var repeat = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/chip-sales", sale);
-        var exchange = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/exchanges/foreign-to-base",
+        var first = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/chip-sales", sale);
+        var repeat = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/chip-sales", sale);
+        var exchange = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/exchanges/foreign-to-base",
             new { transactionId = Guid.NewGuid(), playerId = player.PlayerId, amount = 100m, currency = "EUR", reasonCode = "FX" });
 
-        var summary = await cashier.GetFromJsonAsync<ShiftSummary>($"/api/cage/shifts/{shiftId}");
+        var summary = await cashier.GetFromJsonAsync<ShiftSummary>($"/api/v1/cage/shifts/{shiftId}");
 
         Assert.Equal(HttpStatusCode.Created, opened.StatusCode);
         Assert.Equal(HttpStatusCode.OK, first.StatusCode);
@@ -56,9 +56,9 @@ public sealed class CageApiTests(ApiFactory api) : IClassFixture<ApiFactory>
             new { instrument = "Chips", currency = "TRY", amount = 18_500m },
             new { instrument = "Cash", currency = "EUR", amount = 100m },
         };
-        var withoutNote = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/close", new { counted, note = (string?)null, reasonCode = "SHIFT_END" });
-        var withNote = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/close", new { counted, note = "Sayımda 100 TL fazla", reasonCode = "SHIFT_END" });
-        var afterClose = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/chip-sales",
+        var withoutNote = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/close", new { counted, note = (string?)null, reasonCode = "SHIFT_END" });
+        var withNote = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/close", new { counted, note = "Sayımda 100 TL fazla", reasonCode = "SHIFT_END" });
+        var afterClose = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/chip-sales",
             new { transactionId = Guid.NewGuid(), playerId = player.PlayerId, amount = 10m, currency = "TRY", reasonCode = "CHIP_SALE" });
 
         Assert.Equal(HttpStatusCode.BadRequest, withoutNote.StatusCode);
@@ -109,19 +109,19 @@ public sealed class CageApiTests(ApiFactory api) : IClassFixture<ApiFactory>
 
     private static async Task Grant(HttpClient admin, params string[] permissions)
     {
-        var role = await admin.PostAsJsonAsync("/api/identity/roles", new { name = $"Kasa {Guid.NewGuid():N}", reasonCode = "TEST" });
+        var role = await admin.PostAsJsonAsync("/api/v1/identity/roles", new { name = $"Kasa {Guid.NewGuid():N}", reasonCode = "TEST" });
         var roleId = (await role.Content.ReadFromJsonAsync<IdResponse>())!.Id;
         foreach (var screen in permissions.Select(p => p.Split(':')[0]).Distinct())
         {
-            await admin.PostAsJsonAsync($"/api/identity/roles/{roleId}/permissions", new { permission = $"{screen}:view", reasonCode = "TEST" });
+            await admin.PostAsJsonAsync($"/api/v1/identity/roles/{roleId}/permissions", new { permission = $"{screen}:view", reasonCode = "TEST" });
         }
 
         foreach (var p in permissions)
         {
-            await admin.PostAsJsonAsync($"/api/identity/roles/{roleId}/permissions", new { permission = p, reasonCode = "TEST" });
+            await admin.PostAsJsonAsync($"/api/v1/identity/roles/{roleId}/permissions", new { permission = p, reasonCode = "TEST" });
         }
 
-        await admin.PostAsJsonAsync($"/api/identity/users/{ApiFactory.SuperAdmin.Value}/roles", new { roleId, reasonCode = "TEST" });
+        await admin.PostAsJsonAsync($"/api/v1/identity/users/{ApiFactory.SuperAdmin.Value}/roles", new { roleId, reasonCode = "TEST" });
     }
 
     private sealed record IdResponse(Guid Id);
@@ -134,29 +134,29 @@ public sealed class CageAdjustmentApiTests(ApiFactory api) : IClassFixture<ApiFa
     {
         var cashier = api.ClientFor(ApiFactory.SuperAdmin);
         await TestRoles.Grant(cashier, "player.profile:create", "cage.shift:open", "cage.summary:view", "cage.chips:sell", "cage.adjustment:request", "cage.adjustment:approve");
-        var player = (await (await cashier.PostAsJsonAsync("/api/players", new
+        var player = (await (await cashier.PostAsJsonAsync("/api/v1/players", new
         {
             firstName = "Düzelt", lastName = "Me", birthDate = "1985-01-01", nationality = "TR", documentType = "NationalId",
             documentNumber = $"D{Guid.NewGuid():N}"[..12], reasonCode = "NEW_PLAYER",
         })).Content.ReadFromJsonAsync<Sgt.Modules.CasinoPlayer.Application.Profile.PlayerRegistered>())!;
-        var shiftId = (await (await cashier.PostAsJsonAsync("/api/cage/shifts", new
+        var shiftId = (await (await cashier.PostAsJsonAsync("/api/v1/cage/shifts", new
         {
             opening = new[] { new { instrument = "Cash", currency = "TRY", amount = 1_000m }, new { instrument = "Chips", currency = "TRY", amount = 5_000m } },
             reasonCode = "SHIFT_START",
         })).Content.ReadFromJsonAsync<IdResponse>())!.Id;
         var transactionId = Guid.NewGuid();
-        await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/chip-sales",
+        await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/chip-sales",
             new { transactionId, playerId = player.PlayerId, amount = 700m, currency = "TRY", reasonCode = "CHIP_SALE" });
 
-        var request = await cashier.PostAsJsonAsync($"/api/cage/shifts/{shiftId}/adjustments", new { transactionId, note = "Yanlış tutar girildi", reasonCode = "CORRECTION" });
+        var request = await cashier.PostAsJsonAsync($"/api/v1/cage/shifts/{shiftId}/adjustments", new { transactionId, note = "Yanlış tutar girildi", reasonCode = "CORRECTION" });
         var requestId = (await request.Content.ReadFromJsonAsync<IdResponse>())!.Id;
-        var self = await cashier.PostAsJsonAsync($"/api/cage/adjustments/{requestId}/decision", new { approve = true, reasonCode = "CORRECTION" });
+        var self = await cashier.PostAsJsonAsync($"/api/v1/cage/adjustments/{requestId}/decision", new { approve = true, reasonCode = "CORRECTION" });
 
         var supervisor = Sgt.BuildingBlocks.UserId.New();
         await api.AddUser(supervisor);
         await TestRoles.GrantTo(cashier, supervisor, "cage.adjustment:approve");
-        var approved = await api.ClientFor(supervisor).PostAsJsonAsync($"/api/cage/adjustments/{requestId}/decision", new { approve = true, reasonCode = "CORRECTION" });
-        var summary = await cashier.GetFromJsonAsync<ShiftSummary>($"/api/cage/shifts/{shiftId}");
+        var approved = await api.ClientFor(supervisor).PostAsJsonAsync($"/api/v1/cage/adjustments/{requestId}/decision", new { approve = true, reasonCode = "CORRECTION" });
+        var summary = await cashier.GetFromJsonAsync<ShiftSummary>($"/api/v1/cage/shifts/{shiftId}");
 
         Assert.Equal(HttpStatusCode.Created, request.StatusCode);
         Assert.Equal(HttpStatusCode.Forbidden, self.StatusCode);

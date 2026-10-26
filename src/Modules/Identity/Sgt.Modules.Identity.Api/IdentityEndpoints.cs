@@ -43,7 +43,7 @@ public static class IdentityEndpoints
 
     public static IEndpointRouteBuilder MapIdentityEndpoints(this IEndpointRouteBuilder app)
     {
-        var api = app.MapGroup("/api/identity").RequireAuthorization(SgtClaims.Policy).WithTags("Identity");
+        var api = app.MapGroup("/api/v1/identity").RequireAuthorization(SgtClaims.Policy).WithTags("Identity");
 
         api.MapGet("/me/menu", async (IRequestContext request, IQueryHandler<GetMyMenuQuery, IReadOnlyList<MenuItem>> handler, CancellationToken ct) =>
             Results.Ok(await handler.Handle(new GetMyMenuQuery(request.TenantId, request.UserId), ct)));
@@ -69,7 +69,7 @@ public static class IdentityEndpoints
         api.MapPost("/roles", async (CreateRoleRequest body, IRequestContext request, ICommandHandler<CreateRoleCommand, RoleId> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new CreateRoleCommand(request.TenantId, body.Name, audit), ct))
-                .ToHttp(id => Results.Created($"/api/identity/roles/{id.Value}", new { id = id.Value }))));
+                .ToHttp(id => Results.Created($"/api/v1/identity/roles/{id.Value}", new { id = id.Value }))));
 
         api.MapPost("/roles/defaults", async (ReasonRequest body, IRequestContext request, ICommandHandler<CreateDefaultRolesCommand> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
