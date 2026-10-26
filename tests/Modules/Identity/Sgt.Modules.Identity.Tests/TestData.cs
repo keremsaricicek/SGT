@@ -1,4 +1,5 @@
 using Sgt.BuildingBlocks;
+using Sgt.Modules.Identity.Application.Ports;
 using Sgt.Modules.Identity.Domain;
 
 namespace Sgt.Modules.Identity.Tests;
@@ -14,6 +15,15 @@ internal static class TestData
     public static readonly PermissionCode CageOperate = Code("cage.adjustment:operate");
     public static readonly PermissionCode CageApprove = Code("cage.adjustment:approve");
     public static readonly PermissionCode SlotView = Code("slot.floor:view");
+
+    public static readonly FixedScreens Screens = new(
+        new ScreenDefinition("admin.roles", Product.Core, ["operate"]),
+        new ScreenDefinition("cage.adjustment", Product.SPlus, ["operate", "approve"]),
+        new ScreenDefinition("slot.floor", Product.SPlus, []),
+        new ScreenDefinition("slot.jackpot", Product.SPlus, ["record", "approve"]),
+        new ScreenDefinition("live.rating", Product.SPlus, ["start"]),
+        new ScreenDefinition("player.locator", Product.SPlus, []),
+        new ScreenDefinition("hotel.checkin", Product.SVista, ["operate"]));
 
     public static PermissionCode Code(string value) => PermissionCode.Parse(value).Value;
 

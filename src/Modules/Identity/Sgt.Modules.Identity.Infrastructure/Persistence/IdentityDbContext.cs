@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Sgt.Modules.Identity.Infrastructure.Licensing;
 
 namespace Sgt.Modules.Identity.Infrastructure.Persistence;
 
@@ -12,6 +13,8 @@ public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> option
     internal DbSet<UserAccessRow> Users => Set<UserAccessRow>();
 
     internal DbSet<PermissionChangeRow> PermissionChanges => Set<PermissionChangeRow>();
+
+    internal DbSet<TenantLicenseRow> TenantLicenses => Set<TenantLicenseRow>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -41,6 +44,13 @@ public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> option
             e.Property(c => c.Item).HasMaxLength(200);
             e.Property(c => c.Terminal).HasMaxLength(100);
             e.Property(c => c.ReasonCode).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<TenantLicenseRow>(e =>
+        {
+            e.ToTable("tenant_licenses");
+            e.HasKey(l => new { l.TenantId, l.Product });
+            e.Property(l => l.Product).HasMaxLength(20);
         });
     }
 }

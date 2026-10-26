@@ -14,6 +14,9 @@ internal sealed class InMemoryRoles : IRoleRepository
     public Task<IReadOnlyList<Role>> GetMany(TenantId tenantId, IEnumerable<RoleId> roleIds, CancellationToken ct) =>
         Task.FromResult<IReadOnlyList<Role>>(Items.Where(r => r.TenantId == tenantId && roleIds.Contains(r.Id)).ToList());
 
+    public Task<IReadOnlyList<Role>> List(TenantId tenantId, CancellationToken ct) =>
+        Task.FromResult<IReadOnlyList<Role>>(Items.Where(r => r.TenantId == tenantId).ToList());
+
     public void Add(Role role) => Items.Add(role);
 }
 

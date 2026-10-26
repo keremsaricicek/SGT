@@ -11,6 +11,7 @@ public sealed record DenyUserPermissionCommand(TenantId TenantId, UserId UserId,
 public sealed class DenyUserPermissionHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
+    IScreenCatalog screens,
     IUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<DenyUserPermissionCommand>
 {
@@ -27,6 +28,11 @@ public sealed class DenyUserPermissionHandler(
         if (code.IsFailure)
         {
             return code;
+        }
+
+        if (!screens.Defines(code.Value))
+        {
+            return IdentityErrors.UnknownPermission;
         }
 
         var user = await users.Get(command.TenantId, command.UserId, ct);

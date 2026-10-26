@@ -4,6 +4,7 @@
     <Project Path="src/Bootstrapper/Sgt.Api/Sgt.Api.csproj" />
   </Folder>
   <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks.Web/Sgt.BuildingBlocks.Web.csproj" />
     <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks/Sgt.BuildingBlocks.csproj" />
   </Folder>
   <Folder Name="/src/Modules/" />
@@ -15,6 +16,9 @@
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Infrastructure/Sgt.Modules.Identity.Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/" />
+  <Folder Name="/tests/Api/">
+    <Project Path="tests/Api/Sgt.Api.Tests/Sgt.Api.Tests.csproj" />
+  </Folder>
   <Folder Name="/tests/Architecture/">
     <Project Path="tests/Architecture/Sgt.Tests.Architecture.csproj" />
   </Folder>

@@ -3,6 +3,11 @@
   <ItemGroup>
     <ProjectReference Include="..\Sgt.Modules.Identity.Application\Sgt.Modules.Identity.Application.csproj" />
     <ProjectReference Include="..\Sgt.Modules.Identity.Contracts\Sgt.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Sgt.BuildingBlocks.Web\Sgt.BuildingBlocks.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <PropertyGroup>

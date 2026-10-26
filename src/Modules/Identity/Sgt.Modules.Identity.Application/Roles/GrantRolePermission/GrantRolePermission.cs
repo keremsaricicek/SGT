@@ -10,6 +10,7 @@ public sealed record GrantRolePermissionCommand(TenantId TenantId, RoleId RoleId
 public sealed class GrantRolePermissionHandler(
     AdminActorResolver admins,
     IRoleRepository roles,
+    IScreenCatalog screens,
     IUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<GrantRolePermissionCommand>
 {
@@ -26,6 +27,11 @@ public sealed class GrantRolePermissionHandler(
         if (code.IsFailure)
         {
             return code;
+        }
+
+        if (!screens.Defines(code.Value))
+        {
+            return IdentityErrors.UnknownPermission;
         }
 
         var role = await roles.Get(command.TenantId, command.RoleId, ct);

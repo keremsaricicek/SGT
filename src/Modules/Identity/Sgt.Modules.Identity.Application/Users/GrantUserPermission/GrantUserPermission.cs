@@ -11,6 +11,7 @@ public sealed record GrantUserPermissionCommand(TenantId TenantId, UserId UserId
 public sealed class GrantUserPermissionHandler(
     AdminActorResolver admins,
     IUserAccessRepository users,
+    IScreenCatalog screens,
     IUnitOfWork unitOfWork,
     IClock clock) : ICommandHandler<GrantUserPermissionCommand>
 {
@@ -27,6 +28,11 @@ public sealed class GrantUserPermissionHandler(
         if (code.IsFailure)
         {
             return code;
+        }
+
+        if (!screens.Defines(code.Value))
+        {
+            return IdentityErrors.UnknownPermission;
         }
 
         var user = await users.Get(command.TenantId, command.UserId, ct);

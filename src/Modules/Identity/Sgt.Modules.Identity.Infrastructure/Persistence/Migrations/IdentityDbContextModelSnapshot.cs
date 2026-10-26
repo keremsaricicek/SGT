@@ -24,6 +24,23 @@ namespace Sgt.Modules.Identity.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Sgt.Modules.Identity.Infrastructure.Licensing.TenantLicenseRow", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("Product")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("product");
+
+                    b.HasKey("TenantId", "Product")
+                        .HasName("pk_tenant_licenses");
+
+                    b.ToTable("tenant_licenses", "identity");
+                });
+
             modelBuilder.Entity("Sgt.Modules.Identity.Infrastructure.Persistence.PermissionChangeRow", b =>
                 {
                     b.Property<Guid>("Id")

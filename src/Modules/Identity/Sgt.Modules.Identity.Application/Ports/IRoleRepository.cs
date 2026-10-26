@@ -9,5 +9,7 @@ public interface IRoleRepository
 
     Task<IReadOnlyList<Role>> GetMany(TenantId tenantId, IEnumerable<RoleId> roleIds, CancellationToken ct);
 
+    Task<IReadOnlyList<Role>> List(TenantId tenantId, CancellationToken ct);
+
     void Add(Role role);
 }

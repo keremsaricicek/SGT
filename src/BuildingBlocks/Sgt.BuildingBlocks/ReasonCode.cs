@@ -10,6 +10,12 @@ public sealed record ReasonCode
 
     public string Value { get; }
 
+    public static readonly Error Required = new("Common.ReasonCodeRequired", "Gerekçe kodu zorunludur.");
+
+    /// <summary>Kullanıcı girdisinden oluşturur; boşsa hata döner.</summary>
+    public static Result<ReasonCode> Create(string? value) =>
+        string.IsNullOrWhiteSpace(value) || value.Trim().Length > 50 ? Required : new ReasonCode(value.Trim().ToUpperInvariant());
+
     public static ReasonCode Of(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

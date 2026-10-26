@@ -4,7 +4,9 @@ using Sgt.BuildingBlocks;
 using Sgt.Modules.Identity.Application.Access;
 using Sgt.Modules.Identity.Application.Administration;
 using Sgt.Modules.Identity.Application.Menu;
+using Sgt.Modules.Identity.Application.Panel;
 using Sgt.Modules.Identity.Application.Ports;
+using Sgt.Modules.Identity.Application.Roles.CreateDefaultRoles;
 using Sgt.Modules.Identity.Application.Roles.CreateRole;
 using Sgt.Modules.Identity.Application.Roles.GrantRolePermission;
 using Sgt.Modules.Identity.Application.Roles.RevokeRolePermission;
@@ -14,9 +16,10 @@ using Sgt.Modules.Identity.Application.Users.GrantUserPermission;
 using Sgt.Modules.Identity.Application.Users.RevokeUserPermission;
 using Sgt.Modules.Identity.Application.Users.UnassignRole;
 using Sgt.Modules.Identity.Application.Users.UndenyUserPermission;
-using Sgt.Modules.Identity.Contracts;
 using Sgt.Modules.Identity.Domain;
+using Sgt.Modules.Identity.Infrastructure.Licensing;
 using Sgt.Modules.Identity.Infrastructure.Persistence;
+using Sgt.Modules.Identity.Infrastructure.Screens;
 
 namespace Sgt.Modules.Identity.Infrastructure;
 
@@ -34,10 +37,13 @@ public static class IdentityInfrastructureModule
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IUserAccessRepository, UserAccessRepository>();
         services.AddScoped<IUnitOfWork, IdentityUnitOfWork>();
+        services.AddScoped<IPermissionChangeReader, PermissionChangeReader>();
+        services.AddScoped<ILicensedProducts, LicensedProducts>();
+        services.AddSingleton<IScreenCatalog, ScreenCatalog>();
 
         services.AddScoped<AdminActorResolver>();
         services.AddScoped<EffectiveAccess>();
-        services.AddScoped<IPermissionQuery, PermissionQuery>();
+        services.AddScoped<IPermissionChecker, PermissionChecker>();
 
         services.AddScoped<ICommandHandler<CreateRoleCommand, RoleId>, CreateRoleHandler>();
         services.AddScoped<ICommandHandler<GrantRolePermissionCommand>, GrantRolePermissionHandler>();
@@ -48,7 +54,12 @@ public static class IdentityInfrastructureModule
         services.AddScoped<ICommandHandler<RevokeUserPermissionCommand>, RevokeUserPermissionHandler>();
         services.AddScoped<ICommandHandler<DenyUserPermissionCommand>, DenyUserPermissionHandler>();
         services.AddScoped<ICommandHandler<UndenyUserPermissionCommand>, UndenyUserPermissionHandler>();
+        services.AddScoped<ICommandHandler<CreateDefaultRolesCommand>, CreateDefaultRolesHandler>();
         services.AddScoped<IQueryHandler<GetMyMenuQuery, IReadOnlyList<MenuItem>>, GetMyMenuHandler>();
+        services.AddScoped<IQueryHandler<GetScreensQuery, IReadOnlyList<ScreenView>>, GetScreensHandler>();
+        services.AddScoped<IQueryHandler<ListRolesQuery, IReadOnlyList<RoleView>>, ListRolesHandler>();
+        services.AddScoped<IQueryHandler<GetUserAccessQuery, UserAccessView?>, GetUserAccessHandler>();
+        services.AddScoped<IQueryHandler<GetPermissionChangesQuery, IReadOnlyList<PermissionChangeView>>, GetPermissionChangesHandler>();
 
         return services;
     }

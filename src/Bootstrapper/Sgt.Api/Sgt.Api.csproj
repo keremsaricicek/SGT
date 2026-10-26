@@ -2,6 +2,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Sgt.BuildingBlocks\Sgt.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\Sgt.BuildingBlocks.Web\Sgt.BuildingBlocks.Web.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Api\Sgt.Modules.Identity.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Infrastructure\Sgt.Modules.Identity.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
   </ItemGroup>
 
   <PropertyGroup>

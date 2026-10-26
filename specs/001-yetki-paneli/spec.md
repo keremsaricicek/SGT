@@ -33,6 +33,9 @@ Her değişiklik silinemez şekilde kayda geçer.
 - KK9: Varsayılan rol şablonları (slot müdürü, pit boss, casino müdürü, otel genel müdürü, otel personeli)
   hazır gelir ve değiştirilebilir.
 - KK10: Yetki kontrolü sunucuda yapılır; istemci menüsü yalnızca kolaylıktır.
+- KK11: Süper admin, yönetim (Core) ekranlarının tüm yetkilerine rol atanmadan sahiptir; diğer ekranlar için
+  normal kurallar geçerlidir.
+- KK12: Her değişiklik isteği bir gerekçe kodu taşır; gerekçesiz istek reddedilir.
 
 ## Kapsam dışı
 - Giriş/şifre/MFA (ayrı spec; OIDC sağlayıcı ADR'si bekleniyor).

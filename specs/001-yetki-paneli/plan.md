@@ -4,7 +4,7 @@
 | İlke | Uyum |
 |---|---|
 | I SOLID/OOP | Kurallar `Role` ve `UserAccess` aggregate'lerinde; `PermissionCode` value object; handler yalnızca akış |
-| II Modülerlik | `Sgt.Modules.Identity.*`; diğer modüller yalnızca `Identity.Contracts` (`IPermissionQuery`) kullanır |
+| II Modülerlik | `Sgt.Modules.Identity.*`; diğer modüller yetkiyi `IPermissionChecker` ile sorar |
 | III Değer hareketi | Para yok. Değişiklik kayıtları append-only (KK6) |
 | IV API-only/tenant | Her aggregate `TenantId` taşır; sorgular tenant kapsamlı |
 | V Test-önce | Domain unit testleri önce; handler testleri sahte repository ile |
@@ -17,7 +17,7 @@
   `PermissionChange` (değişiklik kaydı), `ActorContext` (aktör, süper admin mi, gerekçe, correlation id).
 - **Application:** `GrantRolePermission`, `RevokeRolePermission`, `GrantUserPermission`, `RevokeUserPermission`,
   `AssignRole`, `GetMyMenu`. Portlar: `IRoleRepository`, `IUserAccessRepository`, `IScreenCatalog`, `ILicensedProducts`.
-- **Contracts:** `IPermissionQuery.HasPermission(tenant, user, code)` — diğer modüllerin sunucu tarafı kontrolü (KK10).
+- **Yetki kontrolü:** BuildingBlocks `IPermissionChecker` (kesişen altyapı, IClock gibi); uygulaması `PermissionChecker` (KK10).
 - **Infrastructure / Api:** veritabanı ADR'sinden sonra (görev T6–T7).
 
 ## Complexity Tracking

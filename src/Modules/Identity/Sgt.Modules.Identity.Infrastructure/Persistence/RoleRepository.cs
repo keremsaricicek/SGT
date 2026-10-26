@@ -20,6 +20,12 @@ internal sealed class RoleRepository(IdentityDbContext db, TrackedAggregates tra
         return rows.Select(r => Track(r.ToDomain())).ToList();
     }
 
+    public async Task<IReadOnlyList<Role>> List(TenantId tenantId, CancellationToken ct)
+    {
+        var rows = await db.Roles.Where(r => r.TenantId == tenantId.Value).ToListAsync(ct);
+        return rows.Select(r => Track(r.ToDomain())).ToList();
+    }
+
     public void Add(Role role) => Track(role);
 
     private Role Track(Role role)

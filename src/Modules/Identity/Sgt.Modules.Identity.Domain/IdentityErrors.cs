@@ -14,17 +14,20 @@ public static class IdentityErrors
         new("Identity.ViewInUse", "Ekranın diğer yetkileri dururken görme yetkisi geri alınamaz.");
 
     public static readonly Error NotSuperAdmin =
-        new("Identity.NotSuperAdmin", "Rol ve yetkiyi yalnızca süper admin değiştirebilir.");
+        new("Identity.NotSuperAdmin", "Rol ve yetkiyi yalnızca süper admin değiştirebilir.", ErrorKind.Forbidden);
 
     public static readonly Error TenantMismatch =
-        new("Identity.TenantMismatch", "Farklı müşteriye (tenant) ait kayıtlar birlikte kullanılamaz.");
+        new("Identity.TenantMismatch", "Farklı müşteriye (tenant) ait kayıtlar birlikte kullanılamaz.", ErrorKind.Forbidden);
 
     public static readonly Error RoleNameRequired =
         new("Identity.RoleNameRequired", "Rol adı boş olamaz.");
 
     public static readonly Error RoleNotFound =
-        new("Identity.RoleNotFound", "Rol bulunamadı.");
+        new("Identity.RoleNotFound", "Rol bulunamadı.", ErrorKind.NotFound);
 
     public static readonly Error UserNotFound =
-        new("Identity.UserNotFound", "Kullanıcı bulunamadı.");
+        new("Identity.UserNotFound", "Kullanıcı bulunamadı.", ErrorKind.NotFound);
+
+    public static readonly Error UnknownPermission =
+        new("Identity.UnknownPermission", "Bu yetki ekran kataloğunda tanımlı değil.");
 }

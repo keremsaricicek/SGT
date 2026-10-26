@@ -90,9 +90,24 @@ public sealed class RoleCommandTests
         Assert.Equal(0, _unitOfWork.Commits);
     }
 
+    [Fact]
+    public async Task GrantRolePermission_rejects_permission_missing_from_screen_catalog()
+    {
+        var role = TestData.NewRole();
+        _roles.Add(role);
+
+        var unknownScreen = await GrantHandler().Handle(
+            new GrantRolePermissionCommand(TestData.Tenant, role.Id, "nowhere.screen:view", TestData.Audit()), default);
+        var unknownAction = await GrantHandler().Handle(
+            new GrantRolePermissionCommand(TestData.Tenant, role.Id, "cage.adjustment:fly", TestData.Audit()), default);
+
+        Assert.Equal(IdentityErrors.UnknownPermission, unknownScreen.Error);
+        Assert.Equal(IdentityErrors.UnknownPermission, unknownAction.Error);
+    }
+
     private CreateRoleHandler CreateHandler() =>
         new(new AdminActorResolver(_users), _roles, _unitOfWork, new FixedClock());
 
     private GrantRolePermissionHandler GrantHandler() =>
-        new(new AdminActorResolver(_users), _roles, _unitOfWork, new FixedClock());
+        new(new AdminActorResolver(_users), _roles, TestData.Screens, _unitOfWork, new FixedClock());
 }
