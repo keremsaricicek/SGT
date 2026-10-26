@@ -1,8 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace Sgt.BuildingBlocks;
 
 /// <summary>Bir işlemin neden yapıldığını belirten kod (ör. ROLE_SETUP).</summary>
 public sealed record ReasonCode
 {
+    [JsonConstructor]
     private ReasonCode(string value)
     {
         Value = value;
