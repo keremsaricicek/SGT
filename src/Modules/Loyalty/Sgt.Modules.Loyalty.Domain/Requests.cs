@@ -2,60 +2,12 @@ using Sgt.BuildingBlocks;
 
 namespace Sgt.Modules.Loyalty.Domain;
 
-public enum DecisionStatus
-{
-    Pending,
-    Approved,
-    Rejected,
-}
-
-/// <summary>Dört göz kararı: isteyen kişi karar veremez (Spec 008 KK5–KK6).</summary>
-public sealed class Decision
-{
-    internal Decision(UserId requestedBy, DecisionStatus status = DecisionStatus.Pending, UserId? decidedBy = null, DateTimeOffset? decidedAt = null)
-    {
-        RequestedBy = requestedBy;
-        Status = status;
-        DecidedBy = decidedBy;
-        DecidedAt = decidedAt;
-    }
-
-    public UserId RequestedBy { get; }
-
-    public DecisionStatus Status { get; private set; }
-
-    public UserId? DecidedBy { get; private set; }
-
-    public DateTimeOffset? DecidedAt { get; private set; }
-
-    public static Decision Restore(UserId requestedBy, DecisionStatus status, UserId? decidedBy, DateTimeOffset? decidedAt) =>
-        new(requestedBy, status, decidedBy, decidedAt);
-
-    internal Result Decide(UserId by, bool approve, DateTimeOffset at)
-    {
-        if (Status != DecisionStatus.Pending)
-        {
-            return LoyaltyErrors.AlreadyDecided;
-        }
-
-        if (by == RequestedBy)
-        {
-            return LoyaltyErrors.FourEyesRequired;
-        }
-
-        Status = approve ? DecisionStatus.Approved : DecisionStatus.Rejected;
-        DecidedBy = by;
-        DecidedAt = at;
-        return Result.Success();
-    }
-}
-
 /// <summary>Puanla ikram isteği (KK6).</summary>
 public sealed class CompRequest
 {
     private readonly List<LoyaltyChange> _pending = [];
 
-    private CompRequest(Guid id, TenantId tenantId, Guid playerId, long points, string description, DateTimeOffset requestedAt, Decision decision)
+    private CompRequest(Guid id, TenantId tenantId, Guid playerId, long points, string description, DateTimeOffset requestedAt, FourEyesDecision decision)
     {
         Id = id;
         TenantId = tenantId;
@@ -78,7 +30,7 @@ public sealed class CompRequest
 
     public DateTimeOffset RequestedAt { get; }
 
-    public Decision Decision { get; }
+    public FourEyesDecision Decision { get; }
 
     public IReadOnlyList<LoyaltyChange> PendingChanges => _pending;
 
@@ -95,28 +47,34 @@ public sealed class CompRequest
             return LoyaltyErrors.DescriptionRequired;
         }
 
-        var request = new CompRequest(Guid.NewGuid(), tenantId, playerId, points, description.Trim(), at, new Decision(audit.Actor));
+        var request = new CompRequest(Guid.NewGuid(), tenantId, playerId, points, description.Trim(), at, FourEyesDecision.Request(audit.Actor));
         request._pending.Add(new LoyaltyChange(Guid.NewGuid(), playerId, LoyaltyChangeKind.CompRequested, $"{points} puan", audit, at));
         return request;
     }
 
-    public static CompRequest Restore(Guid id, TenantId tenantId, Guid playerId, long points, string description, DateTimeOffset requestedAt, Decision decision) =>
+    public static CompRequest Restore(Guid id, TenantId tenantId, Guid playerId, long points, string description, DateTimeOffset requestedAt, FourEyesDecision decision) =>
         new(id, tenantId, playerId, points, description, requestedAt, decision);
 
     /// <summary>Onayda puan hesaptan düşülür; bakiye yetmezse karar verilmez.</summary>
     public Result Decide(LoyaltyAccount? account, bool approve, AuditContext audit, DateTimeOffset at)
     {
         ArgumentNullException.ThrowIfNull(audit);
-        var decided = Decision.Decide(audit.Actor, approve, at);
-        if (decided.IsFailure || !approve)
+        var allowed = Decision.CanDecide(audit.Actor);
+        if (allowed.IsFailure)
         {
-            RecordDecision(decided, approve, audit, at);
-            return decided;
+            return allowed;
         }
 
-        var redeemed = account?.Redeem(Id, Points, audit, at) ?? LoyaltyErrors.InsufficientPoints;
+        // Onayda önce puan düşülür; bakiye yetmezse karar verilmez.
+        var redeemed = approve ? account?.Redeem(Id, Points, audit, at) ?? LoyaltyErrors.InsufficientPoints : Result.Success();
+        if (redeemed.IsFailure)
+        {
+            return redeemed;
+        }
+
+        Decision.Decide(audit.Actor, approve, at);
         RecordDecision(redeemed, approve, audit, at);
-        return redeemed;
+        return Result.Success();
     }
 
     public void ClearPendingChanges() => _pending.Clear();
@@ -135,7 +93,7 @@ public sealed class PointsAdjustmentRequest
 {
     private readonly List<LoyaltyChange> _pending = [];
 
-    private PointsAdjustmentRequest(Guid id, TenantId tenantId, Guid playerId, long points, string note, DateTimeOffset requestedAt, Decision decision)
+    private PointsAdjustmentRequest(Guid id, TenantId tenantId, Guid playerId, long points, string note, DateTimeOffset requestedAt, FourEyesDecision decision)
     {
         Id = id;
         TenantId = tenantId;
@@ -158,7 +116,7 @@ public sealed class PointsAdjustmentRequest
 
     public DateTimeOffset RequestedAt { get; }
 
-    public Decision Decision { get; }
+    public FourEyesDecision Decision { get; }
 
     public IReadOnlyList<LoyaltyChange> PendingChanges => _pending;
 
@@ -175,23 +133,29 @@ public sealed class PointsAdjustmentRequest
             return LoyaltyErrors.DescriptionRequired;
         }
 
-        var request = new PointsAdjustmentRequest(Guid.NewGuid(), tenantId, playerId, points, note.Trim(), at, new Decision(audit.Actor));
+        var request = new PointsAdjustmentRequest(Guid.NewGuid(), tenantId, playerId, points, note.Trim(), at, FourEyesDecision.Request(audit.Actor));
         request._pending.Add(new LoyaltyChange(Guid.NewGuid(), playerId, LoyaltyChangeKind.AdjustmentRequested, $"{points} puan", audit, at));
         return request;
     }
 
     public static PointsAdjustmentRequest Restore(
-        Guid id, TenantId tenantId, Guid playerId, long points, string note, DateTimeOffset requestedAt, Decision decision) =>
+        Guid id, TenantId tenantId, Guid playerId, long points, string note, DateTimeOffset requestedAt, FourEyesDecision decision) =>
         new(id, tenantId, playerId, points, note, requestedAt, decision);
 
     public Result Decide(LoyaltyAccount account, bool approve, AuditContext audit, DateTimeOffset at)
     {
         ArgumentNullException.ThrowIfNull(account);
         ArgumentNullException.ThrowIfNull(audit);
-        var decided = Decision.Decide(audit.Actor, approve, at);
-        var result = decided.IsFailure || !approve ? decided : account.Adjust(Id, Points, audit, at);
+        var allowed = Decision.CanDecide(audit.Actor);
+        if (allowed.IsFailure)
+        {
+            return allowed;
+        }
+
+        var result = approve ? account.Adjust(Id, Points, audit, at) : Result.Success();
         if (result.IsSuccess)
         {
+            Decision.Decide(audit.Actor, approve, at);
             _pending.Add(new LoyaltyChange(Guid.NewGuid(), PlayerId, approve ? LoyaltyChangeKind.RequestApproved : LoyaltyChangeKind.RequestRejected, $"düzeltme {Points} puan", audit, at));
         }
 

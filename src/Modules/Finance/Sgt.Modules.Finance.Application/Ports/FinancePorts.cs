@@ -16,6 +16,13 @@ public interface IShiftRepository
     void Add(CashierShift shift);
 }
 
+public interface ICageAdjustmentRepository
+{
+    Task<CageAdjustmentRequest?> Get(TenantId tenantId, Guid requestId, CancellationToken ct);
+
+    void Add(CageAdjustmentRequest request);
+}
+
 /// <summary>Vardiya, işlem, defter satırları ve olayları tek transaction'da yazar.</summary>
 public interface IFinanceUnitOfWork : IUnitOfWork
 {

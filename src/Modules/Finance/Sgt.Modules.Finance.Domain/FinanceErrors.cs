@@ -18,4 +18,9 @@ public static class FinanceErrors
     public static readonly Error PlayerRestricted = new("Finance.PlayerRestricted", "Oyuncu kısıtlı; işlem yapılamaz.", ErrorKind.Forbidden);
     public static readonly Error RateUnavailable = new("Finance.RateUnavailable", "Bu para birimi için geçerli kur yok.", ErrorKind.Conflict);
     public static readonly Error DuplicateKeyMismatch = new("Finance.DuplicateKeyMismatch", "Bu işlem anahtarı farklı bir işlem için kullanılmış.", ErrorKind.Conflict);
+    public static readonly Error TransactionNotFound = new("Finance.TransactionNotFound", "İşlem bu vardiyada bulunamadı.", ErrorKind.NotFound);
+    public static readonly Error AlreadyReversed = new("Finance.AlreadyReversed", "İşlem zaten ters çevrilmiş.", ErrorKind.Conflict);
+    public static readonly Error CannotReverseReversal = new("Finance.CannotReverseReversal", "Ters kayıt ters çevrilemez.", ErrorKind.Conflict);
+    public static readonly Error AdjustmentNoteRequired = new("Finance.AdjustmentNoteRequired", "Düzeltme için açıklama zorunludur.");
+    public static readonly Error AdjustmentNotFound = new("Finance.AdjustmentNotFound", "Düzeltme isteği bulunamadı.", ErrorKind.NotFound);
 }

@@ -11,6 +11,8 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence;
 internal sealed class TrackedShifts
 {
     public Dictionary<CashierShift, ShiftRow?> Items { get; } = [];
+
+    public Dictionary<CageAdjustmentRequest, AdjustmentRequestRow?> Adjustments { get; } = [];
 }
 
 internal static class FinanceMapping
@@ -28,7 +30,8 @@ internal static class FinanceMapping
             t.Entries.Select(e => new LedgerEntry(Enum.Parse<LedgerAccount>(e.Account), Enum.Parse<Instrument>(e.Instrument), e.Currency, e.Amount)).ToList(),
             t.Rate,
             new AuditContext(new UserId(t.ActorId), t.Terminal, ReasonCode.Of(t.ReasonCode), t.CorrelationId),
-            t.OccurredAt);
+            t.OccurredAt,
+            t.ReversesId);
 
     /// <summary>Domain'deki yeni satırları ekler; mevcut değer satırlarına dokunmaz (append-only).</summary>
     public static void CopyTo(CashierShift shift, ShiftRow row)
@@ -58,6 +61,7 @@ internal static class FinanceMapping
                 Amount = t.Amount.Amount, Currency = t.Amount.Currency, Rate = t.Rate,
                 ActorId = t.Audit.Actor.Value, Terminal = t.Audit.Terminal, ReasonCode = t.Audit.Reason.Value, CorrelationId = t.Audit.CorrelationId,
                 OccurredAt = t.OccurredAt,
+                ReversesId = t.ReversesId,
                 Entries = t.Entries.Select(e => new LedgerEntryRow
                 {
                     Id = Guid.NewGuid(), TransactionId = t.Id, Account = e.Account.ToString(), Instrument = e.Instrument.ToString(),
@@ -113,6 +117,27 @@ internal sealed class ShiftRepository(FinanceDbContext db, TrackedShifts tracked
     public void Add(CashierShift shift) => tracked.Items[shift] = null;
 }
 
+internal sealed class CageAdjustmentRepository(FinanceDbContext db, TrackedShifts tracked) : ICageAdjustmentRepository
+{
+    public async Task<CageAdjustmentRequest?> Get(TenantId tenantId, Guid requestId, CancellationToken ct)
+    {
+        var row = await db.AdjustmentRequests.SingleOrDefaultAsync(r => r.TenantId == tenantId.Value && r.Id == requestId, ct);
+        if (row is null)
+        {
+            return null;
+        }
+
+        var request = CageAdjustmentRequest.Restore(
+            row.Id, tenantId, row.ShiftId, row.TransactionId, row.Note, row.RequestedAt,
+            FourEyesDecision.Restore(new UserId(row.RequestedBy), Enum.Parse<DecisionStatus>(row.Status), row.DecidedBy is { } by ? new UserId(by) : null, row.DecidedAt),
+            row.ReversalId);
+        tracked.Adjustments[request] = row;
+        return request;
+    }
+
+    public void Add(CageAdjustmentRequest request) => tracked.Adjustments[request] = null;
+}
+
 internal sealed class FinanceUnitOfWork(FinanceDbContext db, TrackedShifts tracked, IntegrationEventSerializer serializer) : IFinanceUnitOfWork
 {
     public async Task Commit(CancellationToken ct)
@@ -131,6 +156,31 @@ internal sealed class FinanceUnitOfWork(FinanceDbContext db, TrackedShifts track
             {
                 db.Set<OutboxMessage>().Add(serializer.ToOutbox(FinanceMapping.ToEvent(shift, change)));
             }
+        }
+
+        foreach (var (request, existing) in tracked.Adjustments.ToList())
+        {
+            var row = existing ?? db.AdjustmentRequests.Add(new AdjustmentRequestRow()).Entity;
+            tracked.Adjustments[request] = row;
+            row.Id = request.Id;
+            row.TenantId = request.TenantId.Value;
+            row.ShiftId = request.ShiftId;
+            row.TransactionId = request.TransactionId;
+            row.Note = request.Note;
+            row.RequestedAt = request.RequestedAt;
+            row.RequestedBy = request.Decision.RequestedBy.Value;
+            row.Status = request.Decision.Status.ToString();
+            row.DecidedBy = request.Decision.DecidedBy?.Value;
+            row.DecidedAt = request.Decision.DecidedAt;
+            row.ReversalId = request.ReversalId;
+            foreach (var change in request.PendingChanges)
+            {
+                db.Set<OutboxMessage>().Add(serializer.ToOutbox(new CageShiftChangedV1(
+                    change.Id, change.Audit.CorrelationId, change.OccurredAt, request.TenantId, change.Audit, request.ShiftId, change.TransactionId,
+                    change.Kind.ToString(), change.Detail)));
+            }
+
+            request.ClearPendingChanges();
         }
 
         try

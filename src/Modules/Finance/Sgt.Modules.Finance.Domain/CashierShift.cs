@@ -133,6 +133,58 @@ public sealed class CashierShift
     }
 
     /// <summary>
+    /// Ters kayıt (Spec 010): asıl işlemin satırlarını ters işaretle yazar. Onaylayan yetkili yapar; kasiyer şartı yoktur.
+    /// Vardiya açık olmalı, işlem bir kez ters çevrilir, çekmece yetmelidir.
+    /// </summary>
+    public Result<CageTransaction> Reverse(Guid originalId, Guid reversalId, AuditContext audit, DateTimeOffset at)
+    {
+        ArgumentNullException.ThrowIfNull(audit);
+        var check = CanReverse(originalId);
+        if (check.IsFailure)
+        {
+            return check.Error;
+        }
+
+        var original = FindTransaction(originalId)!;
+        var entries = original.Entries.Select(e => e with { Amount = -e.Amount }).ToList();
+        var shortfall = entries
+            .Where(e => e.Account == LedgerAccount.Drawer && e.Amount < 0)
+            .Any(e => Balance(e.Instrument, e.Currency) < -e.Amount);
+        if (shortfall)
+        {
+            return FinanceErrors.InsufficientDrawer;
+        }
+
+        var reversal = CageTransaction.Create(
+            reversalId, CageTransactionType.Reversal, original.PlayerId, original.Amount, entries, original.Rate, audit, at, original.Id);
+        _transactions.Add(reversal);
+        Record(ShiftChangeKind.TransactionRecorded, reversal.Id, $"Ters kayıt: {original.Type} {original.Amount.Amount} {original.Amount.Currency}", audit, at);
+        return reversal;
+    }
+
+    /// <summary>İşlemin ters çevrilebilir olup olmadığı (çekmece kontrolü hariç).</summary>
+    public Result CanReverse(Guid originalId)
+    {
+        if (!IsOpen)
+        {
+            return FinanceErrors.ShiftClosed;
+        }
+
+        var original = FindTransaction(originalId);
+        if (original is null)
+        {
+            return FinanceErrors.TransactionNotFound;
+        }
+
+        if (original.ReversesId is not null)
+        {
+            return FinanceErrors.CannotReverseReversal;
+        }
+
+        return _transactions.Any(t => t.ReversesId == originalId) ? FinanceErrors.AlreadyReversed : Result.Success();
+    }
+
+    /// <summary>
     /// Sayımla kapatır (KK9). Bakiyesi veya sayımı olan her araç/birim için fark kaydedilir;
     /// sayılmayan bakiye sıfır sayılmış kabul edilir.
     /// </summary>

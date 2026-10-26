@@ -97,6 +97,72 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence.Migrations
                     b.ToTable("outbox_messages", "finance");
                 });
 
+            modelBuilder.Entity("Sgt.Modules.Finance.Infrastructure.Persistence.AdjustmentRequestRow", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("DecidedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("decided_at");
+
+                    b.Property<Guid?>("DecidedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("decided_by");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)")
+                        .HasColumnName("note");
+
+                    b.Property<DateTimeOffset>("RequestedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("requested_at");
+
+                    b.Property<Guid>("RequestedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("requested_by");
+
+                    b.Property<Guid?>("ReversalId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("reversal_id");
+
+                    b.Property<Guid>("ShiftId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("status");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<Guid>("TransactionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("transaction_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_cage_adjustment_requests");
+
+                    b.HasIndex("TenantId", "ShiftId")
+                        .HasDatabaseName("ix_cage_adjustment_requests_tenant_id_shift_id");
+
+                    b.ToTable("cage_adjustment_requests", "finance");
+                });
+
             modelBuilder.Entity("Sgt.Modules.Finance.Infrastructure.Persistence.CageTransactionRow", b =>
                 {
                     b.Property<Guid>("Id")
@@ -141,6 +207,10 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("reason_code");
 
+                    b.Property<Guid?>("ReversesId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("reverses_id");
+
                     b.Property<Guid>("ShiftId")
                         .HasColumnType("uuid")
                         .HasColumnName("shift_id");
@@ -163,6 +233,11 @@ namespace Sgt.Modules.Finance.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_cage_transactions");
+
+                    b.HasIndex("ReversesId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_cage_transactions_reverses_id")
+                        .HasFilter("reverses_id IS NOT NULL");
 
                     b.HasIndex("ShiftId")
                         .HasDatabaseName("ix_cage_transactions_shift_id");

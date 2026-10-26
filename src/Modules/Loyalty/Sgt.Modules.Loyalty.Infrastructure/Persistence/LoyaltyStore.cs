@@ -76,7 +76,7 @@ internal sealed class ApprovalRequestRepository(LoyaltyDbContext db, TrackedLoya
 
     public void Add(PointsAdjustmentRequest request) => tracked.Adjustments[request] = null;
 
-    private static Decision ToDecision(RequestRow row) => Decision.Restore(
+    private static FourEyesDecision ToDecision(RequestRow row) => FourEyesDecision.Restore(
         new UserId(row.RequestedBy), Enum.Parse<DecisionStatus>(row.Status), row.DecidedBy is { } by ? new UserId(by) : null, row.DecidedAt);
 }
 
@@ -161,7 +161,7 @@ internal sealed class LoyaltyUnitOfWork(LoyaltyDbContext db, TrackedLoyalty trac
         }
     }
 
-    private static void Copy(RequestRow row, Guid id, TenantId tenantId, Guid playerId, long points, string text, DateTimeOffset at, Decision decision)
+    private static void Copy(RequestRow row, Guid id, TenantId tenantId, Guid playerId, long points, string text, DateTimeOffset at, FourEyesDecision decision)
     {
         row.Id = id;
         row.TenantId = tenantId.Value;

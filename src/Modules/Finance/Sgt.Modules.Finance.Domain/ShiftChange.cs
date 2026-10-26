@@ -7,6 +7,9 @@ public enum ShiftChangeKind
     Opened,
     TransactionRecorded,
     Closed,
+    AdjustmentRequested,
+    AdjustmentApproved,
+    AdjustmentRejected,
 }
 
 /// <summary>Denetime düşecek vardiya olayı. TransactionId yalnızca işlem kaydında doludur.</summary>

@@ -15,6 +15,8 @@ public sealed class FinanceDbContext(DbContextOptions<FinanceDbContext> options)
 
     internal DbSet<CageTransactionRow> Transactions => Set<CageTransactionRow>();
 
+    internal DbSet<AdjustmentRequestRow> AdjustmentRequests => Set<AdjustmentRequestRow>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
@@ -56,6 +58,7 @@ public sealed class FinanceDbContext(DbContextOptions<FinanceDbContext> options)
             e.Property(t => t.Rate).HasPrecision(18, 6);
             e.Property(t => t.Terminal).HasMaxLength(100);
             e.Property(t => t.ReasonCode).HasMaxLength(50);
+            e.HasIndex(t => t.ReversesId).IsUnique().HasFilter("reverses_id IS NOT NULL"); // bir işlem bir kez ters çevrilir
             e.HasMany(t => t.Entries).WithOne().HasForeignKey(l => l.TransactionId);
         });
 
@@ -68,6 +71,16 @@ public sealed class FinanceDbContext(DbContextOptions<FinanceDbContext> options)
             e.Property(l => l.Instrument).HasMaxLength(10);
             e.Property(l => l.Currency).HasMaxLength(3);
             e.Property(l => l.Amount).HasPrecision(18, 2);
+        });
+
+        modelBuilder.Entity<AdjustmentRequestRow>(e =>
+        {
+            e.ToTable("cage_adjustment_requests");
+            e.HasKey(r => r.Id);
+            e.HasIndex(r => new { r.TenantId, r.ShiftId });
+            e.Property(r => r.Note).HasMaxLength(1000);
+            e.Property(r => r.Status).HasMaxLength(20);
+            e.Property(r => r.Version).IsRowVersion();
         });
 
         modelBuilder.Entity<ClosingCountRow>(e =>
@@ -146,6 +159,8 @@ internal sealed class CageTransactionRow
 
     public DateTimeOffset OccurredAt { get; set; }
 
+    public Guid? ReversesId { get; set; }
+
     public List<LedgerEntryRow> Entries { get; set; } = [];
 }
 
@@ -175,4 +190,31 @@ internal sealed class ClosingCountRow
     public decimal Expected { get; set; }
 
     public decimal Counted { get; set; }
+}
+
+internal sealed class AdjustmentRequestRow
+{
+    public Guid Id { get; set; }
+
+    public Guid TenantId { get; set; }
+
+    public Guid ShiftId { get; set; }
+
+    public Guid TransactionId { get; set; }
+
+    public string Note { get; set; } = string.Empty;
+
+    public DateTimeOffset RequestedAt { get; set; }
+
+    public Guid RequestedBy { get; set; }
+
+    public string Status { get; set; } = string.Empty;
+
+    public Guid? DecidedBy { get; set; }
+
+    public DateTimeOffset? DecidedAt { get; set; }
+
+    public Guid? ReversalId { get; set; }
+
+    public uint Version { get; set; }
 }

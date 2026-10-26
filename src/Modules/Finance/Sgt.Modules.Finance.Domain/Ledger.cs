@@ -28,6 +28,9 @@ public enum CageTransactionType
     ChipRedeem,
     ExchangeForeignToBase,
     ExchangeBaseToForeign,
+
+    /// <summary>Başka bir işlemin ters kaydı (Spec 010).</summary>
+    Reversal,
 }
 
 /// <summary>
@@ -37,8 +40,10 @@ public enum CageTransactionType
 public sealed class CageTransaction
 {
     private CageTransaction(
-        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset occurredAt)
+        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset occurredAt,
+        Guid? reversesId = null)
     {
+        ReversesId = reversesId;
         Id = id;
         Type = type;
         PlayerId = playerId;
@@ -67,20 +72,25 @@ public sealed class CageTransaction
 
     public DateTimeOffset OccurredAt { get; }
 
+    /// <summary>Ters kayıtsa, ters çevirdiği işlem.</summary>
+    public Guid? ReversesId { get; }
+
     internal static CageTransaction Create(
-        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at)
+        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at,
+        Guid? reversesId = null)
     {
         if (entries.GroupBy(e => e.Currency).Any(g => g.Sum(e => e.Amount) != 0m))
         {
             throw new InvalidOperationException("Dengesiz defter kaydı üretildi; bu bir yazılım hatasıdır.");
         }
 
-        return new CageTransaction(id, type, playerId, amount, entries, rate, audit, at);
+        return new CageTransaction(id, type, playerId, amount, entries, rate, audit, at, reversesId);
     }
 
     public static CageTransaction Restore(
-        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at) =>
-        new(id, type, playerId, amount, entries, rate, audit, at);
+        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at,
+        Guid? reversesId) =>
+        new(id, type, playerId, amount, entries, rate, audit, at, reversesId);
 
     /// <summary>Aynı idempotency anahtarıyla gelen isteğin ilk istekle aynı olup olmadığı (KK5).</summary>
     public bool IsSameRequest(CageTransactionType type, Guid playerId, Money amount) =>

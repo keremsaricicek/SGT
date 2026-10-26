@@ -13,6 +13,10 @@ public sealed record OpenShiftRequest(IReadOnlyList<DrawerAmount> Opening, strin
 /// <summary>TransactionId: istemcinin her işlem için ürettiği idempotency anahtarı (KK5).</summary>
 public sealed record CageRequest(Guid TransactionId, Guid PlayerId, decimal Amount, string Currency, string ReasonCode);
 
+public sealed record AdjustmentRequest(Guid TransactionId, string Note, string ReasonCode);
+
+public sealed record AdjustmentDecisionRequest(bool Approve, string ReasonCode);
+
 public sealed record CloseShiftRequest(IReadOnlyList<DrawerAmount> Counted, string? Note, string ReasonCode);
 
 /// <summary>Kasa ekranları (Spec 006). Para hareketi uçları insan uzman finans onayına tabidir.</summary>
@@ -62,6 +66,19 @@ public static class FinanceEndpoints
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new CloseShiftCommand(request.TenantId, shiftId, body.Counted, body.Note, audit), ct)).ToHttp()))
             .RequirePermission("cage.shift:close");
+
+        api.MapPost("/{shiftId:guid}/adjustments", async (Guid shiftId, AdjustmentRequest body, IRequestContext request, ICommandHandler<RequestCageAdjustmentCommand, Guid> handler, CancellationToken ct) =>
+            await WithReason(body.ReasonCode, request, async audit =>
+                (await handler.Handle(new RequestCageAdjustmentCommand(request.TenantId, shiftId, body.TransactionId, body.Note, audit), ct))
+                .ToHttp(id => Results.Created($"/api/cage/adjustments/{id}", new { id }))))
+            .RequirePermission("cage.adjustment:request");
+
+        app.MapPost("/api/cage/adjustments/{requestId:guid}/decision", async (Guid requestId, AdjustmentDecisionRequest body, IRequestContext request, ICommandHandler<DecideCageAdjustmentCommand> handler, CancellationToken ct) =>
+            await WithReason(body.ReasonCode, request, async audit =>
+                (await handler.Handle(new DecideCageAdjustmentCommand(request.TenantId, requestId, body.Approve, audit), ct)).ToHttp()))
+            .RequireAuthorization(SgtClaims.Policy)
+            .RequirePermission("cage.adjustment:approve")
+            .WithTags("Cage");
 
         return app;
     }
