@@ -134,9 +134,8 @@ public sealed class GetSlotFloorHandler(ISlotMachineRepository machines, IClock 
     public async Task<IReadOnlyList<SlotFloorRow>> Handle(GetSlotFloorQuery query, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(query);
-        var today = clock.LocalToday();
-        var dayStart = new DateTimeOffset(today.ToDateTime(TimeOnly.MinValue), BusinessCalendar.TimeZone.GetUtcOffset(today.ToDateTime(TimeOnly.MinValue)));
-        var readings = await machines.ReadingsBetween(query.TenantId, dayStart, dayStart.AddDays(1), ct);
+        var day = BusinessDay.For(clock.LocalToday());
+        var readings = await machines.ReadingsBetween(query.TenantId, day.Start, day.End, ct);
         var byMachine = readings.GroupBy(r => r.MachineId).ToDictionary(g => g.Key, g => g.Aggregate(MeterSnapshot.Zero, (sum, r) => sum.Plus(r.Delta)));
 
         return (await machines.List(query.TenantId, ct))

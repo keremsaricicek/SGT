@@ -58,6 +58,13 @@
     <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Domain/Sgt.Modules.Loyalty.Domain.csproj" />
     <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Infrastructure/Sgt.Modules.Loyalty.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/Reporting/">
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Api/Sgt.Modules.Reporting.Api.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Application/Sgt.Modules.Reporting.Application.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Contracts/Sgt.Modules.Reporting.Contracts.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Domain/Sgt.Modules.Reporting.Domain.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Infrastructure/Sgt.Modules.Reporting.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/tests/" />
   <Folder Name="/tests/Api/">
     <Project Path="tests/Api/Sgt.Api.Tests/Sgt.Api.Tests.csproj" />
@@ -91,5 +98,8 @@
   </Folder>
   <Folder Name="/tests/Modules/Loyalty/">
     <Project Path="tests/Modules/Loyalty/Sgt.Modules.Loyalty.Tests/Sgt.Modules.Loyalty.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Reporting/">
+    <Project Path="tests/Modules/Reporting/Sgt.Modules.Reporting.Tests/Sgt.Modules.Reporting.Tests.csproj" />
   </Folder>
 </Solution>

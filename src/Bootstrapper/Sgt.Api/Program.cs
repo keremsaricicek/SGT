@@ -16,6 +16,8 @@ using Sgt.Modules.Configuration.Infrastructure;
 using Sgt.Modules.Identity.Api;
 using Sgt.Modules.Loyalty.Api;
 using Sgt.Modules.Loyalty.Infrastructure;
+using Sgt.Modules.Reporting.Api;
+using Sgt.Modules.Reporting.Infrastructure;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure;
 
@@ -52,6 +54,7 @@ builder.Services.AddCasinoPlayerModule(connectionString);
 builder.Services.AddFinanceModule(connectionString);
 builder.Services.AddGamingFloorModule(connectionString);
 builder.Services.AddLoyaltyModule(connectionString);
+builder.Services.AddReportingModule();
 
 // Kişisel veri anahtarları secret manager'dan gelir (ADR-0005).
 builder.Services.AddSingleton<IPersonalDataProtector>(_ => AesGcmPersonalDataProtector.FromBase64(
@@ -71,6 +74,7 @@ app.MapCasinoPlayerEndpoints();
 app.MapFinanceEndpoints();
 app.MapGamingFloorEndpoints();
 app.MapLoyaltyEndpoints();
+app.MapReportingEndpoints();
 app.MapOutboxAdminEndpoints();
 
 if (app.Environment.IsDevelopment())

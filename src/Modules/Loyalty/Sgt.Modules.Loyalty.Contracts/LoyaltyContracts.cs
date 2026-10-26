@@ -15,3 +15,11 @@ public sealed record LoyaltyChangedV1(
 {
     public string Summary => $"Loyalty: {Kind} {Detail}".TrimEnd();
 }
+
+/// <summary>Günlük puan toplamı (Spec 011 KK5).</summary>
+public sealed record DailyLoyaltySummary(long PointsEarned, long PointsRedeemed);
+
+public interface IDailyLoyaltyQuery
+{
+    Task<DailyLoyaltySummary> For(TenantId tenantId, BusinessDay day, CancellationToken ct);
+}

@@ -29,6 +29,7 @@ public static class GamingFloorInfrastructureModule
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<IFloorUnitOfWork, FloorUnitOfWork>();
         services.AddScoped<IPlayerLocationQuery, PlayerLocationQuery>();
+        services.AddScoped<IDailyFloorQuery, DailyFloorQuery>();
         services.AddScoped<ISlotMachineRepository, SlotMachineRepository>();
         services.AddScoped<IFloorEvents, FloorEvents>();
         services.AddScoped<IFloorInbox, FloorInbox>();

@@ -49,6 +49,11 @@
     <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Application\Sgt.Modules.Loyalty.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Infrastructure\Sgt.Modules.Loyalty.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Api\Sgt.Modules.Loyalty.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Contracts\Sgt.Modules.Reporting.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Domain\Sgt.Modules.Reporting.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Application\Sgt.Modules.Reporting.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Infrastructure\Sgt.Modules.Reporting.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Api\Sgt.Modules.Reporting.Api.csproj" />
   </ItemGroup>
 
 </Project>

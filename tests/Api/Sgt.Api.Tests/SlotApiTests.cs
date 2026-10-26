@@ -31,6 +31,7 @@ public sealed class SlotApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         var reimport = await slot.PostAsJsonAsync("/api/floor/slots/readings/import", new { csv, reasonCode = "IMPORT" });
         var report = await import.Content.ReadFromJsonAsync<ImportReport>();
         var detail = await slot.GetFromJsonAsync<SlotMachineView>($"/api/floor/slots/{machineId}");
+        var floor = await slot.GetFromJsonAsync<List<SlotFloorRow>>("/api/floor/slots");
 
         Assert.Equal(HttpStatusCode.Created, defined.StatusCode);
         Assert.Equal(HttpStatusCode.NoContent, manual.StatusCode);
@@ -39,6 +40,7 @@ public sealed class SlotApiTests(ApiFactory api) : IClassFixture<ApiFactory>
         Assert.Equal(HttpStatusCode.OK, reimport.StatusCode);
         Assert.Equal(2, detail!.Readings.Count);
         Assert.Equal(200m, detail.Readings[0].DeltaWin); // 500 − 200 − 100
+        Assert.Contains(floor!, f => f.AssetNumber == asset);
 
         await using var connection = new NpgsqlConnection(api.ConnectionString);
         await connection.OpenAsync();

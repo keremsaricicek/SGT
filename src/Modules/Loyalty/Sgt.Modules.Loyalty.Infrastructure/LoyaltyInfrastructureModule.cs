@@ -33,6 +33,7 @@ public static class LoyaltyInfrastructureModule
         services.AddScoped<ILoyaltyInbox, LoyaltyInbox>();
         services.AddScoped<ILoyaltyUnitOfWork, LoyaltyUnitOfWork>();
         services.AddScoped<IPlayerTierQuery, PlayerTierQuery>();
+        services.AddScoped<IDailyLoyaltyQuery, DailyLoyaltyQuery>();
 
         services.AddScoped<IIntegrationEventHandler<PlayerRatedV1>, PlayerRatedHandler>();
         services.AddScoped<ICommandHandler<RequestCompCommand, Guid>, RequestCompHandler>();

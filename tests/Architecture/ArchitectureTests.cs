@@ -220,5 +220,11 @@ internal static class ModuleCatalog
             typeof(Sgt.Modules.Loyalty.Application.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.Loyalty.Infrastructure.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.Loyalty.Api.AssemblyMarker).Assembly),
+        new("Reporting",
+            typeof(Sgt.Modules.Reporting.Contracts.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Reporting.Domain.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Reporting.Application.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Reporting.Infrastructure.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Reporting.Api.AssemblyMarker).Assembly),
     ];
 }

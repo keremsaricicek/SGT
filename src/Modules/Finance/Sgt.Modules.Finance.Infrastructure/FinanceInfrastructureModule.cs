@@ -24,6 +24,7 @@ public static class FinanceInfrastructureModule
         services.AddScoped<IShiftRepository, ShiftRepository>();
         services.AddScoped<IFinanceUnitOfWork, FinanceUnitOfWork>();
         services.AddScoped<CageOperation>();
+        services.AddScoped<IDailyCageQuery, DailyCageQuery>();
         services.AddScoped<ICageAdjustmentRepository, CageAdjustmentRepository>();
         services.AddScoped<ICommandHandler<RequestCageAdjustmentCommand, Guid>, RequestCageAdjustmentHandler>();
         services.AddScoped<ICommandHandler<DecideCageAdjustmentCommand>, DecideCageAdjustmentHandler>();

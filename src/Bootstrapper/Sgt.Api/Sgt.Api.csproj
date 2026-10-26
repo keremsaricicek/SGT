@@ -17,6 +17,8 @@
     <ProjectReference Include="..\..\Modules\GamingFloor\Sgt.Modules.GamingFloor.Infrastructure\Sgt.Modules.GamingFloor.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Loyalty\Sgt.Modules.Loyalty.Api\Sgt.Modules.Loyalty.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Loyalty\Sgt.Modules.Loyalty.Infrastructure\Sgt.Modules.Loyalty.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Reporting\Sgt.Modules.Reporting.Api\Sgt.Modules.Reporting.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Reporting\Sgt.Modules.Reporting.Infrastructure\Sgt.Modules.Reporting.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
