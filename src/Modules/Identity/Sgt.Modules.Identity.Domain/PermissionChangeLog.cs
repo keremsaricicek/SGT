@@ -19,8 +19,8 @@ internal sealed class PermissionChangeLog
 
     public IReadOnlyList<PermissionChange> Pending => _pending;
 
-    public void Record(PermissionChangeKind kind, string item, AdminActor actor, DateTimeOffset at) =>
-        _pending.Add(new PermissionChange(Guid.NewGuid(), _tenantId, _target, _targetId, kind, item, actor.Audit, at));
+    public void Record(PermissionChangeKind kind, string item, AuditContext audit, DateTimeOffset at) =>
+        _pending.Add(new PermissionChange(Guid.NewGuid(), _tenantId, _target, _targetId, kind, item, audit, at));
 
     public void Clear() => _pending.Clear();
 }

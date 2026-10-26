@@ -15,6 +15,9 @@ internal static class Mapping
             new UserId(row.UserId),
             new TenantId(row.TenantId),
             row.IsSuperAdmin,
+            row.DisplayName,
+            row.EmployeeCode,
+            row.IsActive,
             row.RoleIds.Select(id => new RoleId(id)),
             ToSet(row.Grants),
             row.Denied.Select(ParseStored));
@@ -32,6 +35,9 @@ internal static class Mapping
         row.UserId = user.UserId.Value;
         row.TenantId = user.TenantId.Value;
         row.IsSuperAdmin = user.IsSuperAdmin;
+        row.DisplayName = user.DisplayName;
+        row.EmployeeCode = user.EmployeeCode;
+        row.IsActive = user.IsActive;
         row.RoleIds = user.RoleIds.Select(r => r.Value).Order().ToList();
         row.Grants = ToStrings(user.Grants.Codes);
         row.Denied = ToStrings(user.Denied);

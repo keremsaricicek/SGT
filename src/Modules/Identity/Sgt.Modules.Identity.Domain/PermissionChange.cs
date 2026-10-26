@@ -17,6 +17,9 @@ public enum PermissionChangeKind
     PermissionUndenied,
     RoleAssigned,
     RoleUnassigned,
+    UserCreated,
+    UserDeactivated,
+    UserReactivated,
 }
 
 /// <summary>Silinemez yetki değişiklik kaydı: kim, kime, ne zaman, ne.</summary>

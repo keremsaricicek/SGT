@@ -233,10 +233,28 @@ namespace Sgt.Modules.Identity.Infrastructure.Persistence.Migrations
                         .HasColumnType("text[]")
                         .HasColumnName("denied");
 
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("display_name");
+
+                    b.Property<string>("EmployeeCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("employee_code");
+
                     b.PrimitiveCollection<List<string>>("Grants")
                         .IsRequired()
                         .HasColumnType("text[]")
                         .HasColumnName("grants");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
 
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("boolean")
@@ -255,6 +273,11 @@ namespace Sgt.Modules.Identity.Infrastructure.Persistence.Migrations
 
                     b.HasKey("TenantId", "UserId")
                         .HasName("pk_user_access");
+
+                    b.HasIndex("TenantId", "EmployeeCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_user_access_tenant_id_employee_code")
+                        .HasFilter("employee_code <> ''");
 
                     b.ToTable("user_access", "identity");
                 });

@@ -27,7 +27,7 @@ public sealed class EffectiveAccess(
         var licensed = await licenses.For(tenantId, ct);
         var productOfScreen = screens.All.ToDictionary(s => s.Code, s => s.Product);
 
-        var superAdminPermissions = user.IsSuperAdmin
+        var superAdminPermissions = user.IsSuperAdmin && user.IsActive
             ? screens.All.Where(s => s.Product == Product.Core).SelectMany(s => s.AllPermissions())
             : [];
 

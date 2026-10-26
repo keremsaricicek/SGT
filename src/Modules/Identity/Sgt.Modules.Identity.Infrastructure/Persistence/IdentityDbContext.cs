@@ -36,6 +36,10 @@ public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> option
             e.ToTable("user_access");
             e.HasKey(u => new { u.TenantId, u.UserId });
             e.Property(u => u.Version).IsRowVersion();
+            e.Property(u => u.DisplayName).HasMaxLength(150);
+            e.Property(u => u.EmployeeCode).HasMaxLength(50);
+            e.Property(u => u.IsActive).HasDefaultValue(true);
+            e.HasIndex(u => new { u.TenantId, u.EmployeeCode }).IsUnique().HasFilter("employee_code <> ''");
         });
 
         modelBuilder.Entity<PermissionChangeRow>(e =>

@@ -24,6 +24,12 @@ internal sealed class UserAccessRow
 
     public bool IsSuperAdmin { get; set; }
 
+    public string DisplayName { get; set; } = string.Empty;
+
+    public string EmployeeCode { get; set; } = string.Empty;
+
+    public bool IsActive { get; set; } = true;
+
     public List<Guid> RoleIds { get; set; } = [];
 
     public List<string> Grants { get; set; } = [];

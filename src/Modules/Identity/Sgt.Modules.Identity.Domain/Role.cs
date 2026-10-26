@@ -35,7 +35,7 @@ public sealed class Role
         }
 
         var role = new Role(id, actor.TenantId, name.Trim());
-        role._changes.Record(PermissionChangeKind.RoleCreated, role.Name, actor, at);
+        role._changes.Record(PermissionChangeKind.RoleCreated, role.Name, actor.Audit, at);
         return role;
     }
 
@@ -57,7 +57,7 @@ public sealed class Role
             return updated.Error;
         }
 
-        Apply(updated.Value, PermissionChangeKind.PermissionGranted, code, actor, at);
+        Apply(updated.Value, PermissionChangeKind.PermissionGranted, code, actor.Audit, at);
         return Result.Success();
     }
 
@@ -75,7 +75,7 @@ public sealed class Role
             return updated.Error;
         }
 
-        Apply(updated.Value, PermissionChangeKind.PermissionRevoked, code, actor, at);
+        Apply(updated.Value, PermissionChangeKind.PermissionRevoked, code, actor.Audit, at);
         return Result.Success();
     }
 
@@ -87,9 +87,9 @@ public sealed class Role
         return actor.TenantId == TenantId ? Result.Success() : IdentityErrors.TenantMismatch;
     }
 
-    private void Apply(PermissionSet updated, PermissionChangeKind kind, PermissionCode code, AdminActor actor, DateTimeOffset at)
+    private void Apply(PermissionSet updated, PermissionChangeKind kind, PermissionCode code, AuditContext audit, DateTimeOffset at)
     {
         Permissions = updated;
-        _changes.Record(kind, code.ToString(), actor, at);
+        _changes.Record(kind, code.ToString(), audit, at);
     }
 }

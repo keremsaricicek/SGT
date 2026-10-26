@@ -10,6 +10,9 @@ using Sgt.Modules.Identity.Application.Roles.CreateRole;
 using Sgt.Modules.Identity.Application.Roles.GrantRolePermission;
 using Sgt.Modules.Identity.Application.Roles.RevokeRolePermission;
 using Sgt.Modules.Identity.Application.Users.AssignRole;
+using Sgt.Modules.Identity.Application.Users.DeactivateUser;
+using Sgt.Modules.Identity.Application.Users.ReactivateUser;
+using Sgt.Modules.Identity.Application.Users.RegisterUser;
 using Sgt.Modules.Identity.Application.Users.DenyUserPermission;
 using Sgt.Modules.Identity.Application.Users.GrantUserPermission;
 using Sgt.Modules.Identity.Application.Users.RevokeUserPermission;
@@ -26,6 +29,8 @@ public sealed record ReasonRequest(string ReasonCode);
 public sealed record PermissionRequest(string Permission, string ReasonCode);
 
 public sealed record RoleAssignmentRequest(Guid RoleId, string ReasonCode);
+
+public sealed record RegisterUserRequest(Guid UserId, string DisplayName, string EmployeeCode, string ReasonCode);
 
 /// <summary>
 /// Yetki paneli uç noktaları. Yalnızca HTTP ↔ komut/sorgu çevirisi yapar; iş kuralı yoktur.
@@ -101,6 +106,26 @@ public static class IdentityEndpoints
         api.MapDelete("/users/{userId:guid}/denies/{permission}", async (Guid userId, string permission, string? reasonCode, IRequestContext request, ICommandHandler<UndenyUserPermissionCommand> handler, CancellationToken ct) =>
             await WithReason(reasonCode, request, async audit =>
                 (await handler.Handle(new UndenyUserPermissionCommand(request.TenantId, new UserId(userId), permission, audit), ct)).ToHttp()));
+
+        api.MapGet("/users", async (IRequestContext request, IQueryHandler<ListUsersQuery, IReadOnlyList<UserSummary>> handler, CancellationToken ct) =>
+            Results.Ok(await handler.Handle(new ListUsersQuery(request.TenantId), ct)))
+            .RequirePermission("admin.users:view");
+
+        api.MapPost("/users", async (RegisterUserRequest body, IRequestContext request, ICommandHandler<RegisterUserCommand> handler, CancellationToken ct) =>
+            await WithReason(body.ReasonCode, request, async audit =>
+                (await handler.Handle(new RegisterUserCommand(request.TenantId, new UserId(body.UserId), body.DisplayName, body.EmployeeCode, audit), ct))
+                .ToHttp()))
+            .RequirePermission("admin.users:create");
+
+        api.MapPost("/users/{userId:guid}/deactivate", async (Guid userId, ReasonRequest body, IRequestContext request, ICommandHandler<DeactivateUserCommand> handler, CancellationToken ct) =>
+            await WithReason(body.ReasonCode, request, async audit =>
+                (await handler.Handle(new DeactivateUserCommand(request.TenantId, new UserId(userId), audit), ct)).ToHttp()))
+            .RequirePermission("admin.users:deactivate");
+
+        api.MapPost("/users/{userId:guid}/reactivate", async (Guid userId, ReasonRequest body, IRequestContext request, ICommandHandler<ReactivateUserCommand> handler, CancellationToken ct) =>
+            await WithReason(body.ReasonCode, request, async audit =>
+                (await handler.Handle(new ReactivateUserCommand(request.TenantId, new UserId(userId), audit), ct)).ToHttp()))
+            .RequirePermission("admin.users:deactivate");
 
         return app;
     }

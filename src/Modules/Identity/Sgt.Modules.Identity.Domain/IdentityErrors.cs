@@ -30,4 +30,22 @@ public static class IdentityErrors
 
     public static readonly Error UnknownPermission =
         new("Identity.UnknownPermission", "Bu yetki ekran kataloğunda tanımlı değil.");
+
+    public static readonly Error DisplayNameRequired =
+        new("Identity.DisplayNameRequired", "Ad soyad boş olamaz.");
+
+    public static readonly Error EmployeeCodeRequired =
+        new("Identity.EmployeeCodeRequired", "Personel kodu boş olamaz.");
+
+    public static readonly Error EmployeeCodeTaken =
+        new("Identity.EmployeeCodeTaken", "Bu personel kodu başka bir kullanıcıda.", ErrorKind.Conflict);
+
+    public static readonly Error UserAlreadyExists =
+        new("Identity.UserAlreadyExists", "Bu kimlikle kayıtlı kullanıcı zaten var.", ErrorKind.Conflict);
+
+    public static readonly Error SuperAdminProtected =
+        new("Identity.SuperAdminProtected", "Süper admini yalnızca süper admin pasifleştirebilir.", ErrorKind.Forbidden);
+
+    public static readonly Error LastSuperAdmin =
+        new("Identity.LastSuperAdmin", "Son aktif süper admin pasifleştirilemez.", ErrorKind.Conflict);
 }

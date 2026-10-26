@@ -28,6 +28,15 @@ internal sealed class InMemoryUsers : IUserAccessRepository
         Task.FromResult(Items.SingleOrDefault(u => u.TenantId == tenantId && u.UserId == userId));
 
     public void Add(UserAccess userAccess) => Items.Add(userAccess);
+
+    public Task<IReadOnlyList<UserAccess>> List(TenantId tenantId, CancellationToken ct) =>
+        Task.FromResult<IReadOnlyList<UserAccess>>(Items.Where(u => u.TenantId == tenantId).ToList());
+
+    public Task<bool> EmployeeCodeExists(TenantId tenantId, string employeeCode, CancellationToken ct) =>
+        Task.FromResult(Items.Any(u => u.TenantId == tenantId && string.Equals(u.EmployeeCode, employeeCode, StringComparison.OrdinalIgnoreCase)));
+
+    public Task<int> CountActiveSuperAdmins(TenantId tenantId, CancellationToken ct) =>
+        Task.FromResult(Items.Count(u => u.TenantId == tenantId && u.IsSuperAdmin && u.IsActive));
 }
 
 internal sealed class CountingUnitOfWork : IIdentityUnitOfWork
