@@ -303,3 +303,15 @@ docker compose -f deploy/docker-compose.yml --env-file deploy/.env --profile api
 | Realm değişikliği yansımadı | Keycloak var olan realm'i tekrar içe aktarmaz (B-5). |
 | API logunda `libgssapi_krb5.so.2` uyarısı | Zararsız; veritabanı sürücüsü Kerberos kütüphanesini arar, bulamayınca şifreyle devam eder. |
 | PostgreSQL ilk açılışta `KEYCLOAK_DB_PASSWORD` hatası | `.env`'de değer boş. Veri klasörü oluştuysa `down -v` ile sıfırlayın (geliştirme). |
+
+## Güncelleme: veritabanı şeması tek komutla (ADR-0007)
+
+Elle modül modül `dotnet ef database update` çalıştırmak yerine, yedekten sonra şu komut yeterlidir:
+
+```bash
+dotnet Sgt.Api.dll --migrate        # tüm modüllerin şemasını günceller ve çıkar
+# Docker: docker compose run --rm api --migrate
+```
+
+Windows sunucuda API, "SGT API" adlı Windows servisi olarak kurulabilir:
+`sc.exe create "SGT API" binPath= "C:\sgt\Sgt.Api.exe"` (ortam değişkenleri sistem düzeyinde tanımlanır).

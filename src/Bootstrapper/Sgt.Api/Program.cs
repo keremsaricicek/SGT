@@ -23,6 +23,7 @@ using Sgt.Modules.Identity.Infrastructure;
 
 // Tek host: modülleri kaydeder, kendi iş kodu yoktur (docs/kod-kurallari.md 3.2).
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseWindowsService(o => o.ServiceName = "SGT API"); // Windows sunucuda servis olarak çalışır (ADR-0007)
 
 builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi("v1"); // sözleşme: docs/api/openapi-v1.json (ADR-0006)
@@ -83,7 +84,9 @@ app.MapLoyaltyEndpoints();
 app.MapReportingEndpoints();
 app.MapOutboxAdminEndpoints();
 
-if (app.Environment.IsDevelopment())
+// "--migrate": yalnızca veritabanı şemasını günceller ve çıkar; üretimde dağıtım adımıdır (ADR-0007).
+var migrateOnly = args.Contains("--migrate", StringComparer.Ordinal);
+if (migrateOnly || app.Environment.IsDevelopment())
 {
     await using var scope = app.Services.CreateAsyncScope();
     await scope.ServiceProvider.MigrateIdentityDatabase(default);
@@ -93,6 +96,11 @@ if (app.Environment.IsDevelopment())
     await scope.ServiceProvider.MigrateFinanceDatabase(default);
     await scope.ServiceProvider.MigrateGamingFloorDatabase(default);
     await scope.ServiceProvider.MigrateLoyaltyDatabase(default);
+
+    if (migrateOnly)
+    {
+        return;
+    }
 
     var seed = app.Configuration.GetSection("DevelopmentSeed");
     if (Guid.TryParse(seed["TenantId"], out var tenant) && Guid.TryParse(seed["SuperAdminUserId"], out var admin))
