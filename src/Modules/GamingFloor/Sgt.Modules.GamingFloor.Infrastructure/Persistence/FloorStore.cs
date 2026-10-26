@@ -5,6 +5,7 @@ using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.GamingFloor.Application.Ports;
 using Sgt.Modules.GamingFloor.Contracts;
 using Sgt.Modules.GamingFloor.Domain;
+using Sgt.Modules.GamingFloor.Domain.Slots;
 
 namespace Sgt.Modules.GamingFloor.Infrastructure.Persistence;
 
@@ -13,6 +14,12 @@ internal sealed class TrackedFloor
     public Dictionary<GamingTable, TableRow?> Tables { get; } = [];
 
     public Dictionary<Rating, RatingRow?> Ratings { get; } = [];
+
+    public Dictionary<SlotMachine, SlotMachineRow?> Machines { get; } = [];
+
+    public List<RecordedReading> Readings { get; } = [];
+
+    public List<(TenantId TenantId, FloorChange Change)> ExtraChanges { get; } = [];
 }
 
 internal static class FloorMapping
@@ -161,17 +168,40 @@ internal sealed class FloorUnitOfWork(FloorDbContext db, TrackedFloor tracked, I
             Publish(rating.TenantId, rating.PendingChanges, rating);
         }
 
+        foreach (var (machine, existing) in tracked.Machines.ToList())
+        {
+            var row = existing ?? db.SlotMachines.Add(new SlotMachineRow()).Entity;
+            tracked.Machines[machine] = row;
+            SlotMapping.CopyTo(machine, row);
+            Publish(machine.TenantId, machine.PendingChanges, null);
+            machine.ClearPendingChanges();
+        }
+
+        foreach (var reading in tracked.Readings)
+        {
+            var tenant = tracked.Machines.Keys.Single(m => m.Id == reading.MachineId).TenantId;
+            db.MeterReadings.Add(SlotMapping.ToRow(tenant, reading));
+        }
+
+        tracked.Readings.Clear();
+        foreach (var (tenantId, change) in tracked.ExtraChanges)
+        {
+            Publish(tenantId, [change], null);
+        }
+
+        tracked.ExtraChanges.Clear();
+
         try
         {
             await db.SaveChangesAsync(ct);
         }
         catch (DbUpdateConcurrencyException e)
         {
-            throw new ConcurrencyConflictException("Masa veya rating aynı anda başka bir kullanıcı tarafından değiştirildi.", e);
+            throw new ConcurrencyConflictException("Masa, rating veya makine aynı anda başka bir işlemle değiştirildi.", e);
         }
         catch (DbUpdateException e) when (e.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
         {
-            throw new ConcurrencyConflictException("Aynı masa kodu, açık masa veya süren rating aynı anda kaydedildi.", e);
+            throw new ConcurrencyConflictException("Aynı masa kodu, açık masa, süren rating veya okuma aynı anda kaydedildi.", e);
         }
 
         foreach (var table in tracked.Tables.Keys)

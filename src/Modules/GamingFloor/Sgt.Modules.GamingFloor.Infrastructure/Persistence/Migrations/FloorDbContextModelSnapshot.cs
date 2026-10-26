@@ -97,6 +97,119 @@ namespace Sgt.Modules.GamingFloor.Infrastructure.Persistence.Migrations
                     b.ToTable("outbox_messages", "gaming_floor");
                 });
 
+            modelBuilder.Entity("Sgt.Modules.GamingFloor.Infrastructure.Persistence.MeterReadingRow", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ActorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actor_id");
+
+                    b.Property<decimal>("CoinIn")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("coin_in");
+
+                    b.Property<decimal>("CoinOut")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("coin_out");
+
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<decimal>("DeltaCoinIn")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("delta_coin_in");
+
+                    b.Property<decimal>("DeltaCoinOut")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("delta_coin_out");
+
+                    b.Property<long>("DeltaGamesPlayed")
+                        .HasColumnType("bigint")
+                        .HasColumnName("delta_games_played");
+
+                    b.Property<decimal>("DeltaJackpot")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("delta_jackpot");
+
+                    b.Property<long>("GamesPlayed")
+                        .HasColumnType("bigint")
+                        .HasColumnName("games_played");
+
+                    b.Property<bool>("IsReset")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_reset");
+
+                    b.Property<decimal>("Jackpot")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("jackpot");
+
+                    b.Property<Guid>("MachineId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("machine_id");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<DateTimeOffset>("ReadAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("read_at");
+
+                    b.Property<string>("ReasonCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("reason_code");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("source");
+
+                    b.Property<string>("SourceReference")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("source_reference");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("Terminal")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("terminal");
+
+                    b.HasKey("Id")
+                        .HasName("pk_meter_readings");
+
+                    b.HasIndex("MachineId", "ReadAt")
+                        .HasDatabaseName("ix_meter_readings_machine_id_read_at");
+
+                    b.HasIndex("TenantId", "ReadAt")
+                        .HasDatabaseName("ix_meter_readings_tenant_id_read_at");
+
+                    b.HasIndex("TenantId", "Source", "SourceReference")
+                        .IsUnique()
+                        .HasDatabaseName("ix_meter_readings_tenant_id_source_source_reference");
+
+                    b.ToTable("meter_readings", "gaming_floor");
+                });
+
             modelBuilder.Entity("Sgt.Modules.GamingFloor.Infrastructure.Persistence.RatingCorrectionRow", b =>
                 {
                     b.Property<Guid>("Id")
@@ -246,6 +359,91 @@ namespace Sgt.Modules.GamingFloor.Infrastructure.Persistence.Migrations
                         .HasFilter("finished_at IS NULL");
 
                     b.ToTable("ratings", "gaming_floor");
+                });
+
+            modelBuilder.Entity("Sgt.Modules.GamingFloor.Infrastructure.Persistence.SlotMachineRow", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Area")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("area");
+
+                    b.Property<string>("AssetNumber")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)")
+                        .HasColumnName("asset_number");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasColumnName("currency");
+
+                    b.Property<decimal>("Denomination")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("denomination");
+
+                    b.Property<decimal?>("LastCoinIn")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("last_coin_in");
+
+                    b.Property<decimal?>("LastCoinOut")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("last_coin_out");
+
+                    b.Property<long?>("LastGamesPlayed")
+                        .HasColumnType("bigint")
+                        .HasColumnName("last_games_played");
+
+                    b.Property<decimal?>("LastJackpot")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)")
+                        .HasColumnName("last_jackpot");
+
+                    b.Property<DateTimeOffset?>("LastReadAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_read_at");
+
+                    b.Property<string>("Manufacturer")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("manufacturer");
+
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("model");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id")
+                        .HasName("pk_slot_machines");
+
+                    b.HasIndex("TenantId", "AssetNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_slot_machines_tenant_id_asset_number");
+
+                    b.ToTable("slot_machines", "gaming_floor");
                 });
 
             modelBuilder.Entity("Sgt.Modules.GamingFloor.Infrastructure.Persistence.TableRow", b =>

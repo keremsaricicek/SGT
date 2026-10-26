@@ -4,6 +4,7 @@ using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.GamingFloor.Application.Ports;
 using Sgt.Modules.GamingFloor.Application.Ratings;
+using Sgt.Modules.GamingFloor.Application.Slots;
 using Sgt.Modules.GamingFloor.Application.Tables;
 using Sgt.Modules.GamingFloor.Contracts;
 using Sgt.Modules.GamingFloor.Infrastructure.Persistence;
@@ -21,12 +22,17 @@ public static class GamingFloorInfrastructureModule
         services.AddOutbox<FloorDbContext>("GamingFloor");
         services.AddIntegrationEventType<FloorChangedV1>();
         services.AddIntegrationEventType<PlayerRatedV1>();
+        services.AddIntegrationEventType<SlotMetersReportedV1>();
 
         services.AddScoped<TrackedFloor>();
         services.AddScoped<ITableRepository, TableRepository>();
         services.AddScoped<IRatingRepository, RatingRepository>();
         services.AddScoped<IFloorUnitOfWork, FloorUnitOfWork>();
         services.AddScoped<IPlayerLocationQuery, PlayerLocationQuery>();
+        services.AddScoped<ISlotMachineRepository, SlotMachineRepository>();
+        services.AddScoped<IFloorEvents, FloorEvents>();
+        services.AddScoped<IFloorInbox, FloorInbox>();
+        services.AddScoped<MeterReadingRecorder>();
 
         services.AddScoped<ICommandHandler<DefineTableCommand, Guid>, DefineTableHandler>();
         services.AddScoped<OpenTableSessionHandler>();
@@ -35,6 +41,12 @@ public static class GamingFloorInfrastructureModule
         services.AddScoped<ICommandHandler<FinishRatingCommand>, FinishRatingHandler>();
         services.AddScoped<ICommandHandler<CorrectRatingCommand>, CorrectRatingHandler>();
         services.AddScoped<IQueryHandler<ListTablesQuery, IReadOnlyList<TableView>>, ListTablesHandler>();
+        services.AddScoped<ICommandHandler<DefineSlotMachineCommand, Guid>, DefineSlotMachineHandler>();
+        services.AddScoped<ICommandHandler<EnterMeterReadingCommand>, EnterMeterReadingHandler>();
+        services.AddScoped<ICommandHandler<ImportMeterReadingsCommand, ImportReport>, ImportMeterReadingsHandler>();
+        services.AddScoped<IQueryHandler<GetSlotFloorQuery, IReadOnlyList<SlotFloorRow>>, GetSlotFloorHandler>();
+        services.AddScoped<IQueryHandler<GetSlotMachineQuery, SlotMachineView?>, GetSlotMachineHandler>();
+        services.AddScoped<IIntegrationEventHandler<SlotMetersReportedV1>, SlotMetersReportedHandler>();
         return services;
     }
 

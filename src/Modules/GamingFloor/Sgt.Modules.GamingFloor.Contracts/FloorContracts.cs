@@ -38,3 +38,23 @@ public sealed record PlayerRatedV1(
 {
     public string Summary => $"Rating {(IsCorrection ? "düzeltildi" : "bitti")}: {TableCode} ort. bahis {AverageBet} {Currency}, teorik {TheoreticalWin}";
 }
+
+/// <summary>
+/// Tek slot veri giriş sözleşmesi (docs/kararlar.md bölüm 3): NEXIO adaptörü ve S Slot sayaç okumalarını bu olayla
+/// bildirir. Source: "Nexio" | "SSlot". Reference, kaynağın okuma kimliğidir (idempotency). Sayaçlar birikimlidir.
+/// </summary>
+public sealed record SlotMetersReportedV1(
+    Guid EventId,
+    Guid CorrelationId,
+    DateTimeOffset OccurredAt,
+    TenantId TenantId,
+    string Source,
+    string Reference,
+    string AssetNumber,
+    DateTimeOffset ReadAt,
+    decimal CoinIn,
+    decimal CoinOut,
+    decimal Jackpot,
+    long GamesPlayed,
+    bool IsReset,
+    string? Note) : IIntegrationEvent;

@@ -19,6 +19,9 @@ public enum FloorChangeKind
     RatingStarted,
     RatingFinished,
     RatingCorrected,
+    SlotMachineDefined,
+    SlotReadingEntered,
+    SlotReadingsImported,
 }
 
 public sealed record FloorChange(Guid Id, FloorChangeKind Kind, string Detail, AuditContext Audit, DateTimeOffset OccurredAt);
