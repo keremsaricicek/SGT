@@ -5,8 +5,7 @@ namespace Sgt.Api.Tests;
 
 /// <summary>
 /// Yayınlanan API sözleşmesi depodaki docs/api/openapi-v1.json ile aynı olmalıdır (ADR-0006).
-/// Bilinçli değişiklikte: SGT_UPDATE_OPENAPI=1 ile testi bir kez çalıştırıp dosyayı güncelleyin ve
-/// kırıcı değişiklik olup olmadığını inceleyin (kırıcıysa yeni sürüm: v2).
+/// Bilinçli değişiklikte SGT_UPDATE_OPENAPI=1 ile bir kez çalıştırıp dosyayı güncelleyin; kırıcıysa yeni sürüm açın.
 /// </summary>
 public sealed class OpenApiContractTests(ApiFactory api) : IClassFixture<ApiFactory>
 {
@@ -22,15 +21,15 @@ public sealed class OpenApiContractTests(ApiFactory api) : IClassFixture<ApiFact
             await File.WriteAllTextAsync(path, live);
         }
 
-        Assert.True(File.Exists(path), $"Sözleşme dosyası yok: {path}. SGT_UPDATE_OPENAPI=1 ile oluşturun.");
+        Assert.True(File.Exists(path), $"Sözleşme dosyası yok: {path}");
         Assert.True(live == Normalize(await File.ReadAllTextAsync(path)),
-            "API sözleşmesi değişti. Kırıcı değilse SGT_UPDATE_OPENAPI=1 ile docs/api/openapi-v1.json dosyasını güncelleyin; kırıcıysa yeni sürüm açın.");
+            "API sözleşmesi değişti: SGT_UPDATE_OPENAPI=1 ile docs/api/openapi-v1.json güncelleyin (kırıcıysa yeni sürüm).");
     }
 
     private static string Normalize(string json)
     {
         var node = JsonNode.Parse(json)!;
-        node["servers"]?.AsArray().Clear(); // test sunucusu adresi sözleşmenin parçası değildir
+        node["servers"]?.AsArray().Clear();
         return node.ToJsonString(new JsonSerializerOptions { WriteIndented = true }) + "\n";
     }
 
