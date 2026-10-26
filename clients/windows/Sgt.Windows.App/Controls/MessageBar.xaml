@@ -1,0 +1,26 @@
+<!-- Ekranın durum şeridi: işleniyor göstergesi, hata (problem details + kod) ve bilgi mesajı. DataContext: StatusViewModel. -->
+<UserControl x:Class="Sgt.Windows.App.Controls.MessageBar"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             Focusable="False">
+    <StackPanel>
+        <ProgressBar Height="3" IsIndeterminate="True"
+                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}"
+                     ToolTip="{x:Static loc:Strings.Common_Busy}" />
+        <Border Background="{StaticResource ErrorBackground}" BorderBrush="{StaticResource ErrorBorder}"
+                BorderThickness="1" Padding="6,3" Margin="0,2"
+                Visibility="{Binding ErrorMessage, Converter={StaticResource NullToCollapsed}}">
+            <TextBlock TextWrapping="Wrap" AutomationProperties.LiveSetting="Assertive">
+                <Run Text="{Binding ErrorMessage, Mode=OneWay}" />
+                <Run Text="{Binding ErrorCode, Mode=OneWay, StringFormat=' [{0}]'}" Foreground="{StaticResource MutedText}" />
+            </TextBlock>
+        </Border>
+        <Border Background="{StaticResource InfoBackground}" BorderBrush="{StaticResource InfoBorder}"
+                BorderThickness="1" Padding="6,3" Margin="0,2"
+                Visibility="{Binding StatusMessage, Converter={StaticResource NullToCollapsed}}">
+            <TextBlock Text="{Binding StatusMessage}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+        </Border>
+    </StackPanel>
+</UserControl>

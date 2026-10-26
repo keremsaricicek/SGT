@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\Sgt.BuildingBlocks\Sgt.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\Sgt.BuildingBlocks.Web\Sgt.BuildingBlocks.Web.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Api\Sgt.Modules.Identity.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Infrastructure\Sgt.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Api\Sgt.Modules.Audit.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Infrastructure\Sgt.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Api\Sgt.Modules.Configuration.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Infrastructure\Sgt.Modules.Configuration.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Api\Sgt.Modules.CasinoPlayer.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Infrastructure\Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Finance\Sgt.Modules.Finance.Api\Sgt.Modules.Finance.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Finance\Sgt.Modules.Finance.Infrastructure\Sgt.Modules.Finance.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\GamingFloor\Sgt.Modules.GamingFloor.Api\Sgt.Modules.GamingFloor.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\GamingFloor\Sgt.Modules.GamingFloor.Infrastructure\Sgt.Modules.GamingFloor.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Loyalty\Sgt.Modules.Loyalty.Api\Sgt.Modules.Loyalty.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Loyalty\Sgt.Modules.Loyalty.Infrastructure\Sgt.Modules.Loyalty.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Reporting\Sgt.Modules.Reporting.Api\Sgt.Modules.Reporting.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Reporting\Sgt.Modules.Reporting.Infrastructure\Sgt.Modules.Reporting.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="10.0.4" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

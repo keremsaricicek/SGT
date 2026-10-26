@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arayüz metinleri — Türkçe (varsayılan dil). Yeni metin hem bu dosyaya hem Strings.en.resx'e eklenir. -->
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="Api_Unreachable" xml:space="preserve"><value>Sunucuya ulaşılamadı. Ağ bağlantısını kontrol edip tekrar deneyin.</value></data>
+  <data name="Api_InvalidResponse" xml:space="preserve"><value>Sunucudan beklenmeyen bir yanıt geldi.</value></data>
+  <data name="Api_Unauthorized" xml:space="preserve"><value>Oturumunuz sona erdi. Lütfen yeniden giriş yapın.</value></data>
+  <data name="Api_Forbidden" xml:space="preserve"><value>Bu işlem için yetkiniz yok.</value></data>
+  <data name="Api_NotFound" xml:space="preserve"><value>Kayıt bulunamadı.</value></data>
+  <data name="Api_Failed" xml:space="preserve"><value>İşlem başarısız oldu (HTTP {0}).</value></data>
+  <data name="Login_Timeout" xml:space="preserve"><value>Giriş zaman aşımına uğradı veya iptal edildi.</value></data>
+  <data name="Login_BrowserDone" xml:space="preserve"><value>Giriş tamamlandı. Bu sekmeyi kapatıp SGT uygulamasına dönebilirsiniz.</value></data>
+  <data name="Login_NotConfigured" xml:space="preserve"><value>Giriş ayarları eksik (Authentication:Authority).</value></data>
+  <data name="Login_Waiting" xml:space="preserve"><value>Tarayıcıda giriş sayfası açıldı; giriş yapmanız bekleniyor…</value></data>
+  <data name="Login_Failed" xml:space="preserve"><value>Giriş yapılamadı.</value></data>
+  <data name="Login_Cancelled" xml:space="preserve"><value>Giriş iptal edildi.</value></data>
+  <data name="Login_ServerUnreachable" xml:space="preserve"><value>Giriş sunucusuna ulaşılamadı.</value></data>
+  <data name="Login_Title" xml:space="preserve"><value>SGT — Giriş</value></data>
+  <data name="Login_Heading" xml:space="preserve"><value>S Plus operasyon</value></data>
+  <data name="Login_Explain" xml:space="preserve"><value>Giriş, şifre ve doğrulama kodu tarayıcıda açılan güvenli sayfada yapılır.</value></data>
+  <data name="Login_Button" xml:space="preserve"><value>_Giriş yap</value></data>
+  <data name="Shell_Title" xml:space="preserve"><value>SGT — S Plus</value></data>
+  <data name="Shell_NoShift" xml:space="preserve"><value>vardiya yok</value></data>
+  <data name="Shell_NoScreens" xml:space="preserve"><value>Bu kullanıcıya bu uygulamada açılabilecek ekran tanımlanmamış.</value></data>
+  <data name="Shell_NoAccess" xml:space="preserve"><value>Bu ekranı açma yetkiniz yok.</value></data>
+  <data name="Shell_Menu" xml:space="preserve"><value>Ekranlar</value></data>
+  <data name="Shell_Filter" xml:space="preserve"><value>_Ara (Ctrl+F)</value></data>
+  <data name="Shell_Open" xml:space="preserve"><value>_Aç</value></data>
+  <data name="Shell_Refresh" xml:space="preserve"><value>Menüyü _yenile</value></data>
+  <data name="Shell_Logout" xml:space="preserve"><value>Çı_kış</value></data>
+  <data name="Shell_User" xml:space="preserve"><value>Kullanıcı</value></data>
+  <data name="Shell_Terminal" xml:space="preserve"><value>Terminal</value></data>
+  <data name="Shell_Shift" xml:space="preserve"><value>Vardiya</value></data>
+  <data name="Shell_Hint" xml:space="preserve"><value>Ekranı seçip Enter'a basın; her ekran ayrı pencerede açılır.</value></data>
+  <data name="Group_Cage" xml:space="preserve"><value>Kasa</value></data>
+  <data name="Group_Player" xml:space="preserve"><value>Oyuncu</value></data>
+  <data name="Group_Live" xml:space="preserve"><value>Canlı oyun</value></data>
+  <data name="Group_Other" xml:space="preserve"><value>Diğer</value></data>
+  <data name="Players_NoResults" xml:space="preserve"><value>Sonuç bulunamadı.</value></data>
+  <data name="Players_MinLength" xml:space="preserve"><value>En az 2 karakter girin.</value></data>
+  <data name="Players_Term" xml:space="preserve"><value>Oyuncu (ad, numara, kart)</value></data>
+  <data name="Players_Search" xml:space="preserve"><value>_Ara</value></data>
+  <data name="Players_OpenProfile" xml:space="preserve"><value>_Kartı aç</value></data>
+  <data name="Players_Number" xml:space="preserve"><value>No</value></data>
+  <data name="Players_Name" xml:space="preserve"><value>Ad Soyad</value></data>
+  <data name="Players_Card" xml:space="preserve"><value>Kart</value></data>
+  <data name="Players_Restricted" xml:space="preserve"><value>Kısıtlı</value></data>
+  <data name="Players_BirthDate" xml:space="preserve"><value>Doğum tarihi</value></data>
+  <data name="Players_Nationality" xml:space="preserve"><value>Uyruk</value></data>
+  <data name="Players_Document" xml:space="preserve"><value>Belge</value></data>
+  <data name="Players_Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Players_Restrictions" xml:space="preserve"><value>Aktif kısıtlamalar</value></data>
+  <data name="Players_RestrictionType" xml:space="preserve"><value>Tür</value></data>
+  <data name="Players_Until" xml:space="preserve"><value>Bitiş</value></data>
+  <data name="Players_Note" xml:space="preserve"><value>Not</value></data>
+  <data name="Screen_PlayerSearch" xml:space="preserve"><value>Oyuncu arama</value></data>
+  <data name="Screen_PlayerProfile" xml:space="preserve"><value>Oyuncu kartı</value></data>
+  <data name="Screen_CageShift" xml:space="preserve"><value>Kasiyer vardiyası</value></data>
+  <data name="Screen_CageSummary" xml:space="preserve"><value>Kasa özeti</value></data>
+  <data name="Screen_CageAdjustment" xml:space="preserve"><value>Düzeltme talebi</value></data>
+  <data name="Screen_CageChips" xml:space="preserve"><value>Çip satış / bozdurma</value></data>
+  <data name="Screen_CageExchange" xml:space="preserve"><value>Döviz işlemleri</value></data>
+  <data name="Screen_Tables" xml:space="preserve"><value>Masalar</value></data>
+  <data name="Screen_Rating" xml:space="preserve"><value>Oyuncu rating</value></data>
+  <data name="Cage_SellChips" xml:space="preserve"><value>Çip satış</value></data>
+  <data name="Cage_RedeemChips" xml:space="preserve"><value>Çip bozdurma</value></data>
+  <data name="Cage_ForeignToBase" xml:space="preserve"><value>Döviz alış (döviz → ana para)</value></data>
+  <data name="Cage_BaseToForeign" xml:space="preserve"><value>Döviz satış (ana para → döviz)</value></data>
+  <data name="Cage_NoShift" xml:space="preserve"><value>Açık vardiya yok. Önce "Kasiyer vardiyası" ekranından vardiya açın veya bağlanın.</value></data>
+  <data name="Cage_TransactionDone" xml:space="preserve"><value>{0} tamamlandı: {1}</value></data>
+  <data name="Cage_ShiftOpened" xml:space="preserve"><value>Vardiya açıldı.</value></data>
+  <data name="Cage_ShiftClosed" xml:space="preserve"><value>Vardiya kapatıldı.</value></data>
+  <data name="Cage_ShiftAttached" xml:space="preserve"><value>Vardiyaya bağlanıldı.</value></data>
+  <data name="Cage_AdjustmentRequested" xml:space="preserve"><value>Düzeltme talebi oluşturuldu; ikinci yetkilinin onayı bekleniyor.</value></data>
+  <data name="Cage_Kind" xml:space="preserve"><value>İşlem</value></data>
+  <data name="Cage_Player" xml:space="preserve"><value>Oyuncu</value></data>
+  <data name="Cage_Amount" xml:space="preserve"><value>Tutar</value></data>
+  <data name="Cage_Currency" xml:space="preserve"><value>Para birimi</value></data>
+  <data name="Cage_Reason" xml:space="preserve"><value>Gerekçe kodu</value></data>
+  <data name="Cage_Submit" xml:space="preserve"><value>_Onayla (Ctrl+Enter)</value></data>
+  <data name="Cage_Pending" xml:space="preserve"><value>Bekleyen işlem (tekrar denemede aynı kalır)</value></data>
+  <data name="Cage_LastTransaction" xml:space="preserve"><value>Son işlem</value></data>
+  <data name="Cage_Instrument" xml:space="preserve"><value>Araç</value></data>
+  <data name="Cage_Expected" xml:space="preserve"><value>Beklenen</value></data>
+  <data name="Cage_Counted" xml:space="preserve"><value>Sayılan</value></data>
+  <data name="Cage_Variance" xml:space="preserve"><value>Fark</value></data>
+  <data name="Cage_TotalVariance" xml:space="preserve"><value>Toplam fark</value></data>
+  <data name="Cage_Note" xml:space="preserve"><value>Açıklama</value></data>
+  <data name="Cage_NoteRequired" xml:space="preserve"><value>Sayım farkı var; açıklama zorunludur.</value></data>
+  <data name="Cage_OpenTab" xml:space="preserve"><value>Vardiya aç</value></data>
+  <data name="Cage_CloseTab" xml:space="preserve"><value>Vardiya kapat (sayım)</value></data>
+  <data name="Cage_AttachLabel" xml:space="preserve"><value>Açık vardiya numarası</value></data>
+  <data name="Cage_Attach" xml:space="preserve"><value>_Bağlan</value></data>
+  <data name="Cage_CurrentShift" xml:space="preserve"><value>Geçerli vardiya</value></data>
+  <data name="Cage_AddLine" xml:space="preserve"><value>Satır _ekle</value></data>
+  <data name="Cage_RemoveLine" xml:space="preserve"><value>Sil</value></data>
+  <data name="Cage_Open" xml:space="preserve"><value>Vardiyayı _aç</value></data>
+  <data name="Cage_LoadCounts" xml:space="preserve"><value>Beklenenleri _yükle</value></data>
+  <data name="Cage_Close" xml:space="preserve"><value>Vardiyayı _kapat</value></data>
+  <data name="Cage_Refresh" xml:space="preserve"><value>_Yenile (F5)</value></data>
+  <data name="Cage_Balances" xml:space="preserve"><value>Beklenen bakiyeler</value></data>
+  <data name="Cage_Transactions" xml:space="preserve"><value>İşlemler</value></data>
+  <data name="Cage_ClosingCounts" xml:space="preserve"><value>Kapanış sayımı</value></data>
+  <data name="Cage_Type" xml:space="preserve"><value>Tür</value></data>
+  <data name="Cage_Rate" xml:space="preserve"><value>Kur</value></data>
+  <data name="Cage_OpenedAt" xml:space="preserve"><value>Açılış</value></data>
+  <data name="Cage_ClosedAt" xml:space="preserve"><value>Kapanış</value></data>
+  <data name="Cage_Terminal" xml:space="preserve"><value>Terminal</value></data>
+  <data name="Cage_SelectTransaction" xml:space="preserve"><value>Düzeltilecek işlem</value></data>
+  <data name="Cage_RequestAdjustment" xml:space="preserve"><value>Talep _oluştur</value></data>
+  <data name="Cage_AdjustmentExplain" xml:space="preserve"><value>Kayıt silinmez; onaylanırsa ters kayıt oluşturulur (dört göz).</value></data>
+  <data name="Floor_TableOpened" xml:space="preserve"><value>{0} masası açıldı.</value></data>
+  <data name="Floor_TableClosed" xml:space="preserve"><value>{0} masası kapatıldı.</value></data>
+  <data name="Floor_RatingStarted" xml:space="preserve"><value>{0} için {1} masasında rating başladı.</value></data>
+  <data name="Floor_RatingFinished" xml:space="preserve"><value>{0} ({1}) rating bitirildi.</value></data>
+  <data name="Floor_Code" xml:space="preserve"><value>Masa</value></data>
+  <data name="Floor_Game" xml:space="preserve"><value>Oyun</value></data>
+  <data name="Floor_MinBet" xml:space="preserve"><value>Min bahis</value></data>
+  <data name="Floor_MaxBet" xml:space="preserve"><value>Max bahis</value></data>
+  <data name="Floor_Open" xml:space="preserve"><value>Açık</value></data>
+  <data name="Floor_OpenTable" xml:space="preserve"><value>Masayı _aç</value></data>
+  <data name="Floor_CloseTable" xml:space="preserve"><value>Masayı _kapat</value></data>
+  <data name="Floor_Table" xml:space="preserve"><value>Açık masa</value></data>
+  <data name="Floor_Start" xml:space="preserve"><value>Rating _başlat</value></data>
+  <data name="Floor_ActiveRatings" xml:space="preserve"><value>Süren ratingler (F5 yeniler)</value></data>
+  <data name="Floor_AverageBet" xml:space="preserve"><value>Ortalama bahis</value></data>
+  <data name="Floor_PlayerResult" xml:space="preserve"><value>Oyuncu sonucu (+/−, isteğe bağlı)</value></data>
+  <data name="Floor_Finish" xml:space="preserve"><value>Rating _bitir</value></data>
+  <data name="Floor_StartedAt" xml:space="preserve"><value>Başlangıç</value></data>
+  <data name="Common_Busy" xml:space="preserve"><value>İşleniyor…</value></data>
+</root>

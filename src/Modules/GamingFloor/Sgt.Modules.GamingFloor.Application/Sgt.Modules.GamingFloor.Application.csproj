@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Sgt.BuildingBlocks\Sgt.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.GamingFloor.Domain\Sgt.Modules.GamingFloor.Domain.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.GamingFloor.Contracts\Sgt.Modules.GamingFloor.Contracts.csproj" />
+    <ProjectReference Include="..\..\CasinoPlayer\Sgt.Modules.CasinoPlayer.Contracts\Sgt.Modules.CasinoPlayer.Contracts.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

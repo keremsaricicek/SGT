@@ -1,0 +1,105 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Bootstrapper/">
+    <Project Path="src/Bootstrapper/Sgt.Api/Sgt.Api.csproj" />
+  </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks.Infrastructure/Sgt.BuildingBlocks.Infrastructure.csproj" />
+    <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks.Web/Sgt.BuildingBlocks.Web.csproj" />
+    <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks/Sgt.BuildingBlocks.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Audit/">
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Api/Sgt.Modules.Audit.Api.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Application/Sgt.Modules.Audit.Application.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Contracts/Sgt.Modules.Audit.Contracts.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Domain/Sgt.Modules.Audit.Domain.csproj" />
+    <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Infrastructure/Sgt.Modules.Audit.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/CasinoPlayer/">
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Api/Sgt.Modules.CasinoPlayer.Api.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Application/Sgt.Modules.CasinoPlayer.Application.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Contracts/Sgt.Modules.CasinoPlayer.Contracts.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Domain/Sgt.Modules.CasinoPlayer.Domain.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Infrastructure/Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Configuration/">
+    <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Api/Sgt.Modules.Configuration.Api.csproj" />
+    <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Application/Sgt.Modules.Configuration.Application.csproj" />
+    <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Contracts/Sgt.Modules.Configuration.Contracts.csproj" />
+    <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Domain/Sgt.Modules.Configuration.Domain.csproj" />
+    <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Infrastructure/Sgt.Modules.Configuration.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Finance/">
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Api/Sgt.Modules.Finance.Api.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Application/Sgt.Modules.Finance.Application.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Contracts/Sgt.Modules.Finance.Contracts.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Domain/Sgt.Modules.Finance.Domain.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Infrastructure/Sgt.Modules.Finance.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/GamingFloor/">
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Api/Sgt.Modules.GamingFloor.Api.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Application/Sgt.Modules.GamingFloor.Application.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Contracts/Sgt.Modules.GamingFloor.Contracts.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Domain/Sgt.Modules.GamingFloor.Domain.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Infrastructure/Sgt.Modules.GamingFloor.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Api/Sgt.Modules.Identity.Api.csproj" />
+    <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Application/Sgt.Modules.Identity.Application.csproj" />
+    <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Contracts/Sgt.Modules.Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Domain/Sgt.Modules.Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Infrastructure/Sgt.Modules.Identity.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Loyalty/">
+    <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Api/Sgt.Modules.Loyalty.Api.csproj" />
+    <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Application/Sgt.Modules.Loyalty.Application.csproj" />
+    <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Contracts/Sgt.Modules.Loyalty.Contracts.csproj" />
+    <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Domain/Sgt.Modules.Loyalty.Domain.csproj" />
+    <Project Path="src/Modules/Loyalty/Sgt.Modules.Loyalty.Infrastructure/Sgt.Modules.Loyalty.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Reporting/">
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Api/Sgt.Modules.Reporting.Api.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Application/Sgt.Modules.Reporting.Application.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Contracts/Sgt.Modules.Reporting.Contracts.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Domain/Sgt.Modules.Reporting.Domain.csproj" />
+    <Project Path="src/Modules/Reporting/Sgt.Modules.Reporting.Infrastructure/Sgt.Modules.Reporting.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/Api/">
+    <Project Path="tests/Api/Sgt.Api.Tests/Sgt.Api.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Architecture/">
+    <Project Path="tests/Architecture/Sgt.Tests.Architecture.csproj" />
+  </Folder>
+  <Folder Name="/tests/BuildingBlocks/">
+    <Project Path="tests/BuildingBlocks/Sgt.BuildingBlocks.Infrastructure.Tests/Sgt.BuildingBlocks.Infrastructure.Tests.csproj" />
+    <Project Path="tests/BuildingBlocks/Sgt.BuildingBlocks.Tests/Sgt.BuildingBlocks.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/" />
+  <Folder Name="/tests/Modules/Audit/">
+    <Project Path="tests/Modules/Audit/Sgt.Modules.Audit.Tests/Sgt.Modules.Audit.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/CasinoPlayer/">
+    <Project Path="tests/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Tests/Sgt.Modules.CasinoPlayer.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Configuration/">
+    <Project Path="tests/Modules/Configuration/Sgt.Modules.Configuration.Tests/Sgt.Modules.Configuration.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Finance/">
+    <Project Path="tests/Modules/Finance/Sgt.Modules.Finance.Tests/Sgt.Modules.Finance.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/GamingFloor/">
+    <Project Path="tests/Modules/GamingFloor/Sgt.Modules.GamingFloor.Tests/Sgt.Modules.GamingFloor.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Identity/">
+    <Project Path="tests/Modules/Identity/Sgt.Modules.Identity.IntegrationTests/Sgt.Modules.Identity.IntegrationTests.csproj" />
+    <Project Path="tests/Modules/Identity/Sgt.Modules.Identity.Tests/Sgt.Modules.Identity.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Loyalty/">
+    <Project Path="tests/Modules/Loyalty/Sgt.Modules.Loyalty.Tests/Sgt.Modules.Loyalty.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Reporting/">
+    <Project Path="tests/Modules/Reporting/Sgt.Modules.Reporting.Tests/Sgt.Modules.Reporting.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,90 @@
+<!--
+  Kasa işlemi (K3 çip satış/bozdurma, K4 döviz). Ctrl+Enter onaylar.
+  Hata sonrası aynı bilgilerle tekrar onay aynı işlem numarasıyla gider (çift hareket oluşmaz).
+-->
+<UserControl x:Class="Sgt.Windows.App.Features.Cage.CageTransactionView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             xmlns:cage="clr-namespace:Sgt.Windows.Core.Features.Cage;assembly=Sgt.Windows.Core"
+             xmlns:shared="clr-namespace:Sgt.Windows.Core.Shared;assembly=Sgt.Windows.Core"
+             xmlns:players="clr-namespace:Sgt.Windows.App.Features.Players"
+             xmlns:controls="clr-namespace:Sgt.Windows.App.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=cage:CageTransactionViewModel}">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Modifiers="Ctrl" Command="{Binding SubmitCommand}" />
+    </UserControl.InputBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="8" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <DockPanel>
+            <Grid DockPanel.Dock="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Target="{Binding ElementName=KindBox}" Content="{x:Static loc:Strings.Cage_Kind}" />
+                <ComboBox x:Name="KindBox" Grid.Column="1" ItemsSource="{Binding Kinds}" SelectedItem="{Binding SelectedKind}"
+                          DisplayMemberPath="Title" />
+            </Grid>
+            <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Cage_Player}" Style="{StaticResource SectionHeader}" />
+            <players:PlayerPickerView DataContext="{Binding Player}" />
+        </DockPanel>
+
+        <StackPanel Grid.Column="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Label Target="{Binding ElementName=AmountBox}" Content="{x:Static loc:Strings.Cage_Amount}" />
+                <TextBox x:Name="AmountBox" Grid.Column="1" Text="{Binding AmountText, UpdateSourceTrigger=PropertyChanged}"
+                         HorizontalContentAlignment="Right" FontSize="14" />
+                <Label Grid.Row="1" Target="{Binding ElementName=CurrencyBox}" Content="{x:Static loc:Strings.Cage_Currency}" />
+                <ComboBox x:Name="CurrencyBox" Grid.Row="1" Grid.Column="1" ItemsSource="{x:Static shared:Currency.All}"
+                          SelectedItem="{Binding SelectedCurrency}" DisplayMemberPath="Code" />
+                <Label Grid.Row="2" Target="{Binding ElementName=ReasonBox}" Content="{x:Static loc:Strings.Cage_Reason}" />
+                <TextBox x:Name="ReasonBox" Grid.Row="2" Grid.Column="1" Text="{Binding ReasonCode, UpdateSourceTrigger=PropertyChanged}"
+                         CharacterCasing="Upper" MaxLength="50" />
+            </Grid>
+            <Button Command="{Binding SubmitCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Margin="0,6">
+                <AccessText Text="{x:Static loc:Strings.Cage_Submit}" />
+            </Button>
+            <TextBlock Style="{StaticResource Hint}"
+                       Visibility="{Binding PendingTransactionId, Converter={StaticResource NullToCollapsed}}">
+                <Run Text="{x:Static loc:Strings.Cage_Pending}" />: <Run Text="{Binding PendingTransactionId, Mode=OneWay}" />
+            </TextBlock>
+            <controls:MessageBar />
+
+            <StackPanel Visibility="{Binding LastTransaction, Converter={StaticResource NullToCollapsed}}">
+                <TextBlock Text="{x:Static loc:Strings.Cage_LastTransaction}" Style="{StaticResource SectionHeader}" />
+                <TextBlock>
+                    <Run Text="{Binding LastTransaction.Type, Mode=OneWay}" />
+                    <Run Text="{Binding LastTransaction.Amount, Mode=OneWay, StringFormat=N2}" />
+                    <Run Text="{Binding LastTransaction.Currency, Mode=OneWay}" />
+                    <Run Text="{Binding LastTransaction.Rate, Mode=OneWay, StringFormat=' @ {0}'}" />
+                </TextBlock>
+                <DataGrid ItemsSource="{Binding LastTransaction.Movements}" IsReadOnly="True" MaxHeight="160">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Instrument}" Binding="{Binding Instrument}" Width="*" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Currency}" Binding="{Binding Currency}" Width="60" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Cage_Amount}" Binding="{Binding Amount, StringFormat=N2}" Width="90" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

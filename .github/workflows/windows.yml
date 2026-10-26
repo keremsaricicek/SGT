@@ -1,0 +1,39 @@
+name: Windows istemcisi
+
+on:
+  push:
+    paths:
+      - "clients/windows/**"
+      - "docs/api/openapi-v1.json"
+      - "Directory.Build.props"
+      - ".github/workflows/windows.yml"
+  pull_request:
+    paths:
+      - "clients/windows/**"
+      - "docs/api/openapi-v1.json"
+      - "Directory.Build.props"
+      - ".github/workflows/windows.yml"
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - run: dotnet restore clients/windows/Sgt.Windows.slnx
+      - name: Build (uyarı = hata)
+        run: dotnet build clients/windows/Sgt.Windows.slnx --no-restore -c Release
+      - name: Test (ViewModel, servis, sözleşme)
+        run: dotnet test clients/windows/Sgt.Windows.Core.Tests/Sgt.Windows.Core.Tests.csproj --no-build -c Release
+      - name: Uygulama paketi (yayınlanmaz, yalnızca derleme çıktısı)
+        run: dotnet publish clients/windows/Sgt.Windows.App/Sgt.Windows.App.csproj --no-restore -c Release -o artifacts/windows
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sgt-windows
+          path: artifacts/windows
+          retention-days: 7

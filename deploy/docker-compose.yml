@@ -1,0 +1,93 @@
+# SGT yerel geliştirme / pilot ortamı. Ayrıntı ve komutlar: docs/kurulum.md
+#
+#   cp deploy/.env.example deploy/.env
+#   docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d                # PostgreSQL + Keycloak
+#   docker compose -f deploy/docker-compose.yml --env-file deploy/.env --profile api up -d --build   # + SGT API
+#
+# Secret'lar bu dosyada değil, deploy/.env'dedir (repoya girmez). Üretimde secret manager kullanılır.
+name: sgt
+
+services:
+  postgres:
+    image: postgres:16.14-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?deploy/.env eksik}
+      POSTGRES_USER: ${POSTGRES_USER:?deploy/.env eksik}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?deploy/.env eksik}
+      KEYCLOAK_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:?deploy/.env eksik}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.7.5
+    restart: unless-stopped
+    # start-dev: HTTP ile çalışır, yalnızca geliştirme/pilot içindir. Üretim: "start" + HTTPS (docs/kurulum.md).
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:?deploy/.env eksik}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:?deploy/.env eksik}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:?deploy/.env eksik}
+      # Token "iss" değeri her zaman tarayıcının gördüğü adrestir; konteynerler arası
+      # (API -> keycloak:8080) anahtar indirme isteği iç adresle yapılabilir.
+      KC_HOSTNAME: ${KC_HOSTNAME_URL:-http://localhost:8080}
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HEALTH_ENABLED: "true"
+      # Realm içe aktarımında kullanılan değerler (deploy/keycloak/sgt-realm.json içindeki ${...})
+      SGT_OTP_REQUIREMENT: ${SGT_OTP_REQUIREMENT:-REQUIRED}
+      SGT_DEV_DIRECT_GRANT: ${SGT_DEV_DIRECT_GRANT:-false}
+      SGT_DEV_SUPERADMIN_PASSWORD: ${SGT_DEV_SUPERADMIN_PASSWORD:?deploy/.env eksik}
+      SGT_DEV_KASIYER1_PASSWORD: ${SGT_DEV_KASIYER1_PASSWORD:?deploy/.env eksik}
+    ports:
+      - "127.0.0.1:${KEYCLOAK_PORT:-8080}:8080"
+    volumes:
+      - ./keycloak/sgt-realm.json:/opt/keycloak/data/import/sgt-realm.json:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # İmajda curl yok; bash ile yönetim portundaki /health/ready kontrol edilir.
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '\"UP\"' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  api:
+    profiles: ["api"]
+    build:
+      context: ..
+      dockerfile: deploy/api.Dockerfile
+    image: sgt-api:dev
+    restart: unless-stopped
+    environment:
+      # Development: HTTP üzerinden Keycloak'a izin verir, açılışta migration ve ilk yetki tohumunu çalıştırır.
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ConnectionStrings__Sgt: Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      Authentication__Authority: http://keycloak:8080/realms/sgt
+      Authentication__Audience: sgt-api
+      DevelopmentSeed__TenantId: ${SGT_TENANT_ID:-}
+      DevelopmentSeed__SuperAdminUserId: ${SGT_SUPERADMIN_USER_ID:-}
+      Security__PersonalDataKey: ${SGT_PERSONAL_DATA_KEY:?deploy/.env eksik}
+      Security__BlindIndexKey: ${SGT_BLIND_INDEX_KEY:?deploy/.env eksik}
+    ports:
+      - "127.0.0.1:${API_PORT:-5080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+
+volumes:
+  pgdata:

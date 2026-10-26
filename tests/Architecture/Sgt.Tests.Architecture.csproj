@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="NetArchTest.Rules" Version="1.3.2" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/BuildingBlocks/Sgt.BuildingBlocks/Sgt.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\Sgt.Modules.Identity.Contracts\Sgt.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\Sgt.Modules.Identity.Domain\Sgt.Modules.Identity.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\Sgt.Modules.Identity.Application\Sgt.Modules.Identity.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\Sgt.Modules.Identity.Infrastructure\Sgt.Modules.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Identity\Sgt.Modules.Identity.Api\Sgt.Modules.Identity.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Contracts\Sgt.Modules.Audit.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Domain\Sgt.Modules.Audit.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Application\Sgt.Modules.Audit.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Infrastructure\Sgt.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Api\Sgt.Modules.Audit.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Contracts\Sgt.Modules.Configuration.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Domain\Sgt.Modules.Configuration.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Application\Sgt.Modules.Configuration.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Infrastructure\Sgt.Modules.Configuration.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Api\Sgt.Modules.Configuration.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Contracts\Sgt.Modules.CasinoPlayer.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Domain\Sgt.Modules.CasinoPlayer.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Application\Sgt.Modules.CasinoPlayer.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Infrastructure\Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Api\Sgt.Modules.CasinoPlayer.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Contracts\Sgt.Modules.Finance.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Domain\Sgt.Modules.Finance.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Application\Sgt.Modules.Finance.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Infrastructure\Sgt.Modules.Finance.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Api\Sgt.Modules.Finance.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Contracts\Sgt.Modules.GamingFloor.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Domain\Sgt.Modules.GamingFloor.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Application\Sgt.Modules.GamingFloor.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Infrastructure\Sgt.Modules.GamingFloor.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\GamingFloor\Sgt.Modules.GamingFloor.Api\Sgt.Modules.GamingFloor.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Contracts\Sgt.Modules.Loyalty.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Domain\Sgt.Modules.Loyalty.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Application\Sgt.Modules.Loyalty.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Infrastructure\Sgt.Modules.Loyalty.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Loyalty\Sgt.Modules.Loyalty.Api\Sgt.Modules.Loyalty.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Contracts\Sgt.Modules.Reporting.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Domain\Sgt.Modules.Reporting.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Application\Sgt.Modules.Reporting.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Infrastructure\Sgt.Modules.Reporting.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Reporting\Sgt.Modules.Reporting.Api\Sgt.Modules.Reporting.Api.csproj" />
+  </ItemGroup>
+
+</Project>
