@@ -41,6 +41,7 @@ public static class GamingFloorInfrastructureModule
         services.AddScoped<ICommandHandler<StartRatingCommand, Guid>, StartRatingHandler>();
         services.AddScoped<ICommandHandler<FinishRatingCommand>, FinishRatingHandler>();
         services.AddScoped<ICommandHandler<CorrectRatingCommand>, CorrectRatingHandler>();
+        services.AddScoped<IQueryHandler<ListRunningRatingsQuery, IReadOnlyList<RunningRatingView>>, ListRunningRatingsHandler>();
         services.AddScoped<IQueryHandler<ListTablesQuery, IReadOnlyList<TableView>>, ListTablesHandler>();
         services.AddScoped<ICommandHandler<DefineSlotMachineCommand, Guid>, DefineSlotMachineHandler>();
         services.AddScoped<ICommandHandler<EnterMeterReadingCommand>, EnterMeterReadingHandler>();

@@ -80,6 +80,12 @@ public static class GamingFloorEndpoints
             .RequirePermission("live.rating:correct")
             .ProducesNoContentCommand();
 
+        api.MapGet("/ratings/running", async (Guid? tableId, IRequestContext request, IQueryHandler<ListRunningRatingsQuery, IReadOnlyList<RunningRatingView>> handler, CancellationToken ct) =>
+            Results.Ok(await handler.Handle(new ListRunningRatingsQuery(request.TenantId, tableId), ct)))
+            .RequirePermission("live.rating:view")
+            .Produces<IReadOnlyList<RunningRatingView>>(StatusCodes.Status200OK)
+            .ProducesQueryProblems();
+
         api.MapGet("/players/{playerId:guid}/location", async (Guid playerId, IRequestContext request, IPlayerLocationQuery query, CancellationToken ct) =>
             await query.CurrentLocation(request.TenantId, playerId, ct) is { } location ? Results.Ok(location) : Results.NoContent())
             .RequirePermission("player.locator:view")

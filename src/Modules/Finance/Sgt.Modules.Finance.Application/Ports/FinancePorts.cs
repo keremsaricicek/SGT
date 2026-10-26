@@ -13,6 +13,9 @@ public interface IShiftRepository
     /// <summary>İdempotency: bu anahtarla daha önce yapılmış işlem (KK5).</summary>
     Task<TransactionLookup?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct);
 
+    /// <summary>Kasiyerin açık vardiyası (istemci yeniden açıldığında bağlanmak için).</summary>
+    Task<Guid?> FindOpenShiftId(TenantId tenantId, UserId cashier, CancellationToken ct);
+
     void Add(CashierShift shift);
 }
 

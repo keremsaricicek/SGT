@@ -36,6 +36,7 @@ public static class FinanceInfrastructureModule
         services.AddScoped<ExchangeForeignToBaseHandler>();
         services.AddScoped<ExchangeBaseToForeignHandler>();
         services.AddScoped<IQueryHandler<GetShiftSummaryQuery, ShiftSummary?>, GetShiftSummaryHandler>();
+        services.AddScoped<IQueryHandler<GetMyOpenShiftQuery, Guid?>, GetMyOpenShiftHandler>();
         return services;
     }
 

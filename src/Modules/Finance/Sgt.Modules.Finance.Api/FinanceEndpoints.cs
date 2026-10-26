@@ -42,6 +42,13 @@ public static class FinanceEndpoints
             .ProducesQueryProblems()
             .ProducesProblem(StatusCodes.Status404NotFound);
 
+        api.MapGet("/mine", async (IRequestContext request, IQueryHandler<GetMyOpenShiftQuery, Guid?> handler, CancellationToken ct) =>
+            await handler.Handle(new GetMyOpenShiftQuery(request.TenantId, request.UserId), ct) is { } id ? Results.Ok(new CreatedId(id)) : Results.NoContent())
+            .RequirePermission("cage.shift:view")
+            .Produces<CreatedId>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesQueryProblems();
+
         api.MapPost("/{shiftId:guid}/chip-sales", async (Guid shiftId, CageRequest body, IRequestContext request, SellChipsHandler handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new ChipCommand(request.TenantId, shiftId, body.TransactionId, body.PlayerId, body.Amount, body.Currency, audit), ct))

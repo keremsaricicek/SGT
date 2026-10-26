@@ -113,3 +113,19 @@ public sealed class PlayerLocationQuery(IRatingRepository ratings) : IPlayerLoca
         return rating is null ? null : new PlayerLocationDto(playerId, rating.TableCode, rating.StartedAt);
     }
 }
+
+public sealed record ListRunningRatingsQuery(TenantId TenantId, Guid? TableId);
+
+public sealed record RunningRatingView(Guid RatingId, Guid PlayerId, Guid TableId, string TableCode, DateTimeOffset StartedAt);
+
+/// <summary>Süren rating'ler (pit ekranı ve Windows istemcisi yeniden açıldığında).</summary>
+public sealed class ListRunningRatingsHandler(IRatingRepository ratings) : IQueryHandler<ListRunningRatingsQuery, IReadOnlyList<RunningRatingView>>
+{
+    public async Task<IReadOnlyList<RunningRatingView>> Handle(ListRunningRatingsQuery query, CancellationToken ct)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+        return (await ratings.Running(query.TenantId, query.TableId, ct))
+            .Select(r => new RunningRatingView(r.Id, r.PlayerId, r.TableId, r.TableCode, r.StartedAt))
+            .ToList();
+    }
+}

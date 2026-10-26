@@ -132,6 +132,12 @@ internal sealed class RatingRepository(FloorDbContext db, TrackedFloor tracked) 
     public Task<int> RunningAtTable(TenantId tenantId, Guid tableId, CancellationToken ct) =>
         db.Ratings.CountAsync(r => r.TenantId == tenantId.Value && r.TableId == tableId && r.FinishedAt == null, ct);
 
+    public async Task<IReadOnlyList<Rating>> Running(TenantId tenantId, Guid? tableId, CancellationToken ct) =>
+        (await db.Ratings.AsNoTracking()
+            .Where(r => r.TenantId == tenantId.Value && r.FinishedAt == null && (tableId == null || r.TableId == tableId))
+            .OrderBy(r => r.StartedAt).ToListAsync(ct))
+        .Select(FloorMapping.ToDomain).ToList();
+
     public void Add(Rating rating) => tracked.Ratings[rating] = null;
 
     private async Task<Rating?> Load(System.Linq.Expressions.Expression<Func<RatingRow, bool>> filter, CancellationToken ct)

@@ -2071,6 +2071,38 @@
         }
       }
     },
+    "/api/v1/cage/shifts/mine": {
+      "get": {
+        "tags": [
+          "Cage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatedId"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/cage/shifts/{shiftId}/chip-sales": {
       "post": {
         "tags": [
@@ -2993,6 +3025,48 @@
           },
           "409": {
             "description": "Conflict",
+            "content": {
+              "application/problem\u002Bjson": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/floor/ratings/running": {
+      "get": {
+        "tags": [
+          "GamingFloor"
+        ],
+        "parameters": [
+          {
+            "name": "tableId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunningRatingView"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
             "content": {
               "application/problem\u002Bjson": {
                 "schema": {
@@ -5526,6 +5600,37 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "RunningRatingView": {
+        "required": [
+          "ratingId",
+          "playerId",
+          "tableId",
+          "tableCode",
+          "startedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "ratingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "playerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tableId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "tableCode": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

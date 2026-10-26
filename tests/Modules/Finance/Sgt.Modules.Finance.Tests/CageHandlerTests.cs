@@ -81,6 +81,15 @@ public sealed class CageHandlerTests
         Assert.True(close.IsSuccess);
     }
 
+    [Fact]
+    public async Task My_open_shift_is_found_for_its_cashier_only()
+    {
+        var shiftId = (await Open()).Value;
+
+        Assert.Equal(shiftId, await new GetMyOpenShiftHandler(_shifts).Handle(new GetMyOpenShiftQuery(CashierShiftTests.Tenant, CashierShiftTests.Cashier), default));
+        Assert.Null(await new GetMyOpenShiftHandler(_shifts).Handle(new GetMyOpenShiftQuery(CashierShiftTests.Tenant, UserId.New()), default));
+    }
+
     private Task<Result<Guid>> Open(AuditContext? audit = null) =>
         new OpenShiftHandler(_shifts, _unitOfWork, _clock).Handle(new OpenShiftCommand(
             CashierShiftTests.Tenant,
@@ -104,6 +113,9 @@ public sealed class CageHandlerTests
         public Task<TransactionLookup?> FindTransaction(TenantId tenantId, Guid transactionId, CancellationToken ct) =>
             Task.FromResult(Items.Where(s => s.TenantId == tenantId && s.FindTransaction(transactionId) is not null)
                 .Select(s => new TransactionLookup(s.Id, s.FindTransaction(transactionId)!)).SingleOrDefault());
+
+        public Task<Guid?> FindOpenShiftId(TenantId tenantId, UserId cashier, CancellationToken ct) =>
+            Task.FromResult(Items.Where(s => s.TenantId == tenantId && s.IsOpen && s.CashierId == cashier).Select(s => (Guid?)s.Id).SingleOrDefault());
 
         public void Add(CashierShift shift) => Items.Add(shift);
     }

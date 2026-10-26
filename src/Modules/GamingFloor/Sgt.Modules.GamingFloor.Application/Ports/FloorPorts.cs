@@ -23,6 +23,8 @@ public interface IRatingRepository
 
     Task<int> RunningAtTable(TenantId tenantId, Guid tableId, CancellationToken ct);
 
+    Task<IReadOnlyList<Rating>> Running(TenantId tenantId, Guid? tableId, CancellationToken ct);
+
     void Add(Rating rating);
 }
 

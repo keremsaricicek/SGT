@@ -119,6 +119,19 @@ public sealed class FloorTests
         Assert.Equal(T0, location.Since);
     }
 
+    [Fact]
+    public async Task Running_ratings_are_listed_by_table()
+    {
+        var tableId = (await Define("BJ-09")).Value;
+        await Open(tableId);
+        var ratingId = (await Start(tableId)).Value;
+
+        var running = await new ListRunningRatingsHandler(_ratings).Handle(new ListRunningRatingsQuery(Tenant, tableId), default);
+
+        Assert.Equal(ratingId, Assert.Single(running).RatingId);
+        Assert.Empty(await new ListRunningRatingsHandler(_ratings).Handle(new ListRunningRatingsQuery(Tenant, Guid.NewGuid()), default));
+    }
+
     private Task<Result<Guid>> Define(string code, GameType type = GameType.Blackjack) =>
         new DefineTableHandler(_tables, _unitOfWork, _clock).Handle(
             new DefineTableCommand(Tenant, code, type, "TRY", 50m, 5_000m, 2.5m, 60, Audit()), default);
@@ -163,6 +176,9 @@ public sealed class FloorTests
 
         public Task<int> RunningAtTable(TenantId tenantId, Guid tableId, CancellationToken ct) =>
             Task.FromResult(Items.Count(r => r.TenantId == tenantId && r.TableId == tableId && r.IsRunning));
+
+        public Task<IReadOnlyList<Rating>> Running(TenantId tenantId, Guid? tableId, CancellationToken ct) =>
+            Task.FromResult<IReadOnlyList<Rating>>(Items.Where(r => r.TenantId == tenantId && r.IsRunning && (tableId == null || r.TableId == tableId)).ToList());
 
         public void Add(Rating rating) => Items.Add(rating);
     }

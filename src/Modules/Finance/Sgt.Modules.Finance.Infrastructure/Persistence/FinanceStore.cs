@@ -115,6 +115,10 @@ internal sealed class ShiftRepository(FinanceDbContext db, TrackedShifts tracked
         return row is null ? null : new TransactionLookup(row.ShiftId, FinanceMapping.ToDomain(row));
     }
 
+    public async Task<Guid?> FindOpenShiftId(TenantId tenantId, UserId cashier, CancellationToken ct) =>
+        await db.Shifts.Where(s => s.TenantId == tenantId.Value && s.CashierId == cashier.Value && s.ClosedAt == null)
+            .Select(s => (Guid?)s.Id).SingleOrDefaultAsync(ct);
+
     public void Add(CashierShift shift) => tracked.Items[shift] = null;
 }
 
