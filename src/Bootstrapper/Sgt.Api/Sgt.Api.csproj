@@ -7,6 +7,8 @@
     <ProjectReference Include="..\..\Modules\Identity\Sgt.Modules.Identity.Infrastructure\Sgt.Modules.Identity.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Api\Sgt.Modules.Audit.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Infrastructure\Sgt.Modules.Audit.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Api\Sgt.Modules.Configuration.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Infrastructure\Sgt.Modules.Configuration.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

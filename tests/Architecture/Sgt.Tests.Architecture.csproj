@@ -24,6 +24,11 @@
     <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Application\Sgt.Modules.Audit.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Infrastructure\Sgt.Modules.Audit.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\Audit\Sgt.Modules.Audit.Api\Sgt.Modules.Audit.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Contracts\Sgt.Modules.Configuration.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Domain\Sgt.Modules.Configuration.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Application\Sgt.Modules.Configuration.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Infrastructure\Sgt.Modules.Configuration.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Api\Sgt.Modules.Configuration.Api.csproj" />
   </ItemGroup>
 
 </Project>

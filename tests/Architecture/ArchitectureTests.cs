@@ -190,5 +190,11 @@ internal static class ModuleCatalog
             typeof(Sgt.Modules.Audit.Application.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.Audit.Infrastructure.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.Audit.Api.AssemblyMarker).Assembly),
+        new("Configuration",
+            typeof(Sgt.Modules.Configuration.Contracts.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Configuration.Domain.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Configuration.Application.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Configuration.Infrastructure.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Configuration.Api.AssemblyMarker).Assembly),
     ];
 }

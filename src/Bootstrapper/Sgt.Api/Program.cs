@@ -3,6 +3,8 @@ using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Web;
 using Sgt.Modules.Audit.Api;
 using Sgt.Modules.Audit.Infrastructure;
+using Sgt.Modules.Configuration.Api;
+using Sgt.Modules.Configuration.Infrastructure;
 using Sgt.Modules.Identity.Api;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure;
@@ -33,6 +35,7 @@ var connectionString = builder.Configuration.GetConnectionString("Sgt")
     ?? throw new InvalidOperationException("ConnectionStrings:Sgt tanımlı değil.");
 builder.Services.AddIdentityModule(connectionString);
 builder.Services.AddAuditModule(connectionString);
+builder.Services.AddConfigurationModule(connectionString);
 
 var app = builder.Build();
 
@@ -43,6 +46,7 @@ app.UseAuthorization();
 app.MapGet("/health", (IClock clock) => Results.Ok(new { Status = "ok", ServerTimeUtc = clock.UtcNow }));
 app.MapIdentityEndpoints();
 app.MapAuditEndpoints();
+app.MapConfigurationEndpoints();
 app.MapOutboxAdminEndpoints();
 
 if (app.Environment.IsDevelopment())
@@ -50,6 +54,7 @@ if (app.Environment.IsDevelopment())
     await using var scope = app.Services.CreateAsyncScope();
     await scope.ServiceProvider.MigrateIdentityDatabase(default);
     await scope.ServiceProvider.MigrateAuditDatabase(default);
+    await scope.ServiceProvider.MigrateConfigurationDatabase(default);
 
     var seed = app.Configuration.GetSection("DevelopmentSeed");
     if (Guid.TryParse(seed["TenantId"], out var tenant) && Guid.TryParse(seed["SuperAdminUserId"], out var admin))
