@@ -25,7 +25,9 @@ public static class AuditEndpoints
                     new SearchAuditEntriesQuery(
                         request.TenantId, from, to, actorId is { } a ? new UserId(a) : null, correlationId, take ?? 100),
                     ct)))
-            .RequirePermission("admin.audit:view");
+            .RequirePermission("admin.audit:view")
+            .Produces<IReadOnlyList<AuditEntryView>>(StatusCodes.Status200OK)
+            .ProducesQueryProblems();
 
         return app;
     }

@@ -1,16 +1,7 @@
-import type { SgtApi } from "@/shared/api/client";
+import type { Schemas, SgtApi } from "@/shared/api/client";
 
-/** Audit AuditEntryView (Spec 002). Sözleşmede yanıt şeması yok; elle yazıldı. */
-export interface AuditEntry {
-  readonly id: string;
-  readonly eventType: string;
-  readonly summary: string;
-  readonly actorId: string;
-  readonly terminal: string;
-  readonly reasonCode: string;
-  readonly correlationId: string;
-  readonly occurredAt: string;
-}
+/** Audit AuditEntryView (Spec 002); sözleşmeden üretilir. */
+export type AuditEntry = Schemas["AuditEntryView"];
 
 export interface AuditFilter {
   /** ISO 8601 */

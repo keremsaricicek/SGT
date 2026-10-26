@@ -29,56 +29,71 @@ public static class FinanceEndpoints
         api.MapPost("/", async (OpenShiftRequest body, IRequestContext request, ICommandHandler<OpenShiftCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new OpenShiftCommand(request.TenantId, body.Opening, audit), ct))
-                .ToHttp(id => Results.Created($"/api/v1/cage/shifts/{id}", new { id }))))
-            .RequirePermission("cage.shift:open");
+                .ToHttp(id => Results.Created($"/api/v1/cage/shifts/{id}", new CreatedId(id)))))
+            .RequirePermission("cage.shift:open")
+            .ProducesCreatedCommand();
 
         api.MapGet("/{shiftId:guid}", async (Guid shiftId, IRequestContext request, IQueryHandler<GetShiftSummaryQuery, ShiftSummary?> handler, CancellationToken ct) =>
             await handler.Handle(new GetShiftSummaryQuery(request.TenantId, shiftId), ct) is { } summary
                 ? Results.Ok(summary)
                 : ResultHttpExtensions.Problem(FinanceErrors.ShiftNotFound))
-            .RequirePermission("cage.summary:view");
+            .RequirePermission("cage.summary:view")
+            .Produces<ShiftSummary>(StatusCodes.Status200OK)
+            .ProducesQueryProblems()
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         api.MapPost("/{shiftId:guid}/chip-sales", async (Guid shiftId, CageRequest body, IRequestContext request, SellChipsHandler handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new ChipCommand(request.TenantId, shiftId, body.TransactionId, body.PlayerId, body.Amount, body.Currency, audit), ct))
                 .ToHttp(Results.Ok)))
-            .RequirePermission("cage.chips:sell");
+            .RequirePermission("cage.chips:sell")
+            .Produces<CageTransactionResult>(StatusCodes.Status200OK)
+            .ProducesCommandProblems();
 
         api.MapPost("/{shiftId:guid}/chip-redemptions", async (Guid shiftId, CageRequest body, IRequestContext request, RedeemChipsHandler handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new ChipCommand(request.TenantId, shiftId, body.TransactionId, body.PlayerId, body.Amount, body.Currency, audit), ct))
                 .ToHttp(Results.Ok)))
-            .RequirePermission("cage.chips:redeem");
+            .RequirePermission("cage.chips:redeem")
+            .Produces<CageTransactionResult>(StatusCodes.Status200OK)
+            .ProducesCommandProblems();
 
         api.MapPost("/{shiftId:guid}/exchanges/foreign-to-base", async (Guid shiftId, CageRequest body, IRequestContext request, ExchangeForeignToBaseHandler handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new ExchangeCommand(request.TenantId, shiftId, body.TransactionId, body.PlayerId, body.Amount, body.Currency, audit), ct))
                 .ToHttp(Results.Ok)))
-            .RequirePermission("cage.exchange:exchange");
+            .RequirePermission("cage.exchange:exchange")
+            .Produces<CageTransactionResult>(StatusCodes.Status200OK)
+            .ProducesCommandProblems();
 
         api.MapPost("/{shiftId:guid}/exchanges/base-to-foreign", async (Guid shiftId, CageRequest body, IRequestContext request, ExchangeBaseToForeignHandler handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new ExchangeCommand(request.TenantId, shiftId, body.TransactionId, body.PlayerId, body.Amount, body.Currency, audit), ct))
                 .ToHttp(Results.Ok)))
-            .RequirePermission("cage.exchange:exchange");
+            .RequirePermission("cage.exchange:exchange")
+            .Produces<CageTransactionResult>(StatusCodes.Status200OK)
+            .ProducesCommandProblems();
 
         api.MapPost("/{shiftId:guid}/close", async (Guid shiftId, CloseShiftRequest body, IRequestContext request, ICommandHandler<CloseShiftCommand> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new CloseShiftCommand(request.TenantId, shiftId, body.Counted, body.Note, audit), ct)).ToHttp()))
-            .RequirePermission("cage.shift:close");
+            .RequirePermission("cage.shift:close")
+            .ProducesNoContentCommand();
 
         api.MapPost("/{shiftId:guid}/adjustments", async (Guid shiftId, AdjustmentRequest body, IRequestContext request, ICommandHandler<RequestCageAdjustmentCommand, Guid> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new RequestCageAdjustmentCommand(request.TenantId, shiftId, body.TransactionId, body.Note, audit), ct))
-                .ToHttp(id => Results.Created($"/api/v1/cage/adjustments/{id}", new { id }))))
-            .RequirePermission("cage.adjustment:request");
+                .ToHttp(id => Results.Created($"/api/v1/cage/adjustments/{id}", new CreatedId(id)))))
+            .RequirePermission("cage.adjustment:request")
+            .ProducesCreatedCommand();
 
         app.MapPost("/api/v1/cage/adjustments/{requestId:guid}/decision", async (Guid requestId, AdjustmentDecisionRequest body, IRequestContext request, ICommandHandler<DecideCageAdjustmentCommand> handler, CancellationToken ct) =>
             await WithReason(body.ReasonCode, request, async audit =>
                 (await handler.Handle(new DecideCageAdjustmentCommand(request.TenantId, requestId, body.Approve, audit), ct)).ToHttp()))
             .RequireAuthorization(SgtClaims.Policy)
             .RequirePermission("cage.adjustment:approve")
-            .WithTags("Cage");
+            .WithTags("Cage")
+            .ProducesNoContentCommand();
 
         return app;
     }

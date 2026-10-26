@@ -228,7 +228,6 @@ export const tr = {
   "integration.lastError": "Son hata",
   "integration.occurredAt": "Oluşma",
   "integration.reprocess": "Tekrar işle",
-  "integration.reprocessConfirm": "Bu olay yeniden işleme kuyruğuna alınsın mı?",
 } as const;
 
 export type MessageKey = keyof typeof tr;

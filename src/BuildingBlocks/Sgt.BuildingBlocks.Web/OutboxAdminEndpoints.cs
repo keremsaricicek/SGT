@@ -26,7 +26,9 @@ public static partial class OutboxAdminEndpoints
             }
 
             return Results.Ok(all.OrderByDescending(d => d.OccurredAt));
-        }).RequirePermission("admin.integrations:view");
+        }).RequirePermission("admin.integrations:view")
+            .Produces<IEnumerable<DeadLetter>>(StatusCodes.Status200OK)
+            .ProducesQueryProblems();
 
         api.MapPost("/dead-letters/{module}/{eventId:guid}/reprocess", async (string module, Guid eventId, ReprocessRequest body, IRequestContext request, IEnumerable<IOutboxStore> stores, ILoggerFactory logs, CancellationToken ct) =>
         {
@@ -42,7 +44,11 @@ public static partial class OutboxAdminEndpoints
             return store is not null && await store.Reprocess(request.TenantId, eventId, ct)
                 ? Results.NoContent()
                 : ResultHttpExtensions.Problem(NotFound);
-        }).RequirePermission("admin.integrations:reprocess");
+        }).RequirePermission("admin.integrations:reprocess")
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound);
 
         return app;
     }

@@ -1,12 +1,7 @@
 import type { Schemas, SgtApi } from "@/shared/api/client";
 
-/** Configuration.Contracts.ExchangeRateDto (sözleşmede yanıt şeması yok; elle yazıldı). */
-export interface ExchangeRate {
-  readonly currency: string;
-  readonly buy: number;
-  readonly sell: number;
-  readonly effectiveFrom: string;
-}
+/** Configuration.Contracts.ExchangeRateDto; sözleşmeden üretilir. */
+export type ExchangeRate = Schemas["ExchangeRateDto"];
 
 export type SetExchangeRateInput = Schemas["SetExchangeRateRequest"];
 

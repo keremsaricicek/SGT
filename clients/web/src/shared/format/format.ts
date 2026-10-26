@@ -26,8 +26,11 @@ export function formatAmount(locale: Locale, value: number | string, currency?: 
   return currency ? `${formatted} ${currency}` : formatted;
 }
 
-export function formatInteger(locale: Locale, value: number): string {
-  return new Intl.NumberFormat(intlLocale[locale]).format(value);
+/** Sayaçlar sözleşmede `number | string` olarak tanımlıdır (JSON sayı ya da metin); yalnızca gösterilir. */
+export function formatInteger(locale: Locale, value: number | string): string {
+  const numeric = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(numeric)) return String(value);
+  return new Intl.NumberFormat(intlLocale[locale]).format(numeric);
 }
 
 /** <input type="datetime-local"> değerini ISO 8601'e çevirir; boşsa null. */

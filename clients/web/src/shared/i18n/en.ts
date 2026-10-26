@@ -230,5 +230,4 @@ export const en: Record<MessageKey, string> = {
   "integration.lastError": "Last error",
   "integration.occurredAt": "Occurred",
   "integration.reprocess": "Reprocess",
-  "integration.reprocessConfirm": "Queue this event for reprocessing?",
 };

@@ -14,7 +14,9 @@ public static class ReportingEndpoints
         app.MapGroup("/api/v1/reports").RequireAuthorization(SgtClaims.Policy).WithTags("Reports")
             .MapGet("/daily", async (DateOnly? date, IRequestContext request, IQueryHandler<GetDailySummaryQuery, DailySummary> handler, CancellationToken ct) =>
                 Results.Ok(await handler.Handle(new GetDailySummaryQuery(request.TenantId, date), ct)))
-            .RequirePermission("report.daily:view");
+            .RequirePermission("report.daily:view")
+            .Produces<DailySummary>(StatusCodes.Status200OK)
+            .ProducesQueryProblems();
         return app;
     }
 }

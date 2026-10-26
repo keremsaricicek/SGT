@@ -15,7 +15,7 @@ const SCREEN = "report.daily";
 
 interface Column<T> {
   readonly label: MessageKey;
-  readonly value: (row: T) => number;
+  readonly value: (row: T) => number | string;
 }
 
 function CurrencyTable<T extends { currency: string }>({ rows, columns }: { rows: readonly T[]; columns: readonly Column<T>[] }) {
@@ -49,7 +49,7 @@ function CurrencyTable<T extends { currency: string }>({ rows, columns }: { rows
   );
 }
 
-function Stat({ label, value }: { label: MessageKey; value: number }) {
+function Stat({ label, value }: { label: MessageKey; value: number | string }) {
   const { t, locale } = useI18n();
   return (
     <div className="stat">

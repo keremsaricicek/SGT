@@ -1,46 +1,13 @@
 import type { Schemas } from "@/shared/api/client";
 
 /**
- * Oyuncu yanıt tipleri (Sgt.Modules.CasinoPlayer.Application). Sözleşmede yanıt şeması yok; elle yazıldı.
+ * Oyuncu yanıt tipleri (Sgt.Modules.CasinoPlayer.Application); sözleşmeden üretilir.
  * Belge numarası sunucuda maskelenir (Spec 005 KK4); istemci tam numarayı hiç almaz.
  */
-export interface PlayerSummary {
-  readonly playerId: string;
-  readonly playerNumber: string;
-  readonly firstName: string;
-  readonly lastName: string;
-  readonly activeCardNumber: string | null;
-  readonly isRestricted: boolean;
-}
-
-export interface RestrictionView {
-  readonly id: string;
-  readonly type: string;
-  readonly note: string | null;
-  readonly until: string | null;
-  readonly addedBy: string;
-  readonly addedAt: string;
-}
-
-export interface PlayerView {
-  readonly playerId: string;
-  readonly playerNumber: string;
-  readonly firstName: string;
-  readonly lastName: string;
-  readonly birthDate: string;
-  readonly nationality: string;
-  readonly documentType: string;
-  readonly maskedDocumentNumber: string;
-  readonly phone: string | null;
-  readonly activeCardNumber: string | null;
-  readonly isRestricted: boolean;
-  readonly activeRestrictions: readonly RestrictionView[];
-}
-
-export interface PlayerRegistered {
-  readonly playerId: string;
-  readonly playerNumber: string;
-}
+export type PlayerSummary = Schemas["PlayerSummary"];
+export type RestrictionView = Schemas["RestrictionView"];
+export type PlayerView = Schemas["PlayerView"];
+export type PlayerRegistered = Schemas["PlayerRegistered"];
 
 export type PlayerDetailsInput = Schemas["PlayerDetailsRequest"];
 export type AddRestrictionInput = Schemas["AddRestrictionRequest"];

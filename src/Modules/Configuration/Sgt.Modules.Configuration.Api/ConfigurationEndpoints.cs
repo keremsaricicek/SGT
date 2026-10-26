@@ -17,7 +17,8 @@ public static class ConfigurationEndpoints
         var api = app.MapGroup("/api/v1/configuration").RequireAuthorization(SgtClaims.Policy).WithTags("Configuration");
 
         api.MapGet("/exchange-rates/current", async (IRequestContext request, IQueryHandler<GetCurrentRatesQuery, IReadOnlyList<ExchangeRateDto>> handler, CancellationToken ct) =>
-            Results.Ok(await handler.Handle(new GetCurrentRatesQuery(request.TenantId), ct)));
+            Results.Ok(await handler.Handle(new GetCurrentRatesQuery(request.TenantId), ct)))
+            .Produces<IReadOnlyList<ExchangeRateDto>>(StatusCodes.Status200OK);
 
         api.MapPost("/exchange-rates", async (SetExchangeRateRequest body, IRequestContext request, ICommandHandler<SetExchangeRateCommand> handler, CancellationToken ct) =>
         {
@@ -30,7 +31,8 @@ public static class ConfigurationEndpoints
             var result = await handler.Handle(
                 new SetExchangeRateCommand(request.TenantId, body.Currency, body.Buy, body.Sell, request.Audit(reason.Value)), ct);
             return result.ToHttp();
-        }).RequirePermission("admin.settings:exchange_rate");
+        }).RequirePermission("admin.settings:exchange_rate")
+            .ProducesNoContentCommand();
 
         return app;
     }

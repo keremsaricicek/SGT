@@ -25,7 +25,7 @@ interface ApiCallResult {
 
 /**
  * Tek bir kullanıcı eylemine bağlı API erişimi. Eylem içindeki tüm istekler aynı X-Correlation-Id'yi taşır.
- * Sözleşmede yanıt şeması olmadığından yanıt tipi çağıran serviste belirtilir (bkz. features/<ad>/api/types.ts).
+ * Yanıt tipi çağıran serviste sözleşme şemasıyla (Schemas["..."]) belirtilir.
  */
 export interface SgtApi {
   readonly client: SgtClient;

@@ -3,6 +3,7 @@
 import { ScreenGuard, useAccess } from "@/shared/access/AccessProvider";
 import { formatDateTime } from "@/shared/format/format";
 import { useI18n } from "@/shared/i18n/I18nProvider";
+import { ReasonBar, useReasonCode } from "@/shared/ui/ActionForm";
 import { FormSuccess } from "@/shared/ui/form";
 import { EmptyRow, Loading, PageHeader, Section } from "@/shared/ui/layout";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
@@ -17,11 +18,11 @@ function DeadLettersContent() {
   const letters = useDeadLetters();
   const reprocess = useReprocess(letters.reload);
   const canReprocess = policy.can(SCREEN, "reprocess");
+  const reason = useReasonCode();
 
   const onReprocess = (letter: DeadLetter) => {
-    if (window.confirm(t("integration.reprocessConfirm"))) {
-      void reprocess.run({ module: letter.module, eventId: letter.eventId });
-    }
+    const reasonCode = reason.take();
+    if (reasonCode) void reprocess.run({ module: letter.module, eventId: letter.eventId, reasonCode });
   };
 
   return (
@@ -35,6 +36,7 @@ function DeadLettersContent() {
         }
       />
       <Section>
+        {canReprocess ? <ReasonBar reason={reason} /> : null}
         <ProblemAlert error={letters.error ?? reprocess.error} />
         <FormSuccess show={reprocess.succeeded && !reprocess.pending} />
         <Loading show={letters.loading && !letters.data} />

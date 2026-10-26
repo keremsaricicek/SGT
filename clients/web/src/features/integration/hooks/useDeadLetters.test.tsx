@@ -16,14 +16,15 @@ describe("useDeadLetters", () => {
 });
 
 describe("useReprocess", () => {
-  it("modül ve olay kimliğiyle yeniden işletir", async () => {
+  it("modül, olay kimliği ve gerekçe koduyla yeniden işletir", async () => {
     const fake = fakeFetch([{ method: "POST", path: `/api/v1/integration/dead-letters/identity/${EVENT_ID}/reprocess` }]);
     let reloaded = 0;
     const { result } = renderHook(() => useReprocess(() => reloaded++), { wrapper: testWrapper(fake.fetch) });
     await act(async () => {
-      await result.current.run({ module: "identity", eventId: EVENT_ID });
+      await result.current.run({ module: "identity", eventId: EVENT_ID, reasonCode: "CORRECTION" });
     });
     expect(reloaded).toBe(1);
+    expect(fake.requests[0]?.body).toEqual({ reasonCode: "CORRECTION" });
   });
 
   it("bulunamayan olayda problem ayrıntısını tutar", async () => {
@@ -37,7 +38,7 @@ describe("useReprocess", () => {
     ]);
     const { result } = renderHook(() => useReprocess(), { wrapper: testWrapper(fake.fetch) });
     await act(async () => {
-      await result.current.run({ module: "identity", eventId: EVENT_ID });
+      await result.current.run({ module: "identity", eventId: EVENT_ID, reasonCode: "CORRECTION" });
     });
     expect(result.current.error).toMatchObject({ status: 404, detail: "Bu kimlikte dead-letter olay yok." });
   });
