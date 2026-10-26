@@ -8,3 +8,4 @@ TestResults/
 # Yerel ortam secret dosyalari (docs/kurulum.md)
 deploy/.env
 *.env.local
+.serena/
