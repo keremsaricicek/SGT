@@ -208,5 +208,11 @@ internal static class ModuleCatalog
             typeof(Sgt.Modules.Finance.Application.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.Finance.Infrastructure.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.Finance.Api.AssemblyMarker).Assembly),
+        new("GamingFloor",
+            typeof(Sgt.Modules.GamingFloor.Contracts.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.GamingFloor.Domain.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.GamingFloor.Application.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.GamingFloor.Infrastructure.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.GamingFloor.Api.AssemblyMarker).Assembly),
     ];
 }

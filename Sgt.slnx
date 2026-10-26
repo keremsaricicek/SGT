@@ -37,6 +37,13 @@
     <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Domain/Sgt.Modules.Finance.Domain.csproj" />
     <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Infrastructure/Sgt.Modules.Finance.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/GamingFloor/">
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Api/Sgt.Modules.GamingFloor.Api.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Application/Sgt.Modules.GamingFloor.Application.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Contracts/Sgt.Modules.GamingFloor.Contracts.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Domain/Sgt.Modules.GamingFloor.Domain.csproj" />
+    <Project Path="src/Modules/GamingFloor/Sgt.Modules.GamingFloor.Infrastructure/Sgt.Modules.GamingFloor.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Identity/">
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Api/Sgt.Modules.Identity.Api.csproj" />
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Application/Sgt.Modules.Identity.Application.csproj" />
@@ -67,6 +74,9 @@
   </Folder>
   <Folder Name="/tests/Modules/Finance/">
     <Project Path="tests/Modules/Finance/Sgt.Modules.Finance.Tests/Sgt.Modules.Finance.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/GamingFloor/">
+    <Project Path="tests/Modules/GamingFloor/Sgt.Modules.GamingFloor.Tests/Sgt.Modules.GamingFloor.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/Modules/Identity/">
     <Project Path="tests/Modules/Identity/Sgt.Modules.Identity.IntegrationTests/Sgt.Modules.Identity.IntegrationTests.csproj" />

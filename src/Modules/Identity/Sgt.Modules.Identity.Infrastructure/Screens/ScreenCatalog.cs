@@ -28,7 +28,7 @@ internal sealed class ScreenCatalog : IScreenCatalog
         new("player.restrictions", Product.SPlus, ["add", "remove"]),
 
         // Canlı oyun
-        new("live.tables", Product.SPlus, []),
+        new("live.tables", Product.SPlus, ["define"]),
         new("live.table_session", Product.SPlus, ["open", "close"]),
         new("live.rating", Product.SPlus, ["start", "finish", "correct"]),
         new("live.chips", Product.SPlus, ["request", "approve"]),

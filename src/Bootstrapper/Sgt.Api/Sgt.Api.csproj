@@ -13,6 +13,8 @@
     <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Infrastructure\Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Finance\Sgt.Modules.Finance.Api\Sgt.Modules.Finance.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Finance\Sgt.Modules.Finance.Infrastructure\Sgt.Modules.Finance.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\GamingFloor\Sgt.Modules.GamingFloor.Api\Sgt.Modules.GamingFloor.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\GamingFloor\Sgt.Modules.GamingFloor.Infrastructure\Sgt.Modules.GamingFloor.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

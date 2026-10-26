@@ -13,6 +13,7 @@ using Sgt.Modules.Audit.Infrastructure;
 using Sgt.Modules.CasinoPlayer.Infrastructure;
 using Sgt.Modules.Configuration.Infrastructure;
 using Sgt.Modules.Finance.Infrastructure;
+using Sgt.Modules.GamingFloor.Infrastructure;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure;
 using Sgt.Modules.Identity.Infrastructure.Persistence;
@@ -63,6 +64,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await scope.ServiceProvider.MigrateConfigurationDatabase(default);
         await scope.ServiceProvider.MigrateCasinoPlayerDatabase(default);
         await scope.ServiceProvider.MigrateFinanceDatabase(default);
+        await scope.ServiceProvider.MigrateGamingFloorDatabase(default);
         await IdentityDevelopmentSeed.Run(scope.ServiceProvider, Tenant, SuperAdmin, [Product.SPlus], default);
     }
 
