@@ -1,0 +1,50 @@
+name: Web paneli
+
+on:
+  push:
+    paths:
+      - "clients/web/**"
+      - "docs/api/openapi-v1.json"
+      - ".github/workflows/web.yml"
+  pull_request:
+    paths:
+      - "clients/web/**"
+      - "docs/api/openapi-v1.json"
+      - ".github/workflows/web.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: clients/web
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Derleme için örnek (gizli olmayan) değerler; gerçek ortam değerleri dağıtımda verilir.
+      NEXT_PUBLIC_OIDC_AUTHORITY: http://localhost:8080/realms/sgt
+      NEXT_PUBLIC_OIDC_CLIENT_ID: sgt-web
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:5000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          cache: npm
+          cache-dependency-path: clients/web/package-lock.json
+      - name: Kurulum
+        run: npm ci
+      - name: Üretilen API tipleri sözleşmeyle aynı mı
+        run: |
+          npm run gen:api
+          git diff --exit-code -- src/shared/api/generated
+      - name: Lint
+        run: npm run lint
+      - name: Tip kontrolü
+        run: npm run typecheck
+      - name: Test
+        run: npm test
+      - name: Build
+        run: npm run build
