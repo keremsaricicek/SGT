@@ -94,7 +94,7 @@ Fizibilite raporunu proje sahibi hazırlamadı; eksik veya bu kararlarla uyumsuz
 
 - **K1:** Kod SOLID ilkelerine göre yazılır; OOP kuralları esastır.
 - **K2:** Uygulamadaki her işlev ayrı kodlanır ve diğerleriyle tanımlı sözleşmeler üzerinden entegre olur.
-- Ayrıntı: `docs/kod-kurallari.md`. Proje sahibinin listesinde 2 numaralı madde eksik; geldiğinde K3 olarak eklenecek.
+- Ayrıntı: `docs/kod-kurallari.md`. Listede eksik olan 2 numaralı madde kaldırıldı (26.10.2026); kod kuralları K1 ve K2'dir.
 
 ## 9. Diğer
 
@@ -119,11 +119,16 @@ adaptörü → (3) Windows + mobil + web istemcileri → (4) S Vista → (5) S S
 
 ## 11. Açık sorular
 
-- [ ] Kod kuralları listesindeki 2 numaralı madde nedir?
-- [ ] S Slot: SMIB üreticisiyle anlaşma mı, kendi donanım mı? Sahadaki makinelerde hangi protokoller var (SAS/G2S)?
-- [ ] NEXIO'ya bağlanmak için Advansys'ten resmi API (API Library) ve erişim alınabilir mi?
-- [ ] S Vista hangi otel cihazlarına bağlanacak (kapı kilidi, POS, santral, minibar)?
-- [ ] Lisanslama ve fiyat modeli (modül başına, tesis başına, kullanıcı başına?).
-- [ ] İlk pilot müşteri ve ilk teslim edilecek ürün hangisi?
-- [ ] Teknik lider / entegrasyon mühendisi kim olacak?
-- [ ] Vergi ve resmi raporlama yükümlülükleri (mali müşavir teyidi).
+- [x] Kod kuralları listesindeki 2 numaralı madde nedir? → Kaldırıldı; yalnızca K1 ve K2 geçerli (26.10.2026).
+- [x] S Slot: SMIB üreticisiyle anlaşma mı, kendi donanım mı? → **Hazır SMIB/arayüz kartı üreticisiyle anlaşılacak** (26.10.2026).
+  Açık kalan: sahadaki makinelerde hangi protokoller var (SAS/G2S)?
+- [x] NEXIO'ya bağlanmak için Advansys'ten resmi API alınabilir mi? → Proje sahibi bağlantının sorun olmayacağını
+  belirtti (26.10.2026). Uygulama: önce Advansys'ten resmi API istenir; alınamazsa müşterinin kendi verisine
+  meşru yollarla (müşterinin yetkisindeki rapor/dışa aktarım) erişilir. Bölüm 7 gereği NEXIO yazılımı
+  decompile/tersine mühendislik ile açılmaz. Adaptör her iki yolu da aynı `ISlotDataSource` sözleşmesi arkasında saklar.
+- [x] S Vista hangi otel cihazlarına bağlanacak? → **Yalnızca kapı kilidi / oda kartı basımı** (26.10.2026).
+  POS, santral ve minibar bağlantısı yok. Açık kalan: hangi kapı kilidi markası/markaları?
+- [x] Lisanslama ve fiyat modeli → **Modül + tesis başına**: her tesis için S Plus temel lisansı, S Slot ve S Vista ek lisans (26.10.2026).
+- [x] İlk teslim edilecek ürün → **S Plus + NEXIO adaptörü** (26.10.2026). Pilot müşterinin adı henüz belirlenmedi.
+- [ ] Teknik lider / entegrasyon mühendisi kim olacak? → Proje sahibi belli bir kişi olduğunu belirtti; ad/rol bekleniyor.
+- [ ] Vergi ve resmi raporlama yükümlülükleri → Proje sahibi biliyor; ayrıntıları yazacak.
