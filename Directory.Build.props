@@ -1,0 +1,17 @@
+<Project>
+  <!-- Tüm .NET projeleri için ortak derleme kuralları. Ayrıntı: docs/kod-kurallari.md bölüm 6. -->
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <!-- Domain ve Application projelerinde yasaklı API'ler (DateTime.Now, Console, HttpClient...) derleme hatası verir. -->
+  <ItemGroup Condition="$(MSBuildProjectName.EndsWith('.Domain')) Or $(MSBuildProjectName.EndsWith('.Application'))">
+    <!-- Kurulumda NuGet'teki güncel sürüme yükseltin. -->
+    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" PrivateAssets="all" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)build/BannedSymbols.txt" />
+  </ItemGroup>
+</Project>
