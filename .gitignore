@@ -4,3 +4,7 @@ obj/
 .vs/
 TestResults/
 .claude/worktrees/
+
+# Yerel ortam secret dosyalari (docs/kurulum.md)
+deploy/.env
+*.env.local
