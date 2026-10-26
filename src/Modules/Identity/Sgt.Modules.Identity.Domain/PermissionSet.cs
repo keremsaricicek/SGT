@@ -20,6 +20,24 @@ public sealed class PermissionSet
 
     public IReadOnlySet<PermissionCode> Codes => _codes;
 
+    /// <summary>Kayıtlı yetkilerden kümeyi yeniden kurar. Kural dışı veri bozulma demektir ve hata fırlatır.</summary>
+    public static PermissionSet FromCodes(IEnumerable<PermissionCode> codes)
+    {
+        var set = Empty;
+        foreach (var code in codes.OrderByDescending(c => c.IsView))
+        {
+            var next = set.With(code);
+            if (next.IsFailure)
+            {
+                throw new InvalidOperationException($"Kayıtlı yetki kümesi geçersiz: {code}");
+            }
+
+            set = next.Value;
+        }
+
+        return set;
+    }
+
     public bool Contains(PermissionCode code) => _codes.Contains(code);
 
     public Result<PermissionSet> With(PermissionCode code)

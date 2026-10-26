@@ -41,6 +41,21 @@ public sealed class UserAccess
     public static UserAccess Create(UserId userId, TenantId tenantId, bool isSuperAdmin) =>
         new(userId, tenantId, isSuperAdmin);
 
+    /// <summary>Kalıcı kayıttan geri yükler; değişiklik kaydı üretmez. Yalnızca altyapı kullanır.</summary>
+    public static UserAccess Restore(
+        UserId userId,
+        TenantId tenantId,
+        bool isSuperAdmin,
+        IEnumerable<RoleId> roleIds,
+        PermissionSet grants,
+        IEnumerable<PermissionCode> denied)
+    {
+        var user = new UserAccess(userId, tenantId, isSuperAdmin) { Grants = grants };
+        user._roleIds.UnionWith(roleIds);
+        user._denied.UnionWith(denied);
+        return user;
+    }
+
     public Result AssignRole(Role role, AdminActor actor, DateTimeOffset at)
     {
         ArgumentNullException.ThrowIfNull(role);

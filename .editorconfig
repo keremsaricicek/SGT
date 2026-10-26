@@ -7,3 +7,8 @@ dotnet_diagnostic.CA1716.severity = none
 [tests/**.cs]
 # Test adları okunabilirlik için alt çizgiyle yazılır: Ne_olur_hangi_durumda
 dotnet_diagnostic.CA1707.severity = none
+
+[**/Migrations/*.cs]
+# EF Core tarafından üretilen kod; elle düzenlenmez.
+generated_code = true
+dotnet_analyzer_diagnostic.severity = none

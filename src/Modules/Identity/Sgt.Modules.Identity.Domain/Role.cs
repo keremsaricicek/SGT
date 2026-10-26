@@ -39,6 +39,10 @@ public sealed class Role
         return role;
     }
 
+    /// <summary>Kalıcı kayıttan geri yükler; değişiklik kaydı üretmez. Yalnızca altyapı kullanır.</summary>
+    public static Role Restore(RoleId id, TenantId tenantId, string name, PermissionSet permissions) =>
+        new(id, tenantId, name) { Permissions = permissions };
+
     public Result Grant(PermissionCode code, AdminActor actor, DateTimeOffset at)
     {
         var allowed = EnsureSameTenant(actor);

@@ -99,4 +99,5 @@ dotnet test Sgt.slnx                                   # tüm testler
 dotnet test tests/Architecture/Sgt.Tests.Architecture.csproj   # yalnızca mimari kurallar
 dotnet run --project src/Bootstrapper/Sgt.Api          # lokal API; /health
 ```
-Migration: veritabanı ADR'si sonrası eklenecek.
+Migration (modül başına): `dotnet ef migrations add <Ad> -p src/Modules/<Modül>/Sgt.Modules.<Modül>.Infrastructure -o Persistence/Migrations`
+Entegrasyon testleri yerel PostgreSQL ister (`SGT_TEST_DB` ya da `Host=localhost;Username=sgt;Password=sgt_dev_only`).
