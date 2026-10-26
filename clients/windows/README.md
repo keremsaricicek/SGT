@@ -16,9 +16,10 @@ Veritabanına bağlanmaz; her işlem kimliği doğrulanmış API (`/api/v1`) üz
 - `Login` — giriş (Y1). Şifre ve doğrulama kodu uygulamaya yazılmaz; sistem tarayıcısında Keycloak sayfası açılır (OIDC + PKCE, ADR-0003).
 - `Shell` — ana pencere (Y2). Menü sunucudan gelir (`/api/v1/identity/me/menu`); kullanıcı yalnızca yetkili olduğu ekranları görür.
   Her ekran ayrı pencerede açılır; açık ekran tekrar seçilince mevcut pencere öne gelir.
-- `Cage` — vardiya aç/bağlan/kapat (sayım), çip satış/bozdurma, döviz (iki yön), kasa özeti, düzeltme talebi.
+- `Cage` — vardiya aç/kapat (sayım), çip satış/bozdurma, döviz (iki yön), kasa özeti, düzeltme talebi.
+  Girişte kasiyerin sunucudaki açık vardiyasına otomatik bağlanılır (`/api/v1/cage/shifts/mine`); numarayla elle bağlanma yedek olarak durur.
 - `Players` — oyuncu arama (en az 2 karakter) ve oyuncu kartı (salt okunur, belge numarası maskeli).
-- `Floor` — masalar, masa aç/kapat, oyuncu rating başlat/bitir.
+- `Floor` — masalar, masa aç/kapat, oyuncu rating başlat/bitir. Süren rating listesi sunucudan gelir (`/api/v1/floor/ratings/running`).
 
 ## Önemli davranışlar
 

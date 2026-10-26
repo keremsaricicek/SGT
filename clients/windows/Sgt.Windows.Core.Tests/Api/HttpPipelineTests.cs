@@ -91,6 +91,24 @@ public sealed class HttpPipelineTests : IDisposable
     }
 
     [Fact]
+    public async Task Istege_bagli_kayit_204_ise_bos_basari_200_ise_deger_doner()
+    {
+        _server.Respond(HttpStatusCode.NoContent, null, null);
+        var transport = CreateTransport();
+
+        var none = await transport.GetOptionalAsync<CreatedDto>(ApiRoutes.MyOpenShift.Build(), CancellationToken.None);
+
+        Assert.True(none.IsSuccess);
+        Assert.Null(none.Value);
+
+        _server.Respond(HttpStatusCode.OK, """{"id":"88888888-8888-8888-8888-888888888888"}""", "application/json");
+        var found = await transport.GetOptionalAsync<CreatedDto>(ApiRoutes.MyOpenShift.Build(), CancellationToken.None);
+
+        Assert.Equal(Guid.Parse("88888888-8888-8888-8888-888888888888"), found.Value?.Id);
+        Assert.Equal("https://api.test/api/v1/cage/shifts/mine", _server.Requests[1].Uri);
+    }
+
+    [Fact]
     public async Task Ag_hatasi_istisna_degil_ulasilamadi_problemi_olur()
     {
         _server.Fail(new HttpRequestException("bağlantı reddedildi"));

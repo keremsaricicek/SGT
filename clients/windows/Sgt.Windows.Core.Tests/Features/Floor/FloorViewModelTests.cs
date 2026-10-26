@@ -47,21 +47,48 @@ public sealed class FloorViewModelTests
         Assert.NotNull(sut.StatusMessage);
     }
 
+    private static ApiResult<IReadOnlyList<RunningRatingDto>> Running(params RunningRatingDto[] ratings) =>
+        ApiResult.Success<IReadOnlyList<RunningRatingDto>>(ratings);
+
+    private RatingViewModel RatingSut(PlayerSummaryDto? selected = null) =>
+        new(
+            _tables, _ratings, TestSupport.Access((ScreenCodes.LiveRating, ["view", "start", "finish"])),
+            new PlayerPickerViewModel(Substitute.For<IPlayersApi>()) { Selected = selected });
+
+    [Fact]
+    public async Task Acilista_suren_ratingler_sunucudan_gelir()
+    {
+        var other = new RunningRatingDto(Guid.NewGuid(), Guid.Parse("abcdef01-0000-0000-0000-000000000000"), OpenTable.TableId, "RL-02", DateTimeOffset.UnixEpoch);
+        _ratings.ListRunningAsync(null, Arg.Any<CancellationToken>()).Returns(Running(other));
+        var sut = RatingSut();
+
+        await sut.InitializeAsync(CancellationToken.None);
+
+        var row = Assert.Single(sut.ActiveRatings);
+        Assert.Equal(other.RatingId, row.RatingId);
+        Assert.Equal("RL-02", row.TableCode);
+        Assert.Equal("#abcdef01", row.PlayerName);
+        Assert.Equal(row, sut.SelectedRating);
+    }
+
     [Fact]
     public async Task Rating_baslatilir_ve_ortalama_bahisle_bitirilir()
     {
         var ratingId = Guid.NewGuid();
         var player = new PlayerSummaryDto(Guid.NewGuid(), "P-1", "Ada", "Test", null, false);
+        var running = new RunningRatingDto(ratingId, player.PlayerId, OpenTable.TableId, OpenTable.Code, DateTimeOffset.UnixEpoch);
+        _ratings.ListRunningAsync(null, Arg.Any<CancellationToken>()).Returns(Running(), Running(running), Running());
         _ratings.StartRatingAsync(Arg.Any<StartRatingRequest>(), Arg.Any<CancellationToken>()).Returns(ApiResult.Success(new CreatedDto(ratingId)));
         _ratings.FinishRatingAsync(ratingId, Arg.Any<RatingValuesRequest>(), Arg.Any<CancellationToken>()).Returns(ApiResult.Success());
-        var sut = new RatingViewModel(
-            _tables, _ratings, TestSupport.Access((ScreenCodes.LiveRating, ["start", "finish"])), TimeProvider.System,
-            new PlayerPickerViewModel(Substitute.For<IPlayersApi>()) { Selected = player });
+        var sut = RatingSut(player);
         await sut.InitializeAsync(CancellationToken.None);
 
         Assert.Equal(OpenTable, Assert.Single(sut.OpenTables));
+        Assert.Empty(sut.ActiveRatings);
         await sut.StartCommand.ExecuteAsync(null);
-        Assert.Equal(ratingId, Assert.Single(sut.ActiveRatings).RatingId);
+        var active = Assert.Single(sut.ActiveRatings);
+        Assert.Equal(ratingId, active.RatingId);
+        Assert.Equal("Ada Test", active.PlayerName);
 
         Assert.False(sut.FinishCommand.CanExecute(null));
         sut.AverageBetText = "250";

@@ -25,6 +25,7 @@ public sealed partial class ShellViewModel : StatusViewModel
     private readonly IAuthService _auth;
     private readonly IAppNavigator _navigator;
     private readonly ICashierShiftContext _shift;
+    private readonly IReadOnlyList<ISessionInitializer> _initializers;
     private List<MenuEntry> _allEntries = [];
 
     public ShellViewModel(
@@ -36,8 +37,11 @@ public sealed partial class ShellViewModel : StatusViewModel
         IAuthService auth,
         IAppNavigator navigator,
         ICashierShiftContext shift,
-        ITerminalInfo terminal)
+        ITerminalInfo terminal,
+        IEnumerable<ISessionInitializer> initializers)
     {
+        ArgumentNullException.ThrowIfNull(initializers);
+        _initializers = initializers.ToList();
         ArgumentNullException.ThrowIfNull(shift);
         ArgumentNullException.ThrowIfNull(terminal);
         _identity = identity;
@@ -99,6 +103,15 @@ public sealed partial class ShellViewModel : StatusViewModel
             else
             {
                 ClearMessages();
+            }
+
+            // Oturum hazırlığı (ör. açık vardiyaya otomatik bağlanma). Hata menüyü engellemez, yalnızca gösterilir.
+            foreach (var initializer in _initializers)
+            {
+                if (await initializer.InitializeAsync(access, ct) is { } problem)
+                {
+                    ShowProblem(problem);
+                }
             }
         }
         finally

@@ -125,7 +125,7 @@
   <data name="Floor_CloseTable" xml:space="preserve"><value>Masayı _kapat</value></data>
   <data name="Floor_Table" xml:space="preserve"><value>Açık masa</value></data>
   <data name="Floor_Start" xml:space="preserve"><value>Rating _başlat</value></data>
-  <data name="Floor_ActiveRatings" xml:space="preserve"><value>Bu terminaldeki aktif ratingler</value></data>
+  <data name="Floor_ActiveRatings" xml:space="preserve"><value>Süren ratingler (F5 yeniler)</value></data>
   <data name="Floor_AverageBet" xml:space="preserve"><value>Ortalama bahis</value></data>
   <data name="Floor_PlayerResult" xml:space="preserve"><value>Oyuncu sonucu (+/−, isteğe bağlı)</value></data>
   <data name="Floor_Finish" xml:space="preserve"><value>Rating _bitir</value></data>

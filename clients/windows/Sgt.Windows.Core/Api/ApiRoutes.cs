@@ -41,7 +41,8 @@ public static class ApiRoutes
     public static readonly ApiRoute MyMenu = new("GET", "/api/v1/identity/me/menu");
 
     public static readonly ApiRoute OpenShift = new("POST", "/api/v1/cage/shifts");
-    public static readonly ApiRoute GetShift = new("GET", "/api/v1/cage/shifts/{shiftId}");
+    public static readonly ApiRoute MyOpenShift = new("GET", "/api/v1/cage/shifts/mine");
+    public static readonly ApiRoute GetShift =new("GET", "/api/v1/cage/shifts/{shiftId}");
     public static readonly ApiRoute ChipSales = new("POST", "/api/v1/cage/shifts/{shiftId}/chip-sales");
     public static readonly ApiRoute ChipRedemptions = new("POST", "/api/v1/cage/shifts/{shiftId}/chip-redemptions");
     public static readonly ApiRoute ExchangeForeignToBase = new("POST", "/api/v1/cage/shifts/{shiftId}/exchanges/foreign-to-base");
@@ -57,13 +58,14 @@ public static class ApiRoutes
     public static readonly ApiRoute CloseTable = new("POST", "/api/v1/floor/tables/{tableId}/close");
     public static readonly ApiRoute StartRating = new("POST", "/api/v1/floor/ratings");
     public static readonly ApiRoute FinishRating = new("POST", "/api/v1/floor/ratings/{ratingId}/finish");
+    public static readonly ApiRoute RunningRatings = new("GET", "/api/v1/floor/ratings/running");
 
     public static IReadOnlyList<ApiRoute> All { get; } =
     [
         MyMenu,
-        OpenShift, GetShift, ChipSales, ChipRedemptions, ExchangeForeignToBase, ExchangeBaseToForeign, CloseShift, RequestAdjustment,
+        OpenShift, MyOpenShift, GetShift, ChipSales, ChipRedemptions, ExchangeForeignToBase, ExchangeBaseToForeign, CloseShift, RequestAdjustment,
         SearchPlayers, GetPlayer,
-        ListTables, OpenTable, CloseTable, StartRating, FinishRating,
+        ListTables, OpenTable, CloseTable, StartRating, FinishRating, RunningRatings,
     ];
 }
 

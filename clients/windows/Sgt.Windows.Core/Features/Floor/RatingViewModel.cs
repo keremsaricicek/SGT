@@ -9,27 +9,29 @@ using Sgt.Windows.Core.Shared;
 
 namespace Sgt.Windows.Core.Features.Floor;
 
-/// <summary>Bu terminalden başlatılmış, henüz bitirilmemiş rating.</summary>
-public sealed record ActiveRating(Guid RatingId, string TableCode, string PlayerName, DateTimeOffset StartedAt);
+/// <summary>
+/// Süren rating satırı. Oyuncu adı yalnızca bu ekrandan başlatılan rating'lerde bilinir;
+/// diğerlerinde oyuncu kimliğinin kısa hali gösterilir (sunucu listesi ad taşımaz).
+/// </summary>
+public sealed record ActiveRating(Guid RatingId, Guid PlayerId, string TableCode, string PlayerName, DateTimeOffset StartedAt);
 
 /// <summary>
-/// Oyuncu derecelendirme (C3): açık masada oyuncu için rating başlatılır; bitirirken ortalama bahis
-/// ve (biliniyorsa) oyuncu sonucu girilir.
+/// Oyuncu derecelendirme (C3): açık masada oyuncu için rating başlatılır; süren rating'ler sunucudan gelir
+/// (GET /api/v1/floor/ratings/running), bitirirken ortalama bahis ve (biliniyorsa) oyuncu sonucu girilir.
 /// </summary>
 public sealed partial class RatingViewModel : StatusViewModel, IScreenViewModel
 {
     private readonly ITablesApi _tables;
     private readonly IRatingsApi _ratings;
     private readonly ISessionAccess _access;
-    private readonly TimeProvider _clock;
+    private readonly Dictionary<Guid, string> _knownPlayers = [];
 
-    public RatingViewModel(ITablesApi tables, IRatingsApi ratings, ISessionAccess access, TimeProvider clock, PlayerPickerViewModel picker)
+    public RatingViewModel(ITablesApi tables, IRatingsApi ratings, ISessionAccess access, PlayerPickerViewModel picker)
     {
         ArgumentNullException.ThrowIfNull(picker);
         _tables = tables;
         _ratings = ratings;
         _access = access;
-        _clock = clock;
         Player = picker;
         Player.SelectionChanged += (_, _) => StartCommand.NotifyCanExecuteChanged();
     }
@@ -63,28 +65,30 @@ public sealed partial class RatingViewModel : StatusViewModel, IScreenViewModel
     [NotifyCanExecuteChangedFor(nameof(StartCommand), nameof(FinishCommand))]
     public partial string? ReasonCode { get; set; } = "RATING";
 
-    public Task InitializeAsync(CancellationToken ct) => LoadTablesAsync(ct);
+    public Task InitializeAsync(CancellationToken ct) => LoadAsync(ct);
 
+    /// <summary>Açık masaları ve süren rating'leri sunucudan yükler (F5).</summary>
     [RelayCommand]
-    private async Task LoadTablesAsync(CancellationToken ct)
+    private async Task LoadAsync(CancellationToken ct)
     {
         IsBusy = true;
         try
         {
-            var result = await _tables.ListTablesAsync(ct);
-            if (!result.IsSuccess)
+            var tables = await _tables.ListTablesAsync(ct);
+            if (!tables.IsSuccess)
             {
-                ShowProblem(result.Problem!);
+                ShowProblem(tables.Problem!);
                 return;
             }
 
             OpenTables.Clear();
-            foreach (var table in result.Value.Where(t => t.IsOpen))
+            foreach (var table in tables.Value.Where(t => t.IsOpen))
             {
                 OpenTables.Add(table);
             }
 
-            SelectedTable ??= OpenTables.FirstOrDefault();
+            SelectedTable = OpenTables.FirstOrDefault(t => t.TableId == SelectedTable?.TableId) ?? OpenTables.FirstOrDefault();
+            await LoadRunningAsync(null, ct);
         }
         finally
         {
@@ -113,10 +117,11 @@ public sealed partial class RatingViewModel : StatusViewModel, IScreenViewModel
                 return;
             }
 
-            var rating = new ActiveRating(result.Value.Id, table.Code, player.FullName, _clock.GetLocalNow());
-            ActiveRatings.Add(rating);
-            SelectedRating = rating;
-            ShowStatus(string.Format(CultureInfo.CurrentCulture, Strings.Floor_RatingStarted, player.FullName, table.Code));
+            _knownPlayers[player.PlayerId] = player.FullName;
+            if (await LoadRunningAsync(result.Value.Id, ct))
+            {
+                ShowStatus(string.Format(CultureInfo.CurrentCulture, Strings.Floor_RatingStarted, player.FullName, table.Code));
+            }
         }
         finally
         {
@@ -153,15 +158,39 @@ public sealed partial class RatingViewModel : StatusViewModel, IScreenViewModel
                 return;
             }
 
-            ActiveRatings.Remove(rating);
-            SelectedRating = ActiveRatings.FirstOrDefault();
             AverageBetText = null;
             PlayerResultText = null;
-            ShowStatus(string.Format(CultureInfo.CurrentCulture, Strings.Floor_RatingFinished, rating.PlayerName, rating.TableCode));
+            if (await LoadRunningAsync(null, ct))
+            {
+                ShowStatus(string.Format(CultureInfo.CurrentCulture, Strings.Floor_RatingFinished, rating.PlayerName, rating.TableCode));
+            }
         }
         finally
         {
             IsBusy = false;
         }
+    }
+
+    /// <summary>Süren rating listesini yeniler; <paramref name="select"/> verilirse o satır seçilir.</summary>
+    private async Task<bool> LoadRunningAsync(Guid? select, CancellationToken ct)
+    {
+        var running = await _ratings.ListRunningAsync(null, ct);
+        if (!running.IsSuccess)
+        {
+            ShowProblem(running.Problem!);
+            return false;
+        }
+
+        var previous = select ?? SelectedRating?.RatingId;
+        ActiveRatings.Clear();
+        foreach (var rating in running.Value.OrderBy(r => r.StartedAt))
+        {
+            var name = _knownPlayers.TryGetValue(rating.PlayerId, out var known) ? known : $"#{rating.PlayerId.ToString("N")[..8]}";
+            ActiveRatings.Add(new ActiveRating(rating.RatingId, rating.PlayerId, rating.TableCode, name, rating.StartedAt));
+        }
+
+        SelectedRating = ActiveRatings.FirstOrDefault(r => r.RatingId == previous) ?? ActiveRatings.FirstOrDefault();
+        ClearMessages();
+        return true;
     }
 }

@@ -17,6 +17,7 @@ public static class CageFeature
         services.AddTransient<ICageTransactionApi>(sp => sp.GetRequiredService<CageApiClient>());
         services.AddTransient<ICageAdjustmentApi>(sp => sp.GetRequiredService<CageApiClient>());
 
+        services.AddTransient<ISessionInitializer, OpenShiftRestorer>();
         services.AddTransient<OpenShiftViewModel>();
         services.AddTransient<CloseShiftViewModel>();
         services.AddScreen<CashierShiftViewModel>(ScreenCodes.CageShift, () => Strings.Screen_CageShift);

@@ -11,6 +11,10 @@ public interface IApiTransport
 {
     Task<ApiResult<T>> GetAsync<T>(Uri path, CancellationToken ct);
 
+    /// <summary>Kayıt yoksa sunucu 204 döner; bu durumda başarılı sonuç ve null değer.</summary>
+    Task<ApiResult<T?>> GetOptionalAsync<T>(Uri path, CancellationToken ct)
+        where T : class;
+
     Task<ApiResult<T>> PostAsync<T>(Uri path, object body, CancellationToken ct);
 
     Task<ApiResult<Done>> PostAsync(Uri path, object body, CancellationToken ct);
@@ -22,6 +26,13 @@ internal sealed class ApiTransport(HttpClient http) : IApiTransport
 
     public Task<ApiResult<T>> GetAsync<T>(Uri path, CancellationToken ct) =>
         Send(() => http.GetAsync(path, ct), ReadBody<T>, ct);
+
+    public Task<ApiResult<T?>> GetOptionalAsync<T>(Uri path, CancellationToken ct)
+        where T : class =>
+        Send(
+            () => http.GetAsync(path, ct),
+            async (response, token) => response.StatusCode == HttpStatusCode.NoContent ? null : await ReadBody<T>(response, token),
+            ct);
 
     public Task<ApiResult<T>> PostAsync<T>(Uri path, object body, CancellationToken ct) =>
         Send(() => http.PostAsJsonAsync(path, body, Json, ct), ReadBody<T>, ct);

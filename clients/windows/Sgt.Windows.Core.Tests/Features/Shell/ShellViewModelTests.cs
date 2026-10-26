@@ -31,7 +31,25 @@ public sealed class ShellViewModelTests
         ]);
         var terminal = Substitute.For<ITerminalInfo>();
         terminal.Name.Returns("KASA-1");
-        return new ShellViewModel(_identity, _access, catalog, _opener, _windows, _auth, _navigator, _shift, terminal);
+        return new ShellViewModel(_identity, _access, catalog, _opener, _windows, _auth, _navigator, _shift, terminal, [_initializer]);
+    }
+
+    private readonly ISessionInitializer _initializer = Substitute.For<ISessionInitializer>();
+
+    [Fact]
+    public async Task Menu_yuklenince_oturum_hazirligi_yetkilerle_calisir_ve_hatasi_gosterilir()
+    {
+        MenuReturns(new MenuItemDto(ScreenCodes.CageShift, ["view", "open"]));
+        _initializer.InitializeAsync(Arg.Any<UserAccess>(), Arg.Any<CancellationToken>())
+            .Returns(TestSupport.Problem(503, "Common.Unavailable", "Vardiya bilgisi alınamadı."));
+        var sut = CreateSut();
+
+        await sut.LoadMenuCommand.ExecuteAsync(null);
+
+        await _initializer.Received(1).InitializeAsync(
+            Arg.Is<UserAccess>(a => a.CanDo(ScreenCodes.CageShift, "open")), Arg.Any<CancellationToken>());
+        Assert.Single(sut.MenuEntries);
+        Assert.Equal("Vardiya bilgisi alınamadı.", sut.ErrorMessage);
     }
 
     private void MenuReturns(params MenuItemDto[] items) =>

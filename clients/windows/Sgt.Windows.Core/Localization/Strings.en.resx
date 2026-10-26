@@ -125,7 +125,7 @@
   <data name="Floor_CloseTable" xml:space="preserve"><value>_Close table</value></data>
   <data name="Floor_Table" xml:space="preserve"><value>Open table</value></data>
   <data name="Floor_Start" xml:space="preserve"><value>_Start rating</value></data>
-  <data name="Floor_ActiveRatings" xml:space="preserve"><value>Active ratings on this terminal</value></data>
+  <data name="Floor_ActiveRatings" xml:space="preserve"><value>Running ratings (F5 refreshes)</value></data>
   <data name="Floor_AverageBet" xml:space="preserve"><value>Average bet</value></data>
   <data name="Floor_PlayerResult" xml:space="preserve"><value>Player result (+/−, optional)</value></data>
   <data name="Floor_Finish" xml:space="preserve"><value>_Finish rating</value></data>

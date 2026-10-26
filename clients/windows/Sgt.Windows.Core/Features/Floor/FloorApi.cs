@@ -27,9 +27,16 @@ public interface ITablesApi
     Task<ApiResult<Done>> CloseTableAsync(Guid tableId, FloorReasonRequest request, CancellationToken ct);
 }
 
-/// <summary>Oyuncu derecelendirme (rating) başlat/bitir.</summary>
+/// <summary>Süren (bitirilmemiş) rating (GET /api/v1/floor/ratings/running).</summary>
+[ApiSchema("RunningRatingView")]
+public sealed record RunningRatingDto(Guid RatingId, Guid PlayerId, Guid TableId, string TableCode, DateTimeOffset StartedAt);
+
+/// <summary>Oyuncu derecelendirme (rating): süren liste, başlat, bitir.</summary>
 public interface IRatingsApi
 {
+    /// <summary>Süren rating'ler; <paramref name="tableId"/> verilirse yalnızca o masa.</summary>
+    Task<ApiResult<IReadOnlyList<RunningRatingDto>>> ListRunningAsync(Guid? tableId, CancellationToken ct);
+
     Task<ApiResult<CreatedDto>> StartRatingAsync(StartRatingRequest request, CancellationToken ct);
 
     Task<ApiResult<Done>> FinishRatingAsync(Guid ratingId, RatingValuesRequest request, CancellationToken ct);
@@ -45,6 +52,17 @@ internal sealed class FloorApiClient(IApiTransport transport) : ITablesApi, IRat
 
     public Task<ApiResult<Done>> CloseTableAsync(Guid tableId, FloorReasonRequest request, CancellationToken ct) =>
         transport.PostAsync(ApiRoutes.CloseTable.Build(tableId), request, ct);
+
+    public Task<ApiResult<IReadOnlyList<RunningRatingDto>>> ListRunningAsync(Guid? tableId, CancellationToken ct)
+    {
+        var path = ApiRoutes.RunningRatings.Build();
+        if (tableId is { } id)
+        {
+            path = new Uri($"{path}?tableId={id:D}", UriKind.Relative);
+        }
+
+        return transport.GetAsync<IReadOnlyList<RunningRatingDto>>(path, ct);
+    }
 
     public Task<ApiResult<CreatedDto>> StartRatingAsync(StartRatingRequest request, CancellationToken ct) =>
         transport.PostAsync<CreatedDto>(ApiRoutes.StartRating.Build(), request, ct);

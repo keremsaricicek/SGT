@@ -12,7 +12,7 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=floor:RatingViewModel}">
     <UserControl.InputBindings>
-        <KeyBinding Key="F5" Command="{Binding LoadTablesCommand}" />
+        <KeyBinding Key="F5" Command="{Binding LoadCommand}" />
     </UserControl.InputBindings>
     <DockPanel>
         <StackPanel DockPanel.Dock="Bottom">

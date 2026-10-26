@@ -59,6 +59,9 @@ public interface ICageShiftApi
 
     Task<ApiResult<ShiftSummaryDto>> GetShiftAsync(Guid shiftId, CancellationToken ct);
 
+    /// <summary>Giriş yapan kasiyerin açık vardiyası; yoksa null (204).</summary>
+    Task<ApiResult<CreatedDto?>> GetMyOpenShiftAsync(CancellationToken ct);
+
     Task<ApiResult<Done>> CloseShiftAsync(Guid shiftId, CloseShiftRequest request, CancellationToken ct);
 }
 
@@ -87,6 +90,9 @@ internal sealed class CageApiClient(IApiTransport transport) : ICageShiftApi, IC
 
     public Task<ApiResult<ShiftSummaryDto>> GetShiftAsync(Guid shiftId, CancellationToken ct) =>
         transport.GetAsync<ShiftSummaryDto>(ApiRoutes.GetShift.Build(shiftId), ct);
+
+    public Task<ApiResult<CreatedDto?>> GetMyOpenShiftAsync(CancellationToken ct) =>
+        transport.GetOptionalAsync<CreatedDto>(ApiRoutes.MyOpenShift.Build(), ct);
 
     public Task<ApiResult<Done>> CloseShiftAsync(Guid shiftId, CloseShiftRequest request, CancellationToken ct) =>
         transport.PostAsync(ApiRoutes.CloseShift.Build(shiftId), request, ct);
