@@ -1,6 +1,6 @@
 # Spec 001: Yetki paneli (ekran bazlı yetki)
 
-Modül: Identity · Ürün: Çekirdek (tüm ürünler) · Durum: Onaylandı (koordinatör, 26.10.2026)
+Modül: Identity · Ürün: Çekirdek (tüm ürünler) · Durum: Tamamlandı (26.10.2026)
 Kaynak: `docs/kararlar.md` bölüm 4, `docs/s-plus-ekranlar.md`.
 
 ## Amaç

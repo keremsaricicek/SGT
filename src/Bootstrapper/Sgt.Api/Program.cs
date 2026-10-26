@@ -9,6 +9,7 @@ using Sgt.Modules.Identity.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<ConcurrencyConflictHandler>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddScoped<IRequestContext, HttpRequestContext>();

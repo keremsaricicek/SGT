@@ -26,12 +26,14 @@ public sealed class IdentityDbContext(DbContextOptions<IdentityDbContext> option
             e.HasKey(r => r.Id);
             e.HasIndex(r => r.TenantId);
             e.Property(r => r.Name).HasMaxLength(100);
+            e.Property(r => r.Version).IsRowVersion();
         });
 
         modelBuilder.Entity<UserAccessRow>(e =>
         {
             e.ToTable("user_access");
             e.HasKey(u => new { u.TenantId, u.UserId });
+            e.Property(u => u.Version).IsRowVersion();
         });
 
         modelBuilder.Entity<PermissionChangeRow>(e =>

@@ -129,6 +129,12 @@ namespace Sgt.Modules.Identity.Infrastructure.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("tenant_id");
 
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id")
                         .HasName("pk_roles");
 
@@ -166,6 +172,12 @@ namespace Sgt.Modules.Identity.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("uuid[]")
                         .HasColumnName("role_ids");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("TenantId", "UserId")
                         .HasName("pk_user_access");

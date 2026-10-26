@@ -7,4 +7,4 @@
 - [x] T5 Application: GetMyMenu (KK4) + IPermissionChecker (KK10) + testler
 - [x] T6 ADR-0002 veritabanı; Infrastructure (EF Core/PostgreSQL), append-only değişiklik kaydı
 - [x] T7 ADR-0003 kimlik; ekran kataloğu, rol şablonları (KK9), panel sorguları, Api uçları + API testleri
-- [ ] T8 code-rules-reviewer
+- [x] T8 Kod kuralları denetimi (tarama temiz; eşzamanlı değişiklik açığı bulundu ve kapatıldı)

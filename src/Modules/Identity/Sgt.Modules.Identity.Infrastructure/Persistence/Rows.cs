@@ -11,6 +11,9 @@ internal sealed class RoleRow
     public string Name { get; set; } = string.Empty;
 
     public List<string> Permissions { get; set; } = [];
+
+    /// <summary>PostgreSQL xmin; eşzamanlı değişikliği yakalar.</summary>
+    public uint Version { get; set; }
 }
 
 internal sealed class UserAccessRow
@@ -26,6 +29,9 @@ internal sealed class UserAccessRow
     public List<string> Grants { get; set; } = [];
 
     public List<string> Denied { get; set; } = [];
+
+    /// <summary>PostgreSQL xmin; eşzamanlı değişikliği yakalar.</summary>
+    public uint Version { get; set; }
 }
 
 /// <summary>Append-only: veritabanı tetikleyicisi UPDATE ve DELETE'i reddeder.</summary>

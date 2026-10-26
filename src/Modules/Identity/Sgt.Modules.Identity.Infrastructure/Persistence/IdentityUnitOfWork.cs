@@ -1,9 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Sgt.BuildingBlocks;
 
 namespace Sgt.Modules.Identity.Infrastructure.Persistence;
 
 /// <summary>
 /// Değişen aggregate'leri ve onların değişiklik kayıtlarını tek SaveChanges (tek transaction) ile yazar.
+/// Kayıt okunduktan sonra başkası değiştirdiyse hiçbir şey yazılmaz (<see cref="ConcurrencyConflictException"/>).
 /// </summary>
 internal sealed class IdentityUnitOfWork(IdentityDbContext db, TrackedAggregates tracked) : IUnitOfWork
 {
@@ -35,7 +37,14 @@ internal sealed class IdentityUnitOfWork(IdentityDbContext db, TrackedAggregates
             db.PermissionChanges.AddRange(user.PendingChanges.Select(c => c.ToRow()));
         }
 
-        await db.SaveChangesAsync(ct);
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateConcurrencyException e)
+        {
+            throw new ConcurrencyConflictException("Rol veya kullanıcı yetkisi başka bir yönetici tarafından değiştirildi.", e);
+        }
 
         foreach (var role in tracked.Roles)
         {
