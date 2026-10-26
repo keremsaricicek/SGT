@@ -19,6 +19,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Modules\Finance\Sgt.Modules.Finance.Application\Sgt.Modules.Finance.Application.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Contracts\Sgt.Modules.CasinoPlayer.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Modules\Configuration\Sgt.Modules.Configuration.Contracts\Sgt.Modules.Configuration.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

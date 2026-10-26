@@ -11,6 +11,8 @@
     <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Infrastructure\Sgt.Modules.Configuration.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Api\Sgt.Modules.CasinoPlayer.Api.csproj" />
     <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Infrastructure\Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Finance\Sgt.Modules.Finance.Api\Sgt.Modules.Finance.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Finance\Sgt.Modules.Finance.Infrastructure\Sgt.Modules.Finance.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

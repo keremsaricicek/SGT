@@ -37,11 +37,12 @@ public enum CageTransactionType
 public sealed class CageTransaction
 {
     private CageTransaction(
-        Guid id, CageTransactionType type, Guid playerId, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset occurredAt)
+        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset occurredAt)
     {
         Id = id;
         Type = type;
         PlayerId = playerId;
+        Amount = amount;
         Entries = entries;
         Rate = rate;
         Audit = audit;
@@ -54,6 +55,9 @@ public sealed class CageTransaction
 
     public Guid PlayerId { get; }
 
+    /// <summary>İstenen tutar: çip işleminde çip tutarı, döviz işleminde yabancı para tutarı.</summary>
+    public Money Amount { get; }
+
     public IReadOnlyList<LedgerEntry> Entries { get; }
 
     /// <summary>Döviz işleminde kullanılan kur (1 yabancı birim = Rate TRY).</summary>
@@ -64,19 +68,23 @@ public sealed class CageTransaction
     public DateTimeOffset OccurredAt { get; }
 
     internal static CageTransaction Create(
-        Guid id, CageTransactionType type, Guid playerId, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at)
+        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at)
     {
         if (entries.GroupBy(e => e.Currency).Any(g => g.Sum(e => e.Amount) != 0m))
         {
             throw new InvalidOperationException("Dengesiz defter kaydı üretildi; bu bir yazılım hatasıdır.");
         }
 
-        return new CageTransaction(id, type, playerId, entries, rate, audit, at);
+        return new CageTransaction(id, type, playerId, amount, entries, rate, audit, at);
     }
 
     public static CageTransaction Restore(
-        Guid id, CageTransactionType type, Guid playerId, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at) =>
-        new(id, type, playerId, entries, rate, audit, at);
+        Guid id, CageTransactionType type, Guid playerId, Money amount, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at) =>
+        new(id, type, playerId, amount, entries, rate, audit, at);
+
+    /// <summary>Aynı idempotency anahtarıyla gelen isteğin ilk istekle aynı olup olmadığı (KK5).</summary>
+    public bool IsSameRequest(CageTransactionType type, Guid playerId, Money amount) =>
+        Type == type && PlayerId == playerId && Amount == amount;
 }
 
 /// <summary>Kapanışta bir araç/birim için beklenen, sayılan ve fark.</summary>

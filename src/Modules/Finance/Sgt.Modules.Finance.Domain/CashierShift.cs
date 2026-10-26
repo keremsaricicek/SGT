@@ -216,7 +216,7 @@ public sealed class CashierShift
             return entries.Error;
         }
 
-        var transaction = CageTransaction.Create(transactionId, type, playerId, entries.Value, rate, audit, at);
+        var transaction = CageTransaction.Create(transactionId, type, playerId, Money.Of(amount.Amount, amount.Currency), entries.Value, rate, audit, at);
         _transactions.Add(transaction);
         Record(ShiftChangeKind.TransactionRecorded, transaction.Id, $"{type} {amount.Amount} {amount.Currency}", audit, at);
         return transaction;
