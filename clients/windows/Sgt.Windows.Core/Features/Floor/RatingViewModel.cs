@@ -185,7 +185,7 @@ public sealed partial class RatingViewModel : StatusViewModel, IScreenViewModel
         ActiveRatings.Clear();
         foreach (var rating in running.Value.OrderBy(r => r.StartedAt))
         {
-            var name = _knownPlayers.TryGetValue(rating.PlayerId, out var known) ? known : $"#{rating.PlayerId.ToString("N")[..8]}";
+            var name = _knownPlayers.TryGetValue(rating.PlayerId, out var known) ? known : rating.PlayerNumber ?? $"#{rating.PlayerId.ToString("N")[..8]}";
             ActiveRatings.Add(new ActiveRating(rating.RatingId, rating.PlayerId, rating.TableCode, name, rating.StartedAt));
         }
 

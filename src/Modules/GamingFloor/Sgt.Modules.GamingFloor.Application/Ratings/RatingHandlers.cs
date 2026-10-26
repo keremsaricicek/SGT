@@ -116,16 +116,23 @@ public sealed class PlayerLocationQuery(IRatingRepository ratings) : IPlayerLoca
 
 public sealed record ListRunningRatingsQuery(TenantId TenantId, Guid? TableId);
 
-public sealed record RunningRatingView(Guid RatingId, Guid PlayerId, Guid TableId, string TableCode, DateTimeOffset StartedAt);
+/// <summary>PlayerNumber oyuncu modülünden gelir (ör. P000001); kişisel veri içermez.</summary>
+public sealed record RunningRatingView(Guid RatingId, Guid PlayerId, string? PlayerNumber, Guid TableId, string TableCode, DateTimeOffset StartedAt);
 
 /// <summary>Süren rating'ler (pit ekranı ve Windows istemcisi yeniden açıldığında).</summary>
-public sealed class ListRunningRatingsHandler(IRatingRepository ratings) : IQueryHandler<ListRunningRatingsQuery, IReadOnlyList<RunningRatingView>>
+public sealed class ListRunningRatingsHandler(IRatingRepository ratings, IPlayerStatusQuery players)
+    : IQueryHandler<ListRunningRatingsQuery, IReadOnlyList<RunningRatingView>>
 {
     public async Task<IReadOnlyList<RunningRatingView>> Handle(ListRunningRatingsQuery query, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(query);
-        return (await ratings.Running(query.TenantId, query.TableId, ct))
-            .Select(r => new RunningRatingView(r.Id, r.PlayerId, r.TableId, r.TableCode, r.StartedAt))
-            .ToList();
+        var views = new List<RunningRatingView>();
+        foreach (var r in await ratings.Running(query.TenantId, query.TableId, ct))
+        {
+            var player = await players.GetStatus(query.TenantId, r.PlayerId, ct);
+            views.Add(new RunningRatingView(r.Id, r.PlayerId, player?.PlayerNumber, r.TableId, r.TableCode, r.StartedAt));
+        }
+
+        return views;
     }
 }

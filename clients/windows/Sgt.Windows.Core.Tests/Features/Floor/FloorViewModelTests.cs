@@ -58,7 +58,7 @@ public sealed class FloorViewModelTests
     [Fact]
     public async Task Acilista_suren_ratingler_sunucudan_gelir()
     {
-        var other = new RunningRatingDto(Guid.NewGuid(), Guid.Parse("abcdef01-0000-0000-0000-000000000000"), OpenTable.TableId, "RL-02", DateTimeOffset.UnixEpoch);
+        var other = new RunningRatingDto(Guid.NewGuid(), Guid.Parse("abcdef01-0000-0000-0000-000000000000"), null, OpenTable.TableId, "RL-02", DateTimeOffset.UnixEpoch);
         _ratings.ListRunningAsync(null, Arg.Any<CancellationToken>()).Returns(Running(other));
         var sut = RatingSut();
 
@@ -76,7 +76,7 @@ public sealed class FloorViewModelTests
     {
         var ratingId = Guid.NewGuid();
         var player = new PlayerSummaryDto(Guid.NewGuid(), "P-1", "Ada", "Test", null, false);
-        var running = new RunningRatingDto(ratingId, player.PlayerId, OpenTable.TableId, OpenTable.Code, DateTimeOffset.UnixEpoch);
+        var running = new RunningRatingDto(ratingId, player.PlayerId, null, OpenTable.TableId, OpenTable.Code, DateTimeOffset.UnixEpoch);
         _ratings.ListRunningAsync(null, Arg.Any<CancellationToken>()).Returns(Running(), Running(running), Running());
         _ratings.StartRatingAsync(Arg.Any<StartRatingRequest>(), Arg.Any<CancellationToken>()).Returns(ApiResult.Success(new CreatedDto(ratingId)));
         _ratings.FinishRatingAsync(ratingId, Arg.Any<RatingValuesRequest>(), Arg.Any<CancellationToken>()).Returns(ApiResult.Success());

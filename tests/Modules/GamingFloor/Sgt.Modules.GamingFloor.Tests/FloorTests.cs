@@ -126,10 +126,11 @@ public sealed class FloorTests
         await Open(tableId);
         var ratingId = (await Start(tableId)).Value;
 
-        var running = await new ListRunningRatingsHandler(_ratings).Handle(new ListRunningRatingsQuery(Tenant, tableId), default);
+        var running = await new ListRunningRatingsHandler(_ratings, _players).Handle(new ListRunningRatingsQuery(Tenant, tableId), default);
 
         Assert.Equal(ratingId, Assert.Single(running).RatingId);
-        Assert.Empty(await new ListRunningRatingsHandler(_ratings).Handle(new ListRunningRatingsQuery(Tenant, Guid.NewGuid()), default));
+        Assert.Equal("P000001", running[0].PlayerNumber);
+        Assert.Empty(await new ListRunningRatingsHandler(_ratings, _players).Handle(new ListRunningRatingsQuery(Tenant, Guid.NewGuid()), default));
     }
 
     private Task<Result<Guid>> Define(string code, GameType type = GameType.Blackjack) =>

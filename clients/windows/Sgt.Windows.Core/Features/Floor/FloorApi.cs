@@ -29,7 +29,7 @@ public interface ITablesApi
 
 /// <summary>Süren (bitirilmemiş) rating (GET /api/v1/floor/ratings/running).</summary>
 [ApiSchema("RunningRatingView")]
-public sealed record RunningRatingDto(Guid RatingId, Guid PlayerId, Guid TableId, string TableCode, DateTimeOffset StartedAt);
+public sealed record RunningRatingDto(Guid RatingId, Guid PlayerId, string? PlayerNumber, Guid TableId, string TableCode, DateTimeOffset StartedAt);
 
 /// <summary>Oyuncu derecelendirme (rating): süren liste, başlat, bitir.</summary>
 public interface IRatingsApi

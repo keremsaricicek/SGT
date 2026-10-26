@@ -5607,6 +5607,7 @@
         "required": [
           "ratingId",
           "playerId",
+          "playerNumber",
           "tableId",
           "tableCode",
           "startedAt"
@@ -5620,6 +5621,12 @@
           "playerId": {
             "type": "string",
             "format": "uuid"
+          },
+          "playerNumber": {
+            "type": [
+              "null",
+              "string"
+            ]
           },
           "tableId": {
             "type": "string",
