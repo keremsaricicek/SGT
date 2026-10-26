@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using Sgt.BuildingBlocks;
 using Sgt.Modules.Audit.Infrastructure;
+using Sgt.Modules.CasinoPlayer.Infrastructure;
 using Sgt.Modules.Configuration.Infrastructure;
 using Sgt.Modules.Identity.Domain;
 using Sgt.Modules.Identity.Infrastructure;
@@ -59,6 +60,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         await scope.ServiceProvider.MigrateIdentityDatabase(default);
         await scope.ServiceProvider.MigrateAuditDatabase(default);
         await scope.ServiceProvider.MigrateConfigurationDatabase(default);
+        await scope.ServiceProvider.MigrateCasinoPlayerDatabase(default);
         await IdentityDevelopmentSeed.Run(scope.ServiceProvider, Tenant, SuperAdmin, [Product.SPlus], default);
     }
 
@@ -76,6 +78,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     {
         builder.UseEnvironment("Testing");
         builder.UseSetting("ConnectionStrings:Sgt", _connectionString);
+        builder.UseSetting("Security:PersonalDataKey", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)));
+        builder.UseSetting("Security:BlindIndexKey", Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32)));
         builder.ConfigureServices(services => services
             .AddAuthentication(TestAuthHandler.SchemeName)
             .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.SchemeName, _ => { }));

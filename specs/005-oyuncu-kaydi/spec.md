@@ -1,6 +1,6 @@
 # Spec 005: Oyuncu kaydı, kartı, arama ve kısıtlama
 
-Modül: CasinoPlayer · Ürün: S Plus · Durum: Onaylandı (koordinatör, 26.10.2026)
+Modül: CasinoPlayer · Ürün: S Plus · Durum: Tamamlandı (26.10.2026)
 Ekranlar: player.search, player.profile, player.restrictions (docs/s-plus-ekranlar.md)
 
 ## Amaç

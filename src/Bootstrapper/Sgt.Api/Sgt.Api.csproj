@@ -9,6 +9,8 @@
     <ProjectReference Include="..\..\Modules\Audit\Sgt.Modules.Audit.Infrastructure\Sgt.Modules.Audit.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Api\Sgt.Modules.Configuration.Api.csproj" />
     <ProjectReference Include="..\..\Modules\Configuration\Sgt.Modules.Configuration.Infrastructure\Sgt.Modules.Configuration.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Api\Sgt.Modules.CasinoPlayer.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Infrastructure\Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
