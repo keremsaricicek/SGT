@@ -178,5 +178,11 @@ internal static class ModuleCatalog
     //     typeof(Sgt.Modules.Hotel.Api.AssemblyMarker).Assembly),
     public static readonly IReadOnlyList<ModuleAssemblies> All =
     [
+        new("Identity",
+            typeof(Sgt.Modules.Identity.Contracts.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Identity.Domain.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Identity.Application.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Identity.Infrastructure.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Identity.Api.AssemblyMarker).Assembly),
     ];
 }
