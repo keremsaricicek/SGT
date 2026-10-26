@@ -1,0 +1,93 @@
+using Sgt.BuildingBlocks;
+
+namespace Sgt.Modules.Finance.Domain;
+
+/// <summary>Çekmecede tutulan değer türü.</summary>
+public enum Instrument
+{
+    Cash,
+    Chips,
+}
+
+/// <summary>Defter hesabı: çekmece veya döviz takas (FX) hesabı.</summary>
+public enum LedgerAccount
+{
+    Drawer,
+    FxClearing,
+}
+
+/// <summary>Bir araç ve para birimindeki tutar (açılış ve sayım için).</summary>
+public sealed record DrawerAmount(Instrument Instrument, string Currency, decimal Amount);
+
+/// <summary>Tek defter satırı. İşaretli tutar: + çekmeceye/hesaba giriş, − çıkış. Değiştirilmez.</summary>
+public sealed record LedgerEntry(LedgerAccount Account, Instrument Instrument, string Currency, decimal Amount);
+
+public enum CageTransactionType
+{
+    ChipSale,
+    ChipRedeem,
+    ExchangeForeignToBase,
+    ExchangeBaseToForeign,
+}
+
+/// <summary>
+/// Kasa işlemi. Kimliği istemcinin verdiği idempotency anahtarıdır (KK5).
+/// Kayıtlar para birimi bazında toplamı sıfırdır (KK7).
+/// </summary>
+public sealed class CageTransaction
+{
+    private CageTransaction(
+        Guid id, CageTransactionType type, Guid playerId, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset occurredAt)
+    {
+        Id = id;
+        Type = type;
+        PlayerId = playerId;
+        Entries = entries;
+        Rate = rate;
+        Audit = audit;
+        OccurredAt = occurredAt;
+    }
+
+    public Guid Id { get; }
+
+    public CageTransactionType Type { get; }
+
+    public Guid PlayerId { get; }
+
+    public IReadOnlyList<LedgerEntry> Entries { get; }
+
+    /// <summary>Döviz işleminde kullanılan kur (1 yabancı birim = Rate TRY).</summary>
+    public decimal? Rate { get; }
+
+    public AuditContext Audit { get; }
+
+    public DateTimeOffset OccurredAt { get; }
+
+    internal static CageTransaction Create(
+        Guid id, CageTransactionType type, Guid playerId, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at)
+    {
+        if (entries.GroupBy(e => e.Currency).Any(g => g.Sum(e => e.Amount) != 0m))
+        {
+            throw new InvalidOperationException("Dengesiz defter kaydı üretildi; bu bir yazılım hatasıdır.");
+        }
+
+        return new CageTransaction(id, type, playerId, entries, rate, audit, at);
+    }
+
+    public static CageTransaction Restore(
+        Guid id, CageTransactionType type, Guid playerId, IReadOnlyList<LedgerEntry> entries, decimal? rate, AuditContext audit, DateTimeOffset at) =>
+        new(id, type, playerId, entries, rate, audit, at);
+}
+
+/// <summary>Kapanışta bir araç/birim için beklenen, sayılan ve fark.</summary>
+public sealed record ClosingCount(Instrument Instrument, string Currency, decimal Expected, decimal Counted)
+{
+    public decimal Variance => Counted - Expected;
+}
+
+internal static class CageAmounts
+{
+    public static bool IsValidPositive(decimal amount) => amount > 0 && decimal.Round(amount, 2) == amount;
+
+    public static bool IsValidNonNegative(decimal amount) => amount >= 0 && decimal.Round(amount, 2) == amount;
+}

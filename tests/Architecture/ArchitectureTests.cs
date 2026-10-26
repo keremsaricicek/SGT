@@ -202,5 +202,11 @@ internal static class ModuleCatalog
             typeof(Sgt.Modules.CasinoPlayer.Application.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.CasinoPlayer.Infrastructure.AssemblyMarker).Assembly,
             typeof(Sgt.Modules.CasinoPlayer.Api.AssemblyMarker).Assembly),
+        new("Finance",
+            typeof(Sgt.Modules.Finance.Contracts.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Finance.Domain.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Finance.Application.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Finance.Infrastructure.AssemblyMarker).Assembly,
+            typeof(Sgt.Modules.Finance.Api.AssemblyMarker).Assembly),
     ];
 }

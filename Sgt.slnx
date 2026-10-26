@@ -30,6 +30,13 @@
     <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Domain/Sgt.Modules.Configuration.Domain.csproj" />
     <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Infrastructure/Sgt.Modules.Configuration.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/Finance/">
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Api/Sgt.Modules.Finance.Api.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Application/Sgt.Modules.Finance.Application.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Contracts/Sgt.Modules.Finance.Contracts.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Domain/Sgt.Modules.Finance.Domain.csproj" />
+    <Project Path="src/Modules/Finance/Sgt.Modules.Finance.Infrastructure/Sgt.Modules.Finance.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Identity/">
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Api/Sgt.Modules.Identity.Api.csproj" />
     <Project Path="src/Modules/Identity/Sgt.Modules.Identity.Application/Sgt.Modules.Identity.Application.csproj" />
@@ -57,6 +64,9 @@
   </Folder>
   <Folder Name="/tests/Modules/Configuration/">
     <Project Path="tests/Modules/Configuration/Sgt.Modules.Configuration.Tests/Sgt.Modules.Configuration.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/Finance/">
+    <Project Path="tests/Modules/Finance/Sgt.Modules.Finance.Tests/Sgt.Modules.Finance.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/Modules/Identity/">
     <Project Path="tests/Modules/Identity/Sgt.Modules.Identity.IntegrationTests/Sgt.Modules.Identity.IntegrationTests.csproj" />

@@ -34,6 +34,11 @@
     <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Application\Sgt.Modules.CasinoPlayer.Application.csproj" />
     <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Infrastructure\Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Modules\CasinoPlayer\Sgt.Modules.CasinoPlayer.Api\Sgt.Modules.CasinoPlayer.Api.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Contracts\Sgt.Modules.Finance.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Domain\Sgt.Modules.Finance.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Application\Sgt.Modules.Finance.Application.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Infrastructure\Sgt.Modules.Finance.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Finance\Sgt.Modules.Finance.Api\Sgt.Modules.Finance.Api.csproj" />
   </ItemGroup>
 
 </Project>
