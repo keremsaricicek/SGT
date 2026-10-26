@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sgt.Modules.CasinoPlayer.Application\Sgt.Modules.CasinoPlayer.Application.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.CasinoPlayer.Contracts\Sgt.Modules.CasinoPlayer.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\Sgt.BuildingBlocks.Web\Sgt.BuildingBlocks.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

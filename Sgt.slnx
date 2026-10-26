@@ -16,6 +16,13 @@
     <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Domain/Sgt.Modules.Audit.Domain.csproj" />
     <Project Path="src/Modules/Audit/Sgt.Modules.Audit.Infrastructure/Sgt.Modules.Audit.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/src/Modules/CasinoPlayer/">
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Api/Sgt.Modules.CasinoPlayer.Api.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Application/Sgt.Modules.CasinoPlayer.Application.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Contracts/Sgt.Modules.CasinoPlayer.Contracts.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Domain/Sgt.Modules.CasinoPlayer.Domain.csproj" />
+    <Project Path="src/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Infrastructure/Sgt.Modules.CasinoPlayer.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/src/Modules/Configuration/">
     <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Api/Sgt.Modules.Configuration.Api.csproj" />
     <Project Path="src/Modules/Configuration/Sgt.Modules.Configuration.Application/Sgt.Modules.Configuration.Application.csproj" />
@@ -44,6 +51,9 @@
   <Folder Name="/tests/Modules/" />
   <Folder Name="/tests/Modules/Audit/">
     <Project Path="tests/Modules/Audit/Sgt.Modules.Audit.Tests/Sgt.Modules.Audit.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/CasinoPlayer/">
+    <Project Path="tests/Modules/CasinoPlayer/Sgt.Modules.CasinoPlayer.Tests/Sgt.Modules.CasinoPlayer.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/Modules/Configuration/">
     <Project Path="tests/Modules/Configuration/Sgt.Modules.Configuration.Tests/Sgt.Modules.Configuration.Tests.csproj" />
