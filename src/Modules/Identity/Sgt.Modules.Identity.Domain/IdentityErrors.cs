@@ -21,4 +21,10 @@ public static class IdentityErrors
 
     public static readonly Error RoleNameRequired =
         new("Identity.RoleNameRequired", "Rol adı boş olamaz.");
+
+    public static readonly Error RoleNotFound =
+        new("Identity.RoleNotFound", "Rol bulunamadı.");
+
+    public static readonly Error UserNotFound =
+        new("Identity.UserNotFound", "Kullanıcı bulunamadı.");
 }
