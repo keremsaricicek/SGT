@@ -101,6 +101,15 @@ Fizibilite raporunu proje sahibi hazırlamadı; eksik veya bu kararlarla uyumsuz
 - **Merit Event Studio** ayrı bir ürün ve ayrı bir depo olarak kalır; aynı kural paketi orada da kullanılabilir.
 - Agent ve skill seçimi: `docs/ajan-skill-yol-haritasi.pdf` (çekirdek set + 4 haftalık kurulum).
 
+## 9a. Arayüz dili ve kapsam kararları (21.11.2026)
+
+- **Ortak tasarım dili (A11):** Kurumsal, işlev önce; güzellik yarışması değil. Casino personelinin alıştığı klasik
+  masaüstü iş uygulaması düzeni korunur (menü, araç çubuğu, yoğun tablo/grid, form alanları, durum çubuğu, klavye
+  kısayolları) ve modernleştirilir. Modernlik = net hiyerarşi, iyi tipografi, hizalama, okunur tablolar, sakin renk.
+  **Oval/hap düğme, büyük yuvarlak kart ve süs animasyonu kullanılmaz** (düz ya da çok az köşe yumuşatma).
+  Koyu tema seçeneği zorunlu; açık tema da var. Web, Windows ve mobil aynı tasarım token'larını kullanır.
+- **Lisans açma/kapama (A4) ertelendi:** Proje sahibi tekrar söyleyene kadar plana alınmaz ve yapılmaz.
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
