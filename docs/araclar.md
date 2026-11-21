@@ -14,14 +14,13 @@ bir işi iki araç yapıyorsa biri kapatılır.
 - Arayüz: frontend-design, interface-design; mobil: dart-flutter.
 - İnceleme ve güvenlik: pr-review-toolkit, security-guidance; Trail of Bits static-analysis, insecure-defaults,
   differential-review, sharp-edges, property-based-testing.
+- Token tasarrufu: context-mode (araç çıktısını bağlam dışında tutar), caveman (kısa yazışma).
+- Tanım incelemesi: egm (Google Elephant-Goldfish; taze göz incelemesi).
+- Veritabanı: postgres-best-practices (Supabase). Yük testi: grafana-k6 (Grafana).
 
 Kapatılanlar (tekrar eden veya ilgisiz): compound-engineering, full-stack-orchestration, backend-development,
 feature-dev, c4-architecture, ui-ux-pro-max, dotnet-artisan, dotnet-diag, code-review (yerleşik olanı var);
 hesap düzeyindeki marketing, data, operations, product-management, engineering.
-
-- Token tasarrufu: context-mode (araç çıktısını bağlam dışında tutar), caveman (kısa yazışma).
-- Tanım incelemesi: egm (Google Elephant-Goldfish; taze göz incelemesi).
-- Veritabanı: postgres-best-practices (Supabase). Yük testi: grafana-k6 (Grafana).
 
 ## Skill'ler
 impeccable, design-taste-frontend, vercel-react-best-practices (`.claude/skills` ve `.agents/skills`), owasp-security,

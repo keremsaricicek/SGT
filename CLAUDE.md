@@ -1,103 +1,81 @@
-# CLAUDE.md — SGT (Sentez Gaming Technologies)
+# CLAUDE.md
 
-Bu dosya her oturumda okunur; kısa tutulur, ayrıntılar `docs/` altındadır.
-Çelişki olursa öncelik sırası: `.specify/memory/constitution.md` → `docs/kararlar.md` → bu dosya →
-diğer `docs/` dosyaları → `docs/fizibilite-raporu.pdf` (en eski kaynak; kararlarla çelişirse geçersiz).
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-**Durum: Faz 1 (ortak çekirdek). İskelet kuruldu; her iş spec → test → kod sırasıyla.** Proje sahibi kod bilmez; açıklamalar sade Türkçe olmalı.
+# SGT (Sentez Gaming Technologies)
 
-## Proje
+Kısa tutulur; ayrıntı `docs/` altında. Çelişkide öncelik: `.specify/memory/constitution.md` → `docs/kararlar.md` →
+bu dosya → diğer `docs/` → `docs/fizibilite-raporu.pdf` (en eski).
 
-KKTC casino ve otelleri için ayrı satılabilen ürün ailesi (ayrıntı: `docs/kararlar.md`):
-- **S Plus:** ana casino sistemi; oyuncular, kasa, loyalty, canlı oyun, slot ekranları, raporlar, yetki paneli.
-- **S Slot:** slot makinelerinden veri toplar (NEXIO'nun yerine geçer); isteğe bağlı modül.
-- **S Vista:** otel sistemi; isteğe bağlı modül.
+KKTC casino/otelleri için ayrı satılan ürün ailesi: **S Plus** (casino çekirdeği, tek başına çalışır),
+**S Slot** (slot verisi, NEXIO'nun yerine), **S Vista** (otel). Modüller lisansla açılır. Para birimi TRY/EUR/GBP/USD, arayüz TR/EN.
 
-Kesin kurallar:
-- Rakip sistemlerden tek dış bağlantı NEXIO'dur (isteğe bağlı). Slot verisi tek girişten gelir:
-  NEXIO adaptörü veya S Slot. Opera/Elektra adaptörü yazılmaz.
-- Modüller lisansa göre açılır/kapanır; S Plus tek başına çalışır.
-- Yetki ekran bazındadır: her ekran için "görebilir" ve "işlem yapabilir" ayrı verilir, yetki panelinden yönetilir,
-  her değişiklik audit'e yazılır.
-- Para birimleri TRY/EUR/GBP/USD; arayüz TR/EN.
+**Durum ve yol haritası:** `docs/SGT-tam-plan.pdf` (aşama A–I, iş paketleri, demolar). Çekirdek + S Plus MVP hazır;
+sıradaki iş A aşaması (mobil, demo ortamı). Çalışma dalı `faz0/proje-paketi`; `main`e doğrudan iş yapılmaz, PR istenmeden açılmaz.
 
-İstemciler: Windows uygulaması (operasyon), iOS/Android, web paneli. Mimari: API-first, event-driven, modüler monolit.
+## Proje sahibiyle çalışma
 
-Stack (Discovery sonunda ADR ile kesinleşir): .NET 10 / ASP.NET Core · PostgreSQL · WPF (MVVM) ·
-Flutter · React/Next.js · Kafka veya RabbitMQ · OIDC (Keycloak/Entra sınıfı) · OpenTelemetry.
-
-## Kod kuralları (değiştirilemez)
-
-**K1 — SOLID ve OOP esastır.**
-- Her sınıfın tek bir değişme nedeni vardır (SRP).
-- Yeni davranış, mevcut kodu değiştirerek değil yeni sınıf ekleyerek gelir: strateji, adaptör, kural nesnesi (OCP).
-- Alt tip, üst tipin sözleşmesini bozmaz; arayüz metodu `NotSupportedException` ile "boş geçilmez" (LSP).
-- Arayüzler küçük ve role özeldir; hiçbir sınıf kullanmadığı metoda bağımlı olmaz (ISP).
-- Domain ve Application soyutlamalara bağlıdır; altyapı (EF Core, mesajlaşma, HTTP, saat, cihaz protokolü) dışarıdan enjekte edilir (DIP).
-- Kapsülleme: durum yalnızca davranış metotlarıyla değişir, public setter yoktur; iş kuralı entity ve value object içindedir.
-- Para, kimlik ve kod gibi kavramlar primitive değil value object'tir (`Money`, `PlayerId`, `RoomNumber`). Para için `float`/`double` kullanılmaz.
-- Kalıtım yerine kompozisyon; tip kontrolü (`is`, `switch` on type) yerine polimorfizm.
-
-**K2 — Her işlev ayrı kodlanır, sözleşmelerle entegre olur.**
-- Her işlev (rezervasyon oluşturma, check-in, comp onayı, cashier kapanışı...) kendi modülünde, kendi klasöründe
-  dikey dilim olarak yazılır: komut/sorgu + handler + validator + endpoint + testler.
-- Modüller birbirinin iç koduna, DbContext'ine ve tablolarına erişmez. Tek temas noktaları:
-  modülün `*.Contracts` projesindeki arayüz/DTO'lar ve integration event'ler.
-- Durum değiştiren modüller arası iletişim: integration event + outbox. Anlık okuma: Contracts sorgu arayüzü.
-- Her modül tek başına derlenir ve test edilir; entegrasyon kontrat testleriyle kanıtlanır.
-- `tests/Architecture` bu kuralları her build'de denetler. Kırmızıysa iş bitmemiştir.
-
-Ayrıntılar, örnekler ve platform bazlı uygulama: `docs/kod-kurallari.md`
-
-## Mimari kurallar (fizibilite raporundan)
-
-- İstemciler veritabanına asla doğrudan bağlanmaz; her işlem kimliği doğrulanmış API veya olay üzerinden geçer.
-- Finansal ve değer taşıyan kayıtlar asla UPDATE/DELETE edilmez; düzeltme reversal veya adjustment kaydıyla yapılır.
-- Her kritik işlem `CorrelationId`, `Actor`, `Terminal` ve `ReasonCode` taşır ve audit'e yazılır.
-- Her entegrasyon mesajı idempotency anahtarı taşır; aynı mesaj iki kez gelirse ikinci hareket oluşmaz.
-- Core domain cihaz/vendor protokollerini (TCP, serial, FIAS...) bilmez; bunlar Integration Hub adaptörlerindedir.
-- Vendor kodu → kanonik kod dönüşümü mapping katmanındadır; mapping değişikliği audit edilir.
-- Retry: exponential backoff + dead-letter queue + operatör reprocess ekranı.
-- Her sorgu ve komut tenant/property kapsamındadır; kapsamsız veri erişimi yazılmaz.
-- Offline/edge modda finansal ve gaming değer hareketi yalnızca risk modelinde tanımlı limitlerle açılır.
-- Public/partner API ile internal API ayrıdır; API'ler OpenAPI contract-first ve sürümlüdür.
-- Rakip ürünlerin (NEXIO, Fidelio/Suite8/OPERA, Elektra) ekranı, kaynak kodu veya ticari tasarımı kopyalanmaz;
-  rakip yazılımların kodu açılmaz (decompile/REA yok). Özellik fikri yalnızca kullanım, demo ve kılavuzdan öğrenilir.
-
-## Güvenlik ve veri
-
-- Gerçek misafir/oyuncu verisi, kart verisi, üretim bağlantı bilgisi ve secret asla repoya, koda, loga veya
-  agent bağlamına girmez. Yalnızca sentetik test verisi kullanılır.
-- Secret'lar secret manager'dadır; istemci uygulamalarda secret veya DB bilgisi bulunmaz.
-- Hassas alanlar loglanmaz; gerekiyorsa maskelenir.
-- Web/API için OWASP ASVS, mobil için OWASP MASVS esas alınır.
-
-## Çalışma şekli
-
-- Önce spec ve plan (Spec Kit), sonra test, sonra kod. Plansız kod yazılmaz.
-- Testi olmayan davranış yoktur: önce başarısız test, sonra kod.
-- Her agent yalnızca kendisine atanan modül ve klasörlerde dosya değiştirir.
-- Para/değer akışlarına dokunan PR'lar (ledger, folio, wallet, cage, comp, jackpot) `finans` etiketi alır
-  ve insan onayı olmadan birleşmez.
-- Belirsizlikte tahmin edilmez; soru yazılır ve durulur.
-- UI işi ekran görüntüsüyle doğrulanmadan bitmiş sayılmaz (web: Playwright MCP).
-- Kütüphane/API kullanımında güncel doküman: .NET için Microsoft Learn MCP, diğerleri için Context7.
-
-## Bitti tanımı
-
-1. Spec'teki kabul kriterleri testlerle karşılanıyor.
-2. Build uyarısız; unit, integration, contract ve architecture testleri yeşil.
-3. `code-rules-reviewer` agent'ı ve güvenlik taraması temiz, ya da her bulgu gerekçeli.
-4. Public sözleşme değiştiyse OpenAPI ve Contracts güncel; kırıcı değişiklik yeni sürümle yapılmış.
-5. Önemli bir karar alındıysa `docs/adr/` altında ADR yazılmış.
+- Sahip kod bilmez: sade, kısa Türkçe. Token tasarrufu en önemli konu: ara rapor yazılmaz, "durum ne" denince kısa rapor.
+- Teknik koordinatör sensin: kararları kendin ver, yalnızca gerçekten sahibe ait kararları sor (açıklar `docs/kararlar.md` sonunda).
+- Her aşama sonunda denenebilir demo; UI işi ekran görüntüsüyle (Playwright) doğrulanmadan bitmiş sayılmaz.
 
 ## Komutlar
 
 ```bash
-dotnet build Sgt.slnx                                  # derleme (uyarı = hata)
-dotnet test Sgt.slnx                                   # tüm testler
-dotnet test tests/Architecture/Sgt.Tests.Architecture.csproj   # yalnızca mimari kurallar
-dotnet run --project src/Bootstrapper/Sgt.Api          # lokal API; /health
+dotnet build Sgt.slnx                                    # uyarı = hata
+dotnet test Sgt.slnx                                     # tüm sunucu testleri
+dotnet test tests/Architecture/Sgt.Tests.Architecture.csproj
+dotnet test tests/Modules/Finance/<Proje>.csproj --filter "FullyQualifiedName~OpenShift"   # tek test/sınıf
+dotnet run --project src/Bootstrapper/Sgt.Api            # lokal API (Development: migrate + seed); /health
+dotnet run --project src/Bootstrapper/Sgt.Api -- --migrate   # yalnızca migration (üretim yolu, ADR-0007)
+build/new-module.sh <Modül>                              # modül iskeleti; sonra ModuleCatalog'a ekle
+dotnet ef migrations add <Ad> -p src/Modules/<M>/Sgt.Modules.<M>.Infrastructure -o Persistence/Migrations
+SGT_UPDATE_OPENAPI=1 dotnet test tests/Api/Sgt.Api.Tests --filter OpenApiContractTests   # bilinçli API değişikliği
 ```
-Migration (modül başına): `dotnet ef migrations add <Ad> -p src/Modules/<Modül>/Sgt.Modules.<Modül>.Infrastructure -o Persistence/Migrations`
-Entegrasyon testleri yerel PostgreSQL ister (`SGT_TEST_DB` ya da `Host=localhost;Username=sgt;Password=sgt_dev_only`).
+- Entegrasyon/API testleri yerel PostgreSQL ister (`SGT_TEST_DB`, varsayılan `Host=localhost;Username=sgt;Password=sgt_dev_only`);
+  bulut oturumunda `.claude/hooks/session-start.sh` kurar. Tam ortam: `deploy/docker-compose.yml` (Postgres + Keycloak), bkz. `docs/kurulum.md`.
+- Web (`clients/web`, Next.js 16): `npm run lint|typecheck|test|build`; API tipleri `npm run gen:api` (OpenAPI'den üretilir, elle yazılmaz).
+- Windows (`clients/windows/Sgt.Windows.slnx`): `Sgt.Windows.Core(.Tests)` Linux'ta derlenir/test edilir; `Sgt.Windows.App` (WPF) yalnızca Windows/CI.
+- Mobil (`clients/mobile`, Flutter): yarım; `faz1/mobil` dalında.
+
+## Mimari (büyük resim)
+
+Modüler monolit, .NET 10 minimal API, PostgreSQL 16 + EF Core 10. Tek host: `src/Bootstrapper/Sgt.Api/Program.cs`
+her modülü `Add<Modül>Module(...)` + `Map<Modül>Endpoints()` ile bağlar.
+
+- **Modül = 5 proje** (`src/Modules/<M>/Sgt.Modules.<M>.*`): `Contracts` (dışa açık arayüz, DTO, integration event) ·
+  `Domain` (aggregate, value object; altyapı yok) · `Application` (özellik klasörlerinde dikey dilim: komut/sorgu + handler + validator,
+  ör. `Finance.Application/Cage/OpenShift.cs`) · `Infrastructure` (kendi şeması + DbContext, row sınıfları domain'den ayrı, aggregate `Restore(...)` ile kurulur) ·
+  `Api` (`<M>Endpoints.cs`, `/api/v1/...`).
+- **Modüller arası:** yalnızca `*.Contracts`. Durum değiştiren iletişim integration event + modül başına outbox (`OutboxProcessor`,
+  backoff, 10 denemede dead-letter); tüketim `EfInbox` ile idempotent. Anlık okuma Contracts'taki sorgu arayüzleriyle (ör. `IPlayerStatusQuery`).
+  `tests/Architecture` (NetArchTest + `ModuleCatalog`) bunu her build'de denetler.
+- **BuildingBlocks:** `Result/Error(ErrorKind)` → HTTP (`ResultHttpExtensions`), `Money`, `IClock`, `BusinessCalendar` (Asia/Famagusta; DB'ye UTC yazılır),
+  `IPersonalDataProtector` (AES-GCM + HMAC blind index), `FourEyesDecision`, `IRequestContext` (kullanıcı, tenant, `X-Terminal`, `X-Correlation-Id`).
+- **Değer kayıtları append-only:** DB tetikleyicileri UPDATE/DELETE'i engeller; finans ledger'ında denge kısıtı var. Düzeltme reversal/adjustment ile.
+  Eşzamanlılık: PostgreSQL `xmin` + aggregate "touch" sayaçları → `ConcurrencyConflictException` → 409. Komutlar istemci kaynaklı idempotency anahtarı taşır.
+- **Kimlik/yetki:** Keycloak OIDC JWT; `sub` ve `tenant_id` zorunlu. Ekran bazlı yetki `<ekran>:<işlem>`, endpoint'te `RequirePermission(...)`;
+  ekran kataloğu Identity modülünde. Her sorgu tenant kapsamlı.
+- **Sözleşme:** `docs/api/openapi-v1.json` kontrat testiyle kilitli; istemciler bu dosyadan tip üretir.
+- Kararlar: `docs/adr/0001–0007`. İş tanımları: `specs/NNN-*/spec.md`. Terimler: `docs/sozluk.md`. Ekranlar: `docs/s-plus-ekranlar.md`.
+
+## Kod kuralları (değiştirilemez; ayrıntı `docs/kod-kurallari.md`)
+
+- **K1 SOLID/OOP:** tek sorumluluk; yeni davranış yeni sınıfla (strateji/adaptör); public setter yok, durum davranış metoduyla değişir;
+  para/kimlik/kod value object (`Money`, `PlayerId`), para için `float/double` yok; tip kontrolü yerine polimorfizm.
+- **K2 dikey dilim + sözleşme:** her işlev kendi modülü ve klasöründe; başka modülün iç koduna, DbContext'ine, tablosuna erişim yok.
+- Değer kayıtları asla UPDATE/DELETE edilmez. Kritik işlem `CorrelationId`, `Actor`, `Terminal`, `ReasonCode` taşır ve audit'e yazılır.
+- Cihaz/vendor protokolü (SAS/G2S, kapı kilidi, NEXIO) yalnızca entegrasyon adaptörlerinde; vendor→kanonik kod eşlemesi audit'li.
+- Slot verisinin tek girişi `SlotMetersReportedV1` (NEXIO adaptörü, S Slot veya manuel). Opera/Elektra adaptörü yazılmaz.
+- Rakip ürünlerin (NEXIO, Fidelio/OPERA, Elektra) ekranı/kodu/tasarımı kopyalanmaz; decompile yok.
+- Gerçek oyuncu/misafir/kart verisi, üretim bağlantısı, secret repoya/loga/agent bağlamına girmez; yalnızca sentetik veri.
+- Build analyzer'ları (BannedApiAnalyzers: `DateTime.Now` vb.) uyarıyı hata sayar; susturma gerekçeli olur.
+
+## Çalışma akışı ve bitti tanımı
+
+Spec (Spec Kit) → plan → önce başarısız test → kod → inceleme → demo. Bitti: kabul kriterleri testli; build uyarısız ve
+tüm testler yeşil; `code-rules-reviewer` temiz; OpenAPI/Contracts güncel (kırıcı değişiklik = yeni sürüm); önemli karar ADR'de.
+- Para/değer kodu (ledger, cage, chip, jackpot, comp, loyalty, folio) `finans-denetci`'den geçer, `finans` etiketi alır, insan (teknik lider) onayı olmadan birleşmez.
+- Migration/şema/sorgu değişikliği `veri-sagligi-denetci`'den geçer.
+- Paralel ajanlar ayrı worktree'de ve yalnızca kendi modül/klasöründe çalışır; birleştirmeyi koordinatör yapar.
+- Güncel doküman: Context7 (.NET dahil). Kod haritası için `graphify` (varsa `graphify-out/`). Kurulu araçlar: `docs/araclar.md`.
