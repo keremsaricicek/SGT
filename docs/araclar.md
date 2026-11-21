@@ -25,6 +25,10 @@ hesap düzeyindeki marketing, data, operations, product-management, engineering.
 ## Skill'ler
 impeccable, design-taste-frontend, vercel-react-best-practices (`.claude/skills` ve `.agents/skills`), owasp-security,
 graphify (kodu sorgulanabilir haritaya çevirir; CLI oturum başında kurulur, harita `graphify-out/`).
+Arayüz denetimi (jakubkrehel/skills, MIT, 672ae44): better-interface, better-ui, better-layout, better-colors,
+better-typography, better-accessibility, interface-review. Çelişkide `docs/kararlar.md` 9a kazanır (ör. köşe ≤3px, oval düğme yok).
+Tasarım token'ları: style-dictionary (tek JSON → CSS, XAML, Dart). İkonlar: Microsoft Fluent UI System Icons (MIT).
+Önerilmeyenler (21.11.2026): wpfui, tokens-studio, Lucide, Uno, ui-ux-pro-max, plugin87/ux-ui-agent-skills, awesome-cursorrules.
 Kaldırılanlar: BMAD ve ccpm (Spec Kit + Superpowers ile aynı işi yapıyordu).
 
 ## Spec Kit
