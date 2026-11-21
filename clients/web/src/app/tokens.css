@@ -1,0 +1,125 @@
+/* BU DOSYA ÜRETİLİR, ELLE DEĞİŞTİRMEYİN. Kaynak: design/tokens/sgt-tokens.json (npm run gen:tokens, Spec 013). */
+
+:root {
+  --font-ui: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", "Cascadia Mono", "Consolas", monospace;
+  --text-caption: 11px;
+  --text-small: 12px;
+  --text-body: 13px;
+  --text-heading: 15px;
+  --text-title: 18px;
+  --text-figure: 22px;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --leading-tight: 1.2;
+  --leading-body: 1.45;
+  --tracking-caption: 0.4px;
+  --space-0: 0;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 6px;
+  --space-4: 8px;
+  --space-5: 12px;
+  --space-6: 16px;
+  --space-7: 20px;
+  --space-8: 24px;
+  --space-9: 32px;
+  --radius-none: 0;
+  --radius-control: 2px;
+  --radius-panel: 2px;
+  --radius-dialog: 3px;
+  --border-width: 1px;
+  --border-marker: 3px;
+  --border-focus: 2px;
+  --control-small: 24px;
+  --control-medium: 28px;
+  --control-large: 32px;
+  --control-padding-x: 10px;
+  --grid-standard-row-height: 28px;
+  --grid-standard-header-height: 28px;
+  --grid-standard-cell-padding-x: 8px;
+  --grid-standard-font-size: 13px;
+  --grid-compact-row-height: 24px;
+  --grid-compact-header-height: 26px;
+  --grid-compact-cell-padding-x: 6px;
+  --grid-compact-font-size: 12px;
+  --title-bar-height: 36px;
+  --status-bar-height: 24px;
+  --side-nav-width: 216px;
+  --toolbar-height: 44px;
+  --content-max-width: 1600px;
+}
+
+:root,
+[data-theme="dark"] {
+  --chrome: #0c0f12;
+  --canvas: #121519;
+  --panel: #181c21;
+  --panel-head: #1e2329;
+  --well: #0e1114;
+  --rule: #2a3037;
+  --rule-strong: #6b7581;
+  --row-alt: #15191e;
+  --row-hover: #1f252c;
+  --row-selected: #1b2c42;
+  --ink: #e3e6ea;
+  --ink-secondary: #b3bac3;
+  --ink-muted: #929ba6;
+  --ink-disabled: #5c646e;
+  --accent: #2f6dbf;
+  --accent-hover: #2a62ad;
+  --on-accent: #ffffff;
+  --link: #79aef0;
+  --focus: #79aef0;
+  --money-in: #4cc38a;
+  --money-out: #f1786c;
+  --warning: #e3b450;
+  --warning-bg: #2e2617;
+  --danger: #f1786c;
+  --danger-bg: #371c1a;
+  --success: #4cc38a;
+  --success-bg: #142b1e;
+  --info: #79aef0;
+  --info-bg: #15263a;
+  --restricted: #c09af2;
+  --restricted-bg: #2a2140;
+  --backdrop: #000000;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --chrome: #dfe3e8;
+  --canvas: #eceff2;
+  --panel: #ffffff;
+  --panel-head: #f4f6f8;
+  --well: #ffffff;
+  --rule: #d3d8de;
+  --rule-strong: #7a8490;
+  --row-alt: #f7f8fa;
+  --row-hover: #eaf0f7;
+  --row-selected: #dbe7f6;
+  --ink: #171c22;
+  --ink-secondary: #3d4650;
+  --ink-muted: #58616c;
+  --ink-disabled: #9aa2ac;
+  --accent: #1f5fae;
+  --accent-hover: #1a5299;
+  --on-accent: #ffffff;
+  --link: #1a5299;
+  --focus: #1f5fae;
+  --money-in: #157347;
+  --money-out: #b42318;
+  --warning: #8a5a00;
+  --warning-bg: #fbf1d9;
+  --danger: #b42318;
+  --danger-bg: #fcebe9;
+  --success: #157347;
+  --success-bg: #e3f3ea;
+  --info: #1a5299;
+  --info-bg: #e4edf8;
+  --restricted: #6d35b5;
+  --restricted-bg: #f0e8fb;
+  --backdrop: #0b0e12;
+  color-scheme: light;
+}

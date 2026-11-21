@@ -1,0 +1,69 @@
+<!-- BU DOSYA ÜRETİLİR, ELLE DEĞİŞTİRMEYİN. Kaynak: design/tokens/sgt-tokens.json (npm run gen:tokens, Spec 013). -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+  <Color x:Key="SgtChromeColor">#FF0C0F12</Color>
+  <SolidColorBrush x:Key="SgtChromeBrush" Color="{StaticResource SgtChromeColor}" />
+  <Color x:Key="SgtCanvasColor">#FF121519</Color>
+  <SolidColorBrush x:Key="SgtCanvasBrush" Color="{StaticResource SgtCanvasColor}" />
+  <Color x:Key="SgtPanelColor">#FF181C21</Color>
+  <SolidColorBrush x:Key="SgtPanelBrush" Color="{StaticResource SgtPanelColor}" />
+  <Color x:Key="SgtPanelHeadColor">#FF1E2329</Color>
+  <SolidColorBrush x:Key="SgtPanelHeadBrush" Color="{StaticResource SgtPanelHeadColor}" />
+  <Color x:Key="SgtWellColor">#FF0E1114</Color>
+  <SolidColorBrush x:Key="SgtWellBrush" Color="{StaticResource SgtWellColor}" />
+  <Color x:Key="SgtRuleColor">#FF2A3037</Color>
+  <SolidColorBrush x:Key="SgtRuleBrush" Color="{StaticResource SgtRuleColor}" />
+  <Color x:Key="SgtRuleStrongColor">#FF6B7581</Color>
+  <SolidColorBrush x:Key="SgtRuleStrongBrush" Color="{StaticResource SgtRuleStrongColor}" />
+  <Color x:Key="SgtRowAltColor">#FF15191E</Color>
+  <SolidColorBrush x:Key="SgtRowAltBrush" Color="{StaticResource SgtRowAltColor}" />
+  <Color x:Key="SgtRowHoverColor">#FF1F252C</Color>
+  <SolidColorBrush x:Key="SgtRowHoverBrush" Color="{StaticResource SgtRowHoverColor}" />
+  <Color x:Key="SgtRowSelectedColor">#FF1B2C42</Color>
+  <SolidColorBrush x:Key="SgtRowSelectedBrush" Color="{StaticResource SgtRowSelectedColor}" />
+  <Color x:Key="SgtInkColor">#FFE3E6EA</Color>
+  <SolidColorBrush x:Key="SgtInkBrush" Color="{StaticResource SgtInkColor}" />
+  <Color x:Key="SgtInkSecondaryColor">#FFB3BAC3</Color>
+  <SolidColorBrush x:Key="SgtInkSecondaryBrush" Color="{StaticResource SgtInkSecondaryColor}" />
+  <Color x:Key="SgtInkMutedColor">#FF929BA6</Color>
+  <SolidColorBrush x:Key="SgtInkMutedBrush" Color="{StaticResource SgtInkMutedColor}" />
+  <Color x:Key="SgtInkDisabledColor">#FF5C646E</Color>
+  <SolidColorBrush x:Key="SgtInkDisabledBrush" Color="{StaticResource SgtInkDisabledColor}" />
+  <Color x:Key="SgtAccentColor">#FF2F6DBF</Color>
+  <SolidColorBrush x:Key="SgtAccentBrush" Color="{StaticResource SgtAccentColor}" />
+  <Color x:Key="SgtAccentHoverColor">#FF2A62AD</Color>
+  <SolidColorBrush x:Key="SgtAccentHoverBrush" Color="{StaticResource SgtAccentHoverColor}" />
+  <Color x:Key="SgtOnAccentColor">#FFFFFFFF</Color>
+  <SolidColorBrush x:Key="SgtOnAccentBrush" Color="{StaticResource SgtOnAccentColor}" />
+  <Color x:Key="SgtLinkColor">#FF79AEF0</Color>
+  <SolidColorBrush x:Key="SgtLinkBrush" Color="{StaticResource SgtLinkColor}" />
+  <Color x:Key="SgtFocusColor">#FF79AEF0</Color>
+  <SolidColorBrush x:Key="SgtFocusBrush" Color="{StaticResource SgtFocusColor}" />
+  <Color x:Key="SgtMoneyInColor">#FF4CC38A</Color>
+  <SolidColorBrush x:Key="SgtMoneyInBrush" Color="{StaticResource SgtMoneyInColor}" />
+  <Color x:Key="SgtMoneyOutColor">#FFF1786C</Color>
+  <SolidColorBrush x:Key="SgtMoneyOutBrush" Color="{StaticResource SgtMoneyOutColor}" />
+  <Color x:Key="SgtWarningColor">#FFE3B450</Color>
+  <SolidColorBrush x:Key="SgtWarningBrush" Color="{StaticResource SgtWarningColor}" />
+  <Color x:Key="SgtWarningBgColor">#FF2E2617</Color>
+  <SolidColorBrush x:Key="SgtWarningBgBrush" Color="{StaticResource SgtWarningBgColor}" />
+  <Color x:Key="SgtDangerColor">#FFF1786C</Color>
+  <SolidColorBrush x:Key="SgtDangerBrush" Color="{StaticResource SgtDangerColor}" />
+  <Color x:Key="SgtDangerBgColor">#FF371C1A</Color>
+  <SolidColorBrush x:Key="SgtDangerBgBrush" Color="{StaticResource SgtDangerBgColor}" />
+  <Color x:Key="SgtSuccessColor">#FF4CC38A</Color>
+  <SolidColorBrush x:Key="SgtSuccessBrush" Color="{StaticResource SgtSuccessColor}" />
+  <Color x:Key="SgtSuccessBgColor">#FF142B1E</Color>
+  <SolidColorBrush x:Key="SgtSuccessBgBrush" Color="{StaticResource SgtSuccessBgColor}" />
+  <Color x:Key="SgtInfoColor">#FF79AEF0</Color>
+  <SolidColorBrush x:Key="SgtInfoBrush" Color="{StaticResource SgtInfoColor}" />
+  <Color x:Key="SgtInfoBgColor">#FF15263A</Color>
+  <SolidColorBrush x:Key="SgtInfoBgBrush" Color="{StaticResource SgtInfoBgColor}" />
+  <Color x:Key="SgtRestrictedColor">#FFC09AF2</Color>
+  <SolidColorBrush x:Key="SgtRestrictedBrush" Color="{StaticResource SgtRestrictedColor}" />
+  <Color x:Key="SgtRestrictedBgColor">#FF2A2140</Color>
+  <SolidColorBrush x:Key="SgtRestrictedBgBrush" Color="{StaticResource SgtRestrictedBgColor}" />
+  <Color x:Key="SgtBackdropColor">#FF000000</Color>
+  <SolidColorBrush x:Key="SgtBackdropBrush" Color="{StaticResource SgtBackdropColor}" />
+</ResourceDictionary>

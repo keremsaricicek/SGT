@@ -1,0 +1,399 @@
+{
+  "$description": "SGT ortak tasarım dili (Spec 013, A11). Tek kaynak (DTCG biçimi): style-dictionary ile web (CSS değişkenleri), Windows (WPF XAML ResourceDictionary) ve mobil (Flutter Dart) çıktıları üretilir. Ölçüler px (WPF: DIP, Flutter: mantıksal piksel). Değişiklikten sonra: cd clients/web && npm run gen:tokens.",
+  "color": {
+    "$type": "color",
+    "$description": "Tema başına renkler; iki temada da aynı anahtarlar bulunur. Varsayılan tema: dark.",
+    "dark": {
+      "chrome": {
+        "$value": "#0c0f12"
+      },
+      "canvas": {
+        "$value": "#121519"
+      },
+      "panel": {
+        "$value": "#181c21"
+      },
+      "panelHead": {
+        "$value": "#1e2329"
+      },
+      "well": {
+        "$value": "#0e1114"
+      },
+      "rule": {
+        "$value": "#2a3037"
+      },
+      "ruleStrong": {
+        "$value": "#6b7581"
+      },
+      "rowAlt": {
+        "$value": "#15191e"
+      },
+      "rowHover": {
+        "$value": "#1f252c"
+      },
+      "rowSelected": {
+        "$value": "#1b2c42"
+      },
+      "ink": {
+        "$value": "#e3e6ea"
+      },
+      "inkSecondary": {
+        "$value": "#b3bac3"
+      },
+      "inkMuted": {
+        "$value": "#929ba6"
+      },
+      "inkDisabled": {
+        "$value": "#5c646e"
+      },
+      "accent": {
+        "$value": "#2f6dbf"
+      },
+      "accentHover": {
+        "$value": "#2a62ad"
+      },
+      "onAccent": {
+        "$value": "#ffffff"
+      },
+      "link": {
+        "$value": "#79aef0"
+      },
+      "focus": {
+        "$value": "#79aef0"
+      },
+      "moneyIn": {
+        "$value": "#4cc38a"
+      },
+      "moneyOut": {
+        "$value": "#f1786c"
+      },
+      "warning": {
+        "$value": "#e3b450"
+      },
+      "warningBg": {
+        "$value": "#2e2617"
+      },
+      "danger": {
+        "$value": "#f1786c"
+      },
+      "dangerBg": {
+        "$value": "#371c1a"
+      },
+      "success": {
+        "$value": "#4cc38a"
+      },
+      "successBg": {
+        "$value": "#142b1e"
+      },
+      "info": {
+        "$value": "#79aef0"
+      },
+      "infoBg": {
+        "$value": "#15263a"
+      },
+      "restricted": {
+        "$value": "#c09af2"
+      },
+      "restrictedBg": {
+        "$value": "#2a2140"
+      },
+      "backdrop": {
+        "$value": "#000000"
+      }
+    },
+    "light": {
+      "chrome": {
+        "$value": "#dfe3e8"
+      },
+      "canvas": {
+        "$value": "#eceff2"
+      },
+      "panel": {
+        "$value": "#ffffff"
+      },
+      "panelHead": {
+        "$value": "#f4f6f8"
+      },
+      "well": {
+        "$value": "#ffffff"
+      },
+      "rule": {
+        "$value": "#d3d8de"
+      },
+      "ruleStrong": {
+        "$value": "#7a8490"
+      },
+      "rowAlt": {
+        "$value": "#f7f8fa"
+      },
+      "rowHover": {
+        "$value": "#eaf0f7"
+      },
+      "rowSelected": {
+        "$value": "#dbe7f6"
+      },
+      "ink": {
+        "$value": "#171c22"
+      },
+      "inkSecondary": {
+        "$value": "#3d4650"
+      },
+      "inkMuted": {
+        "$value": "#58616c"
+      },
+      "inkDisabled": {
+        "$value": "#9aa2ac"
+      },
+      "accent": {
+        "$value": "#1f5fae"
+      },
+      "accentHover": {
+        "$value": "#1a5299"
+      },
+      "onAccent": {
+        "$value": "#ffffff"
+      },
+      "link": {
+        "$value": "#1a5299"
+      },
+      "focus": {
+        "$value": "#1f5fae"
+      },
+      "moneyIn": {
+        "$value": "#157347"
+      },
+      "moneyOut": {
+        "$value": "#b42318"
+      },
+      "warning": {
+        "$value": "#8a5a00"
+      },
+      "warningBg": {
+        "$value": "#fbf1d9"
+      },
+      "danger": {
+        "$value": "#b42318"
+      },
+      "dangerBg": {
+        "$value": "#fcebe9"
+      },
+      "success": {
+        "$value": "#157347"
+      },
+      "successBg": {
+        "$value": "#e3f3ea"
+      },
+      "info": {
+        "$value": "#1a5299"
+      },
+      "infoBg": {
+        "$value": "#e4edf8"
+      },
+      "restricted": {
+        "$value": "#6d35b5"
+      },
+      "restrictedBg": {
+        "$value": "#f0e8fb"
+      },
+      "backdrop": {
+        "$value": "#0b0e12"
+      }
+    }
+  },
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "ui": {
+        "$value": [
+          "IBM Plex Sans",
+          "Segoe UI",
+          "system-ui",
+          "sans-serif"
+        ]
+      },
+      "mono": {
+        "$value": [
+          "IBM Plex Mono",
+          "Cascadia Mono",
+          "Consolas",
+          "monospace"
+        ]
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "caption": {
+        "$value": 11
+      },
+      "small": {
+        "$value": 12
+      },
+      "body": {
+        "$value": 13
+      },
+      "heading": {
+        "$value": 15
+      },
+      "title": {
+        "$value": 18
+      },
+      "figure": {
+        "$value": 22
+      }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": {
+        "$value": 400
+      },
+      "medium": {
+        "$value": 500
+      },
+      "semibold": {
+        "$value": 600
+      }
+    },
+    "lineHeight": {
+      "$type": "number",
+      "tight": {
+        "$value": 1.2
+      },
+      "body": {
+        "$value": 1.45
+      }
+    },
+    "letterSpacing": {
+      "$type": "dimension",
+      "caption": {
+        "$value": 0.4
+      }
+    }
+  },
+  "space": {
+    "0": {
+      "$value": 0
+    },
+    "1": {
+      "$value": 2
+    },
+    "2": {
+      "$value": 4
+    },
+    "3": {
+      "$value": 6
+    },
+    "4": {
+      "$value": 8
+    },
+    "5": {
+      "$value": 12
+    },
+    "6": {
+      "$value": 16
+    },
+    "7": {
+      "$value": 20
+    },
+    "8": {
+      "$value": 24
+    },
+    "9": {
+      "$value": 32
+    },
+    "$type": "dimension"
+  },
+  "radius": {
+    "$type": "dimension",
+    "$description": "En çok 3px (docs/kararlar.md 9a).",
+    "none": {
+      "$value": 0
+    },
+    "control": {
+      "$value": 2
+    },
+    "panel": {
+      "$value": 2
+    },
+    "dialog": {
+      "$value": 3
+    }
+  },
+  "border": {
+    "$type": "dimension",
+    "width": {
+      "$value": 1
+    },
+    "marker": {
+      "$value": 3
+    },
+    "focus": {
+      "$value": 2
+    }
+  },
+  "control": {
+    "$type": "dimension",
+    "height": {
+      "small": {
+        "$value": 24
+      },
+      "medium": {
+        "$value": 28
+      },
+      "large": {
+        "$value": 32
+      }
+    },
+    "paddingX": {
+      "$value": 10
+    }
+  },
+  "grid": {
+    "$type": "dimension",
+    "standard": {
+      "rowHeight": {
+        "$value": 28
+      },
+      "headerHeight": {
+        "$value": 28
+      },
+      "cellPaddingX": {
+        "$value": 8
+      },
+      "fontSize": {
+        "$value": 13
+      }
+    },
+    "compact": {
+      "rowHeight": {
+        "$value": 24
+      },
+      "headerHeight": {
+        "$value": 26
+      },
+      "cellPaddingX": {
+        "$value": 6
+      },
+      "fontSize": {
+        "$value": 12
+      }
+    }
+  },
+  "layout": {
+    "$type": "dimension",
+    "titleBarHeight": {
+      "$value": 36
+    },
+    "statusBarHeight": {
+      "$value": 24
+    },
+    "sideNavWidth": {
+      "$value": 216
+    },
+    "toolbarHeight": {
+      "$value": 44
+    },
+    "contentMaxWidth": {
+      "$value": 1600
+    }
+  }
+}
