@@ -110,6 +110,11 @@ Fizibilite raporunu proje sahibi hazırlamadı; eksik veya bu kararlarla uyumsuz
   Koyu tema seçeneği zorunlu; açık tema da var. Web, Windows ve mobil aynı tasarım token'larını kullanır.
 - **Lisans açma/kapama (A4) ertelendi:** Proje sahibi tekrar söyleyene kadar plana alınmaz ve yapılmaz.
 
+- **Ekran görselleri:** Proje sonunda (ve her aşama demosunda) tüm ekranların ürün hedefini gösteren örnek
+  görselleri (Playwright ekran görüntüsü, sentetik veriyle) proje sahibine sunulur.
+- **Araç kullanımı:** Kurulu skill ve ajanlar işin her adımında aktif kullanılır (spec/plan skill'leri, TDD,
+  tasarım skill'leri, paralel worktree ajanları, `code-rules-reviewer`, `finans-denetci`, `veri-sagligi-denetci`).
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
