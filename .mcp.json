@@ -21,29 +21,6 @@
       ],
       "env": {}
     },
-    "semgrep": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": [
-        "semgrep-mcp"
-      ],
-      "env": {}
-    },
-    "serena": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/oraios/serena",
-        "serena",
-        "start-mcp-server",
-        "--context",
-        "ide-assistant",
-        "--project",
-        "/home/user/SGT"
-      ],
-      "env": {}
-    },
     "postgres": {
       "type": "stdio",
       "command": "uvx",
@@ -54,19 +31,6 @@
       "env": {
         "DATABASE_URI": "postgresql://sgt:sgt_dev_only@localhost:5432/sgt_dev"
       }
-    },
-    "taskmaster-ai": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "task-master-ai"
-      ],
-      "env": {}
-    },
-    "figma": {
-      "type": "http",
-      "url": "https://mcp.figma.com/mcp"
     }
   }
 }
