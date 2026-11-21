@@ -25,7 +25,7 @@ sıradaki iş A aşaması (mobil, demo ortamı). Çalışma dalı `faz0/proje-pa
 dotnet build Sgt.slnx                                    # uyarı = hata
 dotnet test Sgt.slnx                                     # tüm sunucu testleri
 dotnet test tests/Architecture/Sgt.Tests.Architecture.csproj
-dotnet test tests/Modules/Finance/<Proje>.csproj --filter "FullyQualifiedName~OpenShift"   # tek test/sınıf
+dotnet test tests/Modules/Finance/Sgt.Modules.Finance.Tests --filter "FullyQualifiedName~OpenShift"   # tek test/sınıf
 dotnet run --project src/Bootstrapper/Sgt.Api            # lokal API (Development: migrate + seed); /health
 dotnet run --project src/Bootstrapper/Sgt.Api -- --migrate   # yalnızca migration (üretim yolu, ADR-0007)
 build/new-module.sh <Modül>                              # modül iskeleti; sonra ModuleCatalog'a ekle
