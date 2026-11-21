@@ -42,7 +42,12 @@
     "data@knowledge-work-plugins": false,
     "operations@knowledge-work-plugins": false,
     "product-management@knowledge-work-plugins": false,
-    "engineering@knowledge-work-plugins": false
+    "engineering@knowledge-work-plugins": false,
+    "context-mode@context-mode": true,
+    "caveman@caveman": true,
+    "egm@egm": true,
+    "postgres-best-practices@supabase-agent-skills": true,
+    "grafana-k6@grafana-skills": true
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {
@@ -103,6 +108,36 @@
       "source": {
         "source": "github",
         "repo": "novotnyllc/dotnet-artisan"
+      }
+    },
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode"
+      }
+    },
+    "caveman": {
+      "source": {
+        "source": "github",
+        "repo": "JuliusBrussee/caveman"
+      }
+    },
+    "egm": {
+      "source": {
+        "source": "github",
+        "repo": "google/elephant-goldfish-model"
+      }
+    },
+    "supabase-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "supabase/agent-skills"
+      }
+    },
+    "grafana-skills": {
+      "source": {
+        "source": "github",
+        "repo": "grafana/skills"
       }
     }
   }

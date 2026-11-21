@@ -19,11 +19,13 @@ Kapatılanlar (tekrar eden veya ilgisiz): compound-engineering, full-stack-orche
 feature-dev, c4-architecture, ui-ux-pro-max, dotnet-artisan, dotnet-diag, code-review (yerleşik olanı var);
 hesap düzeyindeki marketing, data, operations, product-management, engineering.
 
-Kurulması önerilen, onay bekleyenler: postgres-best-practices (Supabase), accesslint (WCAG 2.2 erişilebilirlik),
-grafana-k6 (yük testi).
+- Token tasarrufu: context-mode (araç çıktısını bağlam dışında tutar), caveman (kısa yazışma).
+- Tanım incelemesi: egm (Google Elephant-Goldfish; taze göz incelemesi).
+- Veritabanı: postgres-best-practices (Supabase). Yük testi: grafana-k6 (Grafana).
 
 ## Skill'ler
-impeccable, design-taste-frontend, vercel-react-best-practices (`.claude/skills` ve `.agents/skills`), owasp-security.
+impeccable, design-taste-frontend, vercel-react-best-practices (`.claude/skills` ve `.agents/skills`), owasp-security,
+graphify (kodu sorgulanabilir haritaya çevirir; CLI oturum başında kurulur, harita `graphify-out/`).
 Kaldırılanlar: BMAD ve ccpm (Spec Kit + Superpowers ile aynı işi yapıyordu).
 
 ## Spec Kit
