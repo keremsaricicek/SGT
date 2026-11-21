@@ -33,7 +33,6 @@ export function RegisterPlayerForm({ onRegistered }: { onRegistered: (registered
 
   return (
     <ActionForm
-      title={t("players.register")}
       submitLabel={t("players.register")}
       pending={register.pending}
       error={register.error}

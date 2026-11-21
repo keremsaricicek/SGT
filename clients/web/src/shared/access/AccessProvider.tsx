@@ -45,8 +45,18 @@ export function Can({ screen, action, children }: { screen: string; action: stri
 export function ScreenGuard({ screen, children }: { screen: string; children: ReactNode }) {
   const { policy, loading } = useAccess();
   const t = useT();
-  if (loading) return <p className="muted">{t("app.loading")}</p>;
-  if (!policy.canView(screen)) return <p className="notice">{t("app.forbidden")}</p>;
+  if (loading)
+    return (
+      <div className="page">
+        <p className="muted">{t("app.loading")}</p>
+      </div>
+    );
+  if (!policy.canView(screen))
+    return (
+      <div className="page">
+        <p className="notice">{t("app.forbidden")}</p>
+      </div>
+    );
   return <>{children}</>;
 }
 

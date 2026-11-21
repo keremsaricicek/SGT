@@ -2,6 +2,7 @@
 
 import { useT } from "@/shared/i18n/I18nProvider";
 import { actionLabel, screenLabel } from "@/shared/i18n/labels";
+import { Badge } from "@/shared/ui/Badge";
 import type { ScreenView } from "../api/types";
 import { permissionCode } from "../api/types";
 
@@ -17,21 +18,23 @@ interface PermissionMatrixProps {
 export function PermissionMatrix({ screens, granted, editable, busy, onToggle }: PermissionMatrixProps) {
   const t = useT();
   return (
-    <table className="table matrix">
+    <table className="grid matrix">
       <thead>
         <tr>
-          <th>{t("permissions.screen")}</th>
-          <th>{t("permissions.product")}</th>
-          <th>{t("permissions.actions")}</th>
+          <th scope="col">{t("permissions.screen")}</th>
+          <th scope="col">{t("permissions.product")}</th>
+          <th scope="col">{t("permissions.actions")}</th>
         </tr>
       </thead>
       <tbody>
         {screens.map((screen) => (
           <tr key={screen.code}>
             <td>
-              {screenLabel(t, screen.code)} <code className="muted">{screen.code}</code>
+              {screenLabel(t, screen.code)} <code>{screen.code}</code>
             </td>
-            <td>{screen.product}</td>
+            <td>
+              <Badge>{screen.product}</Badge>
+            </td>
             <td className="checks">
               {screen.actions.map((action) => {
                 const code = permissionCode(screen.code, action);

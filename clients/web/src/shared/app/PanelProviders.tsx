@@ -10,6 +10,7 @@ import { useAuth } from "@/shared/auth/AuthProvider";
 import { missingAuthConfig, readConfig } from "@/shared/config/env";
 import { useT } from "@/shared/i18n/I18nProvider";
 import { useTerminal } from "@/shared/terminal/TerminalProvider";
+import { Button } from "@/shared/ui/Button";
 import { AppShell } from "./AppShell";
 
 const CONFIG = readConfig();
@@ -46,13 +47,20 @@ export function PanelProviders({ children }: { children: ReactNode }) {
 
   if (auth.status === "anonymous") {
     return (
-      <main className="center login">
-        <h1>{t("app.title")}</h1>
-        <p>{t("auth.loginRequired")}</p>
-        {auth.error ? <p className="alert">{auth.error}</p> : null}
-        <button type="button" className="btn primary" onClick={() => void auth.login(pathname)}>
-          {t("auth.login")}
-        </button>
+      <main className="center">
+        <section className="panel login-panel" aria-labelledby="login-title">
+          <header className="panel-head">
+            <span className="brand-mark">SGT</span>
+            <h2 id="login-title">{t("app.title")}</h2>
+          </header>
+          <div className="panel-body">
+            <p>{t("auth.loginRequired")}</p>
+            {auth.error ? <p className="alert">{auth.error}</p> : null}
+            <Button variant="primary" onClick={() => void auth.login(pathname)}>
+              {t("auth.login")}
+            </Button>
+          </div>
+        </section>
       </main>
     );
   }

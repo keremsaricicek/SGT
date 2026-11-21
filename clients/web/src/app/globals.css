@@ -1122,3 +1122,87 @@ kbd {
     padding: var(--space-4);
   }
 }
+
+/* ---------------------------------------------------------------- Simgeler (Fluent UI System Icons) */
+
+.icon {
+  flex: none;
+  display: inline-block;
+  vertical-align: -3px;
+}
+
+.nav-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidenav a .icon {
+  color: var(--ink-muted);
+}
+
+.sidenav a[aria-current="page"] .icon {
+  color: var(--link);
+}
+
+.btn .icon {
+  margin-left: calc(var(--space-1) * -1);
+}
+
+.login-panel .panel-head {
+  justify-content: flex-start;
+}
+
+/* ---------------------------------------------------------------- Ek düzenler */
+
+.badge .icon {
+  width: 12px;
+  height: 12px;
+  margin-right: var(--space-1);
+  vertical-align: -2px;
+}
+
+.toolbar .field {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.toolbar .field input {
+  height: var(--control-medium);
+}
+
+.action-form h3 {
+  margin-bottom: var(--space-5);
+}
+
+.subform {
+  padding: var(--space-5);
+  border-top: var(--border-width) solid var(--rule);
+  background: var(--panel);
+}
+
+.figures .figure:last-child {
+  border-right: none;
+}
+
+.grid td.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.grid td strong {
+  font-weight: var(--weight-semibold);
+}
+
+.grid kbd {
+  font-size: var(--text-caption);
+}
+
+.grid th.shortcut,
+.grid td.shortcut {
+  width: 1%;
+}
