@@ -1,5 +1,5 @@
 name: sgt_mobile
-description: "A new Flutter project."
+description: "SGT S Plus mobil uygulaması (iOS/Android). Spec 014."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -19,6 +19,7 @@ dependencies:
   http: ^1.6.0
   intl: ^0.20.3
   material_ui: ^1.1.0
+  timezone: ^0.11.2
   uuid: ^4.6.0
 
 dev_dependencies:
@@ -28,3 +29,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.otf
+        - asset: assets/fonts/Inter-Medium.otf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.otf
+          weight: 600
