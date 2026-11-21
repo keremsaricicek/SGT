@@ -2,6 +2,7 @@
   <Folder Name="/src/" />
   <Folder Name="/src/Bootstrapper/">
     <Project Path="src/Bootstrapper/Sgt.Api/Sgt.Api.csproj" />
+    <Project Path="src/Bootstrapper/Sgt.DemoData/Sgt.DemoData.csproj" />
   </Folder>
   <Folder Name="/src/BuildingBlocks/">
     <Project Path="src/BuildingBlocks/Sgt.BuildingBlocks.Infrastructure/Sgt.BuildingBlocks.Infrastructure.csproj" />
@@ -71,6 +72,9 @@
   </Folder>
   <Folder Name="/tests/Architecture/">
     <Project Path="tests/Architecture/Sgt.Tests.Architecture.csproj" />
+  </Folder>
+  <Folder Name="/tests/Bootstrapper/">
+    <Project Path="tests/Bootstrapper/Sgt.DemoData.Tests/Sgt.DemoData.Tests.csproj" />
   </Folder>
   <Folder Name="/tests/BuildingBlocks/">
     <Project Path="tests/BuildingBlocks/Sgt.BuildingBlocks.Infrastructure.Tests/Sgt.BuildingBlocks.Infrastructure.Tests.csproj" />

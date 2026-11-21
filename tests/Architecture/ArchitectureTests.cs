@@ -116,6 +116,23 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
+    public void DemoData_writes_only_through_module_contracts_and_application_commands()
+    {
+        // Spec 012: demo verisi modül komut handler'larıyla yazılır; DbContext/tablo erişimi (Infrastructure) ve HTTP katmanı (Api) yasak.
+        var forbidden = ModuleCatalog.All
+            .SelectMany(m => new[] { $"{m.RootNamespace}.Infrastructure", $"{m.RootNamespace}.Api" })
+            .Append("Microsoft.EntityFrameworkCore")
+            .Append("Npgsql")
+            .ToArray();
+
+        var result = Types.InAssembly(typeof(Sgt.DemoData.AssemblyMarker).Assembly)
+            .ShouldNot().HaveDependencyOnAny(forbidden)
+            .GetResult();
+
+        AssertNone(Describe(result, "K2: Sgt.DemoData modüllerin Infrastructure/Api koduna erişemez").ToList());
+    }
+
+    [Fact]
     public void Domain_types_do_not_expose_public_setters()
     {
         var violations = ModuleCatalog.All
