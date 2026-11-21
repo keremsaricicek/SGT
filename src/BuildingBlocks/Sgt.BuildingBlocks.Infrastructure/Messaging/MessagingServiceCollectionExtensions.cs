@@ -25,6 +25,7 @@ public static class MessagingServiceCollectionExtensions
         services.AddIntegrationEvents();
         services.AddSingleton<OutboxProcessor<TContext>>();
         services.AddHostedService<OutboxDispatcherService<TContext>>();
+        services.AddSingleton<IOutboxDrainer, OutboxDrainer<TContext>>();
         services.AddScoped<IOutboxStore>(sp =>
             new OutboxStore<TContext>(module, sp.GetRequiredService<TContext>(), sp.GetRequiredService<IClock>()));
         return services;
