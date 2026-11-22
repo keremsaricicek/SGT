@@ -21,10 +21,15 @@ interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
   readonly label: string;
 }
 
+/** Zorunlu alan işareti (*) CSS ile eklenir; erişilebilir ad yalnızca etiket metnidir, "required" özniteliği zorunluluğu bildirir. */
+function fieldClass(required: boolean | undefined): string {
+  return required ? "field is-required" : "field";
+}
+
 export function TextField({ label, ...input }: FieldProps) {
   const id = useId();
   return (
-    <label className="field" htmlFor={id}>
+    <label className={fieldClass(input.required)} htmlFor={id}>
       <span>{label}</span>
       <input id={id} {...input} />
     </label>
@@ -39,7 +44,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export function SelectField({ label, children, ...select }: SelectProps) {
   const id = useId();
   return (
-    <label className="field" htmlFor={id}>
+    <label className={fieldClass(select.required)} htmlFor={id}>
       <span>{label}</span>
       <select id={id} {...select}>
         {children}
@@ -54,10 +59,8 @@ export function ReasonCodeField({ value, onChange }: { value: string; onChange: 
   const id = useId();
   const listId = `${id}-reasons`;
   return (
-    <label className="field" htmlFor={id}>
-      <span>
-        {t("common.reasonCode")} <em className="required">*</em>
-      </span>
+    <label className={fieldClass(true)} htmlFor={id}>
+      <span>{t("common.reasonCode")}</span>
       <input
         id={id}
         name="reasonCode"

@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-import { Can, ScreenGuard, useAccess } from "@/shared/access/AccessProvider";
+import { ScreenGuard, useAccess } from "@/shared/access/AccessProvider";
 import { useT } from "@/shared/i18n/I18nProvider";
 import { routes } from "@/shared/navigation/routes";
 import { ActionForm, ReasonBar, useReasonCode } from "@/shared/ui/ActionForm";
 import { FormSuccess, TextField } from "@/shared/ui/form";
-import { EmptyRow, Loading, PageHeader, Section } from "@/shared/ui/layout";
+import { Badge } from "@/shared/ui/Badge";
+import { Button } from "@/shared/ui/Button";
+import { DataGrid } from "@/shared/ui/DataGrid";
+import { Dialog } from "@/shared/ui/Dialog";
+import { Page, Section } from "@/shared/ui/layout";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
 import type { UserSummary } from "../api/types";
 import { useRegisterUser, useUserActivation, useUsers } from "../hooks/useUsers";
@@ -16,7 +20,7 @@ import { SCREEN_ROLES, SCREEN_USERS } from "./screens";
 
 const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function RegisterUserForm({ onDone }: { onDone: () => void }) {
+function RegisterUserForm({ onDone, onCancel }: { onDone: () => void; onCancel: () => void }) {
   const t = useT();
   const empty = { userId: "", displayName: "", employeeCode: "" };
   const [form, setForm] = useState(empty);
@@ -29,8 +33,8 @@ function RegisterUserForm({ onDone }: { onDone: () => void }) {
 
   return (
     <ActionForm
-      title={t("permissions.users.register")}
       submitLabel={t("permissions.users.register")}
+      secondary={<Button onClick={onCancel}>{t("common.cancel")}</Button>}
       pending={register.pending}
       error={register.error}
       succeeded={register.succeeded}
@@ -57,38 +61,16 @@ function RegisterUserForm({ onDone }: { onDone: () => void }) {
   );
 }
 
-function UserRow({ user, onToggle, canToggle, canOpenAccess }: {
-  user: UserSummary;
-  onToggle: (user: UserSummary) => void;
-  canToggle: boolean;
-  canOpenAccess: boolean;
-}) {
-  const t = useT();
-  return (
-    <tr className={user.isActive ? undefined : "inactive"}>
-      <td>{user.displayName}</td>
-      <td>{user.employeeCode}</td>
-      <td>{user.isActive ? t("common.yes") : t("common.no")}</td>
-      <td>{user.isSuperAdmin ? t("common.yes") : t("common.no")}</td>
-      <td className="row-actions">
-        {canOpenAccess ? <Link href={routes.userAccess(user.userId)}>{t("permissions.users.access")}</Link> : null}
-        {canToggle ? (
-          <button type="button" className="btn small" onClick={() => onToggle(user)}>
-            {user.isActive ? t("permissions.users.deactivate") : t("permissions.users.reactivate")}
-          </button>
-        ) : null}
-      </td>
-    </tr>
-  );
-}
-
 function UsersContent() {
   const t = useT();
   const { policy } = useAccess();
   const users = useUsers();
   const reason = useReasonCode();
   const activation = useUserActivation(users.reload);
+  const [registering, setRegistering] = useState(false);
   const canToggle = policy.can(SCREEN_USERS, "deactivate");
+  const canCreate = policy.can(SCREEN_USERS, "create");
+  const canOpenAccess = policy.canView(SCREEN_ROLES);
 
   const toggle = (user: UserSummary) => {
     const reasonCode = reason.take();
@@ -96,43 +78,76 @@ function UsersContent() {
   };
 
   return (
-    <>
-      <PageHeader title={t("permissions.users.title")} />
-      <Section>
+    <Page
+      title={t("permissions.users.title")}
+      meta={users.data ? t("common.records", { count: users.data.length }) : null}
+      actions={
+        canCreate ? (
+          <Button icon="personAdd" onClick={() => setRegistering(true)}>
+            {t("permissions.users.new")}
+          </Button>
+        ) : null
+      }
+    >
+      <ProblemAlert error={users.error} />
+      <Section flush>
         {canToggle ? <ReasonBar reason={reason} /> : null}
-        <ProblemAlert error={users.error ?? activation.error} />
-        <FormSuccess show={activation.succeeded && !activation.pending} />
-        <Loading show={users.loading && !users.data} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t("permissions.users.displayName")}</th>
-              <th>{t("permissions.users.employeeCode")}</th>
-              <th>{t("permissions.users.active")}</th>
-              <th>{t("permissions.users.superAdmin")}</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {users.data?.length === 0 ? <EmptyRow colSpan={5} /> : null}
-            {users.data?.map((user) => (
-              <UserRow
-                key={user.userId}
-                user={user}
-                onToggle={toggle}
-                canToggle={canToggle && !activation.pending}
-                canOpenAccess={policy.canView(SCREEN_ROLES)}
-              />
-            ))}
-          </tbody>
-        </table>
+        <div className="panel-messages">
+          <ProblemAlert error={activation.error} />
+          <FormSuccess show={activation.succeeded && !activation.pending} />
+        </div>
+        <DataGrid<UserSummary>
+          label={t("permissions.users.title")}
+          rows={users.data}
+          loading={users.loading}
+          rowKey={(u) => u.userId}
+          rowClassName={(u) => (u.isActive ? undefined : "inactive")}
+          columns={[
+            { key: "name", header: t("permissions.users.displayName"), cell: (u) => u.displayName },
+            { key: "code", header: t("permissions.users.employeeCode"), cell: (u) => <code>{u.employeeCode}</code> },
+            {
+              key: "status",
+              header: t("common.status"),
+              cell: (u) =>
+                u.isActive ? (
+                  <Badge tone="success">{t("permissions.users.status.active")}</Badge>
+                ) : (
+                  <Badge>{t("permissions.users.status.inactive")}</Badge>
+                ),
+            },
+            {
+              key: "super",
+              header: t("permissions.users.superAdmin"),
+              cell: (u) => (u.isSuperAdmin ? <Badge tone="info">{t("permissions.users.superAdmin")}</Badge> : null),
+            },
+            {
+              key: "actions",
+              header: <span className="visually-hidden">{t("permissions.users.access")}</span>,
+              className: "actions",
+              cell: (u) => (
+                <span className="row-actions">
+                  {canOpenAccess ? <Link href={routes.userAccess(u.userId)}>{t("permissions.users.access")}</Link> : null}
+                  {canToggle ? (
+                    <Button size="small" variant={u.isActive ? "danger" : "default"} disabled={activation.pending} onClick={() => toggle(u)}>
+                      {u.isActive ? t("permissions.users.deactivate") : t("permissions.users.reactivate")}
+                    </Button>
+                  ) : null}
+                </span>
+              ),
+            },
+          ]}
+        />
       </Section>
-      <Can screen={SCREEN_USERS} action="create">
-        <Section>
-          <RegisterUserForm onDone={users.reload} />
-        </Section>
-      </Can>
-    </>
+      <Dialog open={registering} title={t("permissions.users.register")} onClose={() => setRegistering(false)}>
+        <RegisterUserForm
+          onCancel={() => setRegistering(false)}
+          onDone={() => {
+            setRegistering(false);
+            users.reload();
+          }}
+        />
+      </Dialog>
+    </Page>
   );
 }
 

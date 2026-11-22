@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { Can, ScreenGuard } from "@/shared/access/AccessProvider";
-import { formatAmount, formatDateTime } from "@/shared/format/format";
+import { formatDateTime } from "@/shared/format/format";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { ActionForm } from "@/shared/ui/ActionForm";
 import { SelectField, TextField } from "@/shared/ui/form";
-import { EmptyRow, Loading, PageHeader, Section } from "@/shared/ui/layout";
+import { DataGrid } from "@/shared/ui/DataGrid";
+import { Amount, Page, Section } from "@/shared/ui/layout";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
+import type { ExchangeRate } from "../api/exchangeRatesService";
 import { BASE_CURRENCY, FOREIGN_CURRENCIES, toDecimalString } from "../api/exchangeRatesService";
 import { useCurrentRates, useSetRate } from "../hooks/useExchangeRates";
 
@@ -58,40 +60,28 @@ function RatesContent() {
   const { t, locale } = useI18n();
   const rates = useCurrentRates();
   return (
-    <>
-      <PageHeader title={t("rates.title")} />
-      <Section>
-        <p className="muted">{t("rates.baseNote")}</p>
-        <ProblemAlert error={rates.error} />
-        <Loading show={rates.loading && !rates.data} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t("common.currency")}</th>
-              <th className="num">{t("rates.buy")}</th>
-              <th className="num">{t("rates.sell")}</th>
-              <th>{t("rates.effectiveFrom")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rates.data?.length === 0 ? <EmptyRow colSpan={4} /> : null}
-            {rates.data?.map((rate) => (
-              <tr key={rate.currency}>
-                <td>{rate.currency}</td>
-                <td className="num">{formatAmount(locale, rate.buy)}</td>
-                <td className="num">{formatAmount(locale, rate.sell)}</td>
-                <td>{formatDateTime(locale, rate.effectiveFrom)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <Page title={t("rates.title")} meta={t("rates.baseNote")}>
+      <ProblemAlert error={rates.error} />
+      <Section flush>
+        <DataGrid<ExchangeRate>
+          label={t("rates.title")}
+          rows={rates.data}
+          loading={rates.loading}
+          rowKey={(r) => r.currency}
+          columns={[
+            { key: "currency", header: t("common.currency"), cell: (r) => <strong>{r.currency}</strong> },
+            { key: "buy", header: `${t("rates.buy")} (${BASE_CURRENCY})`, align: "end", cell: (r) => <Amount value={r.buy} /> },
+            { key: "sell", header: `${t("rates.sell")} (${BASE_CURRENCY})`, align: "end", cell: (r) => <Amount value={r.sell} /> },
+            { key: "from", header: t("rates.effectiveFrom"), className: "tabular", cell: (r) => formatDateTime(locale, r.effectiveFrom) },
+          ]}
+        />
       </Section>
       <Can screen={SCREEN} action="exchange_rate">
         <Section>
           <SetRateForm onDone={rates.reload} />
         </Section>
       </Can>
-    </>
+    </Page>
   );
 }
 

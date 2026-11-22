@@ -5,7 +5,10 @@ import { formatDateTime } from "@/shared/format/format";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { ReasonBar, useReasonCode } from "@/shared/ui/ActionForm";
 import { FormSuccess } from "@/shared/ui/form";
-import { EmptyRow, Loading, PageHeader, Section } from "@/shared/ui/layout";
+import { Button } from "@/shared/ui/Button";
+import { DataGrid } from "@/shared/ui/DataGrid";
+import { Page, Section } from "@/shared/ui/layout";
+import { Badge } from "@/shared/ui/Badge";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
 import type { DeadLetter } from "../api/deadLettersService";
 import { useDeadLetters, useReprocess } from "../hooks/useDeadLetters";
@@ -26,53 +29,53 @@ function DeadLettersContent() {
   };
 
   return (
-    <>
-      <PageHeader
-        title={t("integration.title")}
-        actions={
-          <button type="button" className="btn" onClick={letters.reload}>
-            {t("common.refresh")}
-          </button>
-        }
-      />
-      <Section>
+    <Page
+      title={t("integration.title")}
+      meta={letters.data ? t("common.records", { count: letters.data.length }) : null}
+      actions={
+        <Button icon="refresh" onClick={letters.reload}>
+          {t("common.refresh")}
+        </Button>
+      }
+    >
+      <ProblemAlert error={letters.error} />
+      <Section flush>
         {canReprocess ? <ReasonBar reason={reason} /> : null}
-        <ProblemAlert error={letters.error ?? reprocess.error} />
-        <FormSuccess show={reprocess.succeeded && !reprocess.pending} />
-        <Loading show={letters.loading && !letters.data} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t("integration.occurredAt")}</th>
-              <th>{t("integration.module")}</th>
-              <th>{t("integration.type")}</th>
-              <th className="num">{t("integration.attempts")}</th>
-              <th>{t("integration.lastError")}</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {letters.data?.length === 0 ? <EmptyRow colSpan={6} /> : null}
-            {letters.data?.map((letter) => (
-              <tr key={`${letter.module}/${letter.eventId}`}>
-                <td>{formatDateTime(locale, letter.occurredAt)}</td>
-                <td>{letter.module}</td>
-                <td>{letter.type}</td>
-                <td className="num">{letter.attempts}</td>
-                <td className="wrap">{letter.lastError ?? "—"}</td>
-                <td>
-                  {canReprocess ? (
-                    <button type="button" className="btn small" disabled={reprocess.pending} onClick={() => onReprocess(letter)}>
-                      {t("integration.reprocess")}
-                    </button>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="panel-messages">
+          <ProblemAlert error={reprocess.error} />
+          <FormSuccess show={reprocess.succeeded && !reprocess.pending} />
+        </div>
+        <DataGrid<DeadLetter>
+          label={t("integration.title")}
+          rows={letters.data}
+          loading={letters.loading}
+          rowKey={(l) => `${l.module}/${l.eventId}`}
+          columns={[
+            { key: "time", header: t("integration.occurredAt"), className: "tabular", cell: (l) => formatDateTime(locale, l.occurredAt) },
+            { key: "module", header: t("integration.module"), cell: (l) => <Badge>{l.module}</Badge> },
+            { key: "type", header: t("integration.type"), cell: (l) => <code>{l.type}</code> },
+            {
+              key: "attempts",
+              header: t("integration.attempts"),
+              align: "end",
+              cell: (l) => l.attempts,
+            },
+            { key: "error", header: t("integration.lastError"), className: "wrap", cell: (l) => l.lastError ?? "—" },
+            {
+              key: "actions",
+              header: <span className="visually-hidden">{t("integration.reprocess")}</span>,
+              className: "actions",
+              cell: (l) =>
+                canReprocess ? (
+                  <Button size="small" icon="reprocess" disabled={reprocess.pending} onClick={() => onReprocess(l)}>
+                    {t("integration.reprocess")}
+                  </Button>
+                ) : null,
+            },
+          ]}
+        />
       </Section>
-    </>
+    </Page>
   );
 }
 

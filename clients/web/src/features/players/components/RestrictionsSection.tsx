@@ -5,8 +5,10 @@ import { Can, useAccess } from "@/shared/access/AccessProvider";
 import { formatDateTime, localInputToIso } from "@/shared/format/format";
 import { useI18n } from "@/shared/i18n/I18nProvider";
 import { ActionForm, ReasonBar, useReasonCode } from "@/shared/ui/ActionForm";
+import { Badge } from "@/shared/ui/Badge";
+import { Button } from "@/shared/ui/Button";
+import { DataGrid } from "@/shared/ui/DataGrid";
 import { FormSuccess, SelectField, TextField } from "@/shared/ui/form";
-import { EmptyRow, Section } from "@/shared/ui/layout";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
 import type { RestrictionType, RestrictionView } from "../api/types";
 import { RESTRICTION_TYPES } from "../api/types";
@@ -63,6 +65,7 @@ function AddRestrictionForm({ playerId, onDone }: { playerId: string; onDone: ()
   );
 }
 
+/** Aktif kısıtlamalar gridi + ekleme formu (oyuncu kartı sekmesi). */
 export function RestrictionsSection({ playerId, restrictions, onChanged }: {
   playerId: string;
   restrictions: readonly RestrictionView[];
@@ -81,44 +84,42 @@ export function RestrictionsSection({ playerId, restrictions, onChanged }: {
 
   return (
     <>
-      <Section title={t("players.restrictions.title")}>
-        {canRemove && restrictions.length > 0 ? <ReasonBar reason={reason} /> : null}
+      {canRemove && restrictions.length > 0 ? <ReasonBar reason={reason} /> : null}
+      <div className="panel-messages">
         <ProblemAlert error={remove.error} />
         <FormSuccess show={remove.succeeded && !remove.pending} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t("players.restrictions.type")}</th>
-              <th>{t("players.restrictions.note")}</th>
-              <th>{t("players.restrictions.until")}</th>
-              <th>{t("players.restrictions.addedAt")}</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {restrictions.length === 0 ? <EmptyRow colSpan={5} /> : null}
-            {restrictions.map((r) => (
-              <tr key={r.id}>
-                <td>{restrictionLabel(t, r.type)}</td>
-                <td>{r.note ?? "—"}</td>
-                <td>{formatDateTime(locale, r.until)}</td>
-                <td>{formatDateTime(locale, r.addedAt)}</td>
-                <td>
-                  {canRemove ? (
-                    <button type="button" className="btn small" disabled={remove.pending} onClick={() => onRemove(r.id)}>
-                      {t("common.remove")}
-                    </button>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Section>
+      </div>
+      <DataGrid<RestrictionView>
+        label={t("players.restrictions.title")}
+        rows={restrictions}
+        rowKey={(r) => r.id}
+        rowClassName={() => "restricted"}
+        columns={[
+          {
+            key: "type",
+            header: t("players.restrictions.type"),
+            cell: (r) => <Badge tone="restricted">{restrictionLabel(t, r.type)}</Badge>,
+          },
+          { key: "note", header: t("players.restrictions.note"), className: "wrap", cell: (r) => r.note ?? "—" },
+          { key: "until", header: t("players.restrictions.until"), cell: (r) => formatDateTime(locale, r.until) },
+          { key: "addedAt", header: t("players.restrictions.addedAt"), cell: (r) => formatDateTime(locale, r.addedAt) },
+          {
+            key: "actions",
+            header: <span className="visually-hidden">{t("common.remove")}</span>,
+            className: "actions",
+            cell: (r) =>
+              canRemove ? (
+                <Button size="small" variant="danger" disabled={remove.pending} onClick={() => onRemove(r.id)}>
+                  {t("common.remove")}
+                </Button>
+              ) : null,
+          },
+        ]}
+      />
       <Can screen={SCREEN_RESTRICTIONS} action="add">
-        <Section>
+        <div className="subform">
           <AddRestrictionForm playerId={playerId} onDone={onChanged} />
-        </Section>
+        </div>
       </Can>
     </>
   );

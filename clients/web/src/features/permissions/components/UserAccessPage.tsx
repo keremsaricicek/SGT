@@ -7,7 +7,11 @@ import { useT } from "@/shared/i18n/I18nProvider";
 import { routes } from "@/shared/navigation/routes";
 import { ReasonBar, useReasonCode } from "@/shared/ui/ActionForm";
 import { FormSuccess, SelectField } from "@/shared/ui/form";
-import { Loading, PageHeader, Section } from "@/shared/ui/layout";
+import { Button } from "@/shared/ui/Button";
+import { Icon } from "@/shared/ui/Icon";
+import { Loading, Page } from "@/shared/ui/layout";
+import type { TabItem } from "@/shared/ui/Tabs";
+import { Tabs } from "@/shared/ui/Tabs";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
 import type { RoleView, ScreenView } from "../api/types";
 import { permissionCode } from "../api/types";
@@ -28,14 +32,14 @@ function CodeList({ codes, removeLabel, onRemove }: {
   const t = useT();
   if (codes.length === 0) return <p className="muted">{t("common.noRecords")}</p>;
   return (
-    <ul className="chips">
+    <ul className="tags">
       {codes.map((code) => (
         <li key={code}>
           <code>{code}</code>
           {onRemove ? (
-            <button type="button" className="link" onClick={() => onRemove(code)}>
+            <Button size="small" variant="ghost" onClick={() => onRemove(code)}>
               {removeLabel}
-            </button>
+            </Button>
           ) : null}
         </li>
       ))}
@@ -62,9 +66,9 @@ function PickAndApply({ label, placeholder, options, buttonLabel, onApply, disab
           </option>
         ))}
       </SelectField>
-      <button type="button" className="btn" disabled={disabled || !value} onClick={() => onApply(value)}>
+      <Button icon="add" disabled={disabled || !value} onClick={() => onApply(value)}>
         {buttonLabel}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -96,35 +100,26 @@ function UserAccessContent({ userId }: { userId: string }) {
     .filter((r) => !view?.roleIds.includes(r.id))
     .map((r) => ({ value: r.id, label: r.name }));
 
-  return (
-    <>
-      <PageHeader title={t("permissions.access.title", { name })} actions={<Link href={routes.users}>{t("common.back")}</Link>} />
-      <ProblemAlert error={access.error ?? roles.error ?? screens.error} />
-      <Loading show={access.loading && !view} />
-      {view ? (
-        <>
-          {view.isSuperAdmin ? <p className="notice">{t("permissions.access.superAdminNote")}</p> : null}
-          {editable ? (
-            <Section>
-              <ReasonBar reason={reason} />
-              <ProblemAlert error={change.error} />
-              <FormSuccess show={change.succeeded && !change.pending} />
-            </Section>
-          ) : null}
-          <div className="columns">
-            <Section title={t("permissions.access.roles")}>
-              <ul className="chips">
+  const tabs: TabItem[] = view
+    ? [
+        {
+          id: "roles",
+          label: t("permissions.access.roles"),
+          count: view.roleIds.length,
+          content: (
+            <>
+              <ul className="tags">
                 {view.roleIds.map((roleId) => (
                   <li key={roleId}>
                     {roleName(roles.data, roleId)}
                     {editable ? (
-                      <button
-                        type="button"
-                        className="link"
+                      <Button
+                        size="small"
+                        variant="ghost"
                         onClick={() => apply((reasonCode) => ({ kind: "unassignRole", roleId, reasonCode }))}
                       >
                         {t("permissions.access.unassign")}
-                      </button>
+                      </Button>
                     ) : null}
                   </li>
                 ))}
@@ -139,13 +134,21 @@ function UserAccessContent({ userId }: { userId: string }) {
                   onApply={(roleId) => apply((reasonCode) => ({ kind: "assignRole", roleId, reasonCode }))}
                 />
               ) : null}
-            </Section>
-            <Section title={t("permissions.access.effective")}>
-              <CodeList codes={view.effective} />
-            </Section>
-          </div>
-          <div className="columns">
-            <Section title={t("permissions.access.grants")}>
+            </>
+          ),
+        },
+        {
+          id: "effective",
+          label: t("permissions.access.effective"),
+          count: view.effective.length,
+          content: <CodeList codes={view.effective} />,
+        },
+        {
+          id: "grants",
+          label: t("permissions.access.grants"),
+          count: view.grants.length,
+          content: (
+            <>
               <CodeList
                 codes={view.grants}
                 removeLabel={t("common.remove")}
@@ -165,15 +168,20 @@ function UserAccessContent({ userId }: { userId: string }) {
                   onApply={(permission) => apply((reasonCode) => ({ kind: "grant", permission, reasonCode }))}
                 />
               ) : null}
-            </Section>
-            <Section title={t("permissions.access.denied")}>
+            </>
+          ),
+        },
+        {
+          id: "denied",
+          label: t("permissions.access.denied"),
+          count: view.denied.length,
+          content: (
+            <>
               <CodeList
                 codes={view.denied}
                 removeLabel={t("common.remove")}
                 onRemove={
-                  editable
-                    ? (permission) => apply((reasonCode) => ({ kind: "undeny", permission, reasonCode }))
-                    : undefined
+                  editable ? (permission) => apply((reasonCode) => ({ kind: "undeny", permission, reasonCode })) : undefined
                 }
               />
               {editable ? (
@@ -186,11 +194,38 @@ function UserAccessContent({ userId }: { userId: string }) {
                   onApply={(permission) => apply((reasonCode) => ({ kind: "deny", permission, reasonCode }))}
                 />
               ) : null}
-            </Section>
-          </div>
+            </>
+          ),
+        },
+      ]
+    : [];
+
+  return (
+    <Page
+      title={t("permissions.access.title", { name })}
+      actions={
+        <Link className="btn" href={routes.users}>
+          <Icon name="back" />
+          {t("common.back")}
+        </Link>
+      }
+    >
+      <ProblemAlert error={access.error ?? roles.error ?? screens.error} />
+      <Loading show={access.loading && !view} />
+      {view ? (
+        <>
+          {view.isSuperAdmin ? <p className="info-note">{t("permissions.access.superAdminNote")}</p> : null}
+          <section className="panel">
+            {editable ? <ReasonBar reason={reason} /> : null}
+            <div className="panel-messages">
+              <ProblemAlert error={change.error} />
+              <FormSuccess show={change.succeeded && !change.pending} />
+            </div>
+            <Tabs label={t("permissions.access.title", { name })} tabs={tabs} />
+          </section>
         </>
       ) : null}
-    </>
+    </Page>
   );
 }
 

@@ -7,8 +7,10 @@ import { useT } from "@/shared/i18n/I18nProvider";
 import { routes } from "@/shared/navigation/routes";
 import { ActionForm } from "@/shared/ui/ActionForm";
 import { TextField } from "@/shared/ui/form";
-import { EmptyRow, Loading, PageHeader, Section } from "@/shared/ui/layout";
+import { DataGrid } from "@/shared/ui/DataGrid";
+import { Page, Section } from "@/shared/ui/layout";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
+import type { RoleView } from "../api/types";
 import { useCreateDefaultRoles, useCreateRole, useRoles } from "../hooks/useRoles";
 import { SCREEN_ROLES } from "./screens";
 
@@ -40,6 +42,7 @@ function CreateDefaultRolesForm({ onCreated }: { onCreated: () => void }) {
     <ActionForm
       title={t("permissions.roles.createDefaults")}
       submitLabel={t("permissions.roles.createDefaults")}
+      submitVariant="default"
       pending={create.pending}
       error={create.error}
       succeeded={create.succeeded}
@@ -54,30 +57,19 @@ function RolesContent() {
   const t = useT();
   const roles = useRoles();
   return (
-    <>
-      <PageHeader title={t("permissions.roles.title")} />
-      <Section>
-        <ProblemAlert error={roles.error} />
-        <Loading show={roles.loading && !roles.data} />
-        <table className="table">
-          <thead>
-            <tr>
-              <th>{t("permissions.roles.name")}</th>
-              <th className="num">{t("permissions.roles.permissionCount")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {roles.data?.length === 0 ? <EmptyRow colSpan={2} /> : null}
-            {roles.data?.map((role) => (
-              <tr key={role.id}>
-                <td>
-                  <Link href={routes.role(role.id)}>{role.name}</Link>
-                </td>
-                <td className="num">{role.permissions.length}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <Page title={t("permissions.roles.title")} meta={roles.data ? t("common.records", { count: roles.data.length }) : null}>
+      <ProblemAlert error={roles.error} />
+      <Section flush>
+        <DataGrid<RoleView>
+          label={t("permissions.roles.title")}
+          rows={roles.data}
+          loading={roles.loading}
+          rowKey={(role) => role.id}
+          columns={[
+            { key: "name", header: t("permissions.roles.name"), cell: (role) => <Link href={routes.role(role.id)}>{role.name}</Link> },
+            { key: "count", header: t("permissions.roles.permissionCount"), align: "end", cell: (role) => role.permissions.length },
+          ]}
+        />
       </Section>
       <Can screen={SCREEN_ROLES} action="operate">
         <div className="columns">
@@ -89,7 +81,7 @@ function RolesContent() {
           </Section>
         </div>
       </Can>
-    </>
+    </Page>
   );
 }
 

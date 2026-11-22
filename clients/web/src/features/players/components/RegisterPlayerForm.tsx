@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { ChangeEvent } from "react";
 import { useT } from "@/shared/i18n/I18nProvider";
 import { ActionForm } from "@/shared/ui/ActionForm";
+import { Button } from "@/shared/ui/Button";
 import { SelectField, TextField } from "@/shared/ui/form";
 import type { DocumentType, PlayerRegistered } from "../api/types";
 import { DOCUMENT_TYPES } from "../api/types";
@@ -21,7 +22,10 @@ const EMPTY = {
 
 type FormState = typeof EMPTY;
 
-export function RegisterPlayerForm({ onRegistered }: { onRegistered: (registered: PlayerRegistered) => void }) {
+export function RegisterPlayerForm({ onRegistered, onCancel }: {
+  onRegistered: (registered: PlayerRegistered) => void;
+  onCancel?: () => void;
+}) {
   const t = useT();
   const [form, setForm] = useState<FormState>(EMPTY);
   const register = useRegisterPlayer((registered) => {
@@ -33,8 +37,8 @@ export function RegisterPlayerForm({ onRegistered }: { onRegistered: (registered
 
   return (
     <ActionForm
-      title={t("players.register")}
       submitLabel={t("players.register")}
+      secondary={onCancel ? <Button onClick={onCancel}>{t("common.cancel")}</Button> : null}
       pending={register.pending}
       error={register.error}
       succeeded={register.succeeded}

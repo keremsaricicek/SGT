@@ -4,7 +4,8 @@ import { useState } from "react";
 import { ScreenGuard } from "@/shared/access/AccessProvider";
 import { formatDateTime } from "@/shared/format/format";
 import { useI18n } from "@/shared/i18n/I18nProvider";
-import { PageHeader, Section } from "@/shared/ui/layout";
+import { Button } from "@/shared/ui/Button";
+import { Page, Section } from "@/shared/ui/layout";
 import { ProblemAlert } from "@/shared/ui/ProblemAlert";
 import { HISTORY_PAGE_SIZE, usePermissionHistoryPage } from "../hooks/usePermissionHistory";
 import { SCREEN_HISTORY } from "./screens";
@@ -28,14 +29,14 @@ function HistoryChunk({ before, isLast, onMore }: { before?: string; isLast: boo
       ) : null}
       {page.loading ? (
         <tr>
-          <td colSpan={COLUMNS} className="muted">
+          <td colSpan={COLUMNS} className="empty">
             {t("app.loading")}
           </td>
         </tr>
       ) : null}
       {!page.loading && !before && rows.length === 0 ? (
         <tr>
-          <td colSpan={COLUMNS} className="muted">
+          <td colSpan={COLUMNS} className="empty">
             {t("common.noRecords")}
           </td>
         </tr>
@@ -44,7 +45,7 @@ function HistoryChunk({ before, isLast, onMore }: { before?: string; isLast: boo
         <tr key={change.id}>
           <td>{formatDateTime(locale, change.occurredAt)}</td>
           <td>
-            {change.target} <code className="muted">{change.targetId}</code>
+            {change.target} <code>{change.targetId}</code>
           </td>
           <td>{change.kind}</td>
           <td>
@@ -63,9 +64,9 @@ function HistoryChunk({ before, isLast, onMore }: { before?: string; isLast: boo
       {isLast && last && rows.length >= HISTORY_PAGE_SIZE ? (
         <tr>
           <td colSpan={COLUMNS}>
-            <button type="button" className="btn small" onClick={() => onMore(last.occurredAt)}>
+            <Button size="small" icon="history" onClick={() => onMore(last.occurredAt)}>
               {t("common.loadMore")}
-            </button>
+            </Button>
           </td>
         </tr>
       ) : null}
@@ -77,20 +78,19 @@ function HistoryContent() {
   const { t } = useI18n();
   const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
   return (
-    <>
-      <PageHeader title={t("permissions.history.title")} />
-      <Section>
-        <table className="table">
+    <Page title={t("permissions.history.title")}>
+      <Section flush>
+        <table className="grid" aria-label={t("permissions.history.title")}>
           <thead>
             <tr>
-              <th>{t("common.time")}</th>
-              <th>{t("permissions.history.target")}</th>
-              <th>{t("permissions.history.kind")}</th>
-              <th>{t("permissions.history.item")}</th>
-              <th>{t("common.actor")}</th>
-              <th>{t("common.terminal")}</th>
-              <th>{t("common.reasonCode")}</th>
-              <th>{t("common.correlationId")}</th>
+              <th scope="col">{t("common.time")}</th>
+              <th scope="col">{t("permissions.history.target")}</th>
+              <th scope="col">{t("permissions.history.kind")}</th>
+              <th scope="col">{t("permissions.history.item")}</th>
+              <th scope="col">{t("common.actor")}</th>
+              <th scope="col">{t("common.terminal")}</th>
+              <th scope="col">{t("common.reasonCode")}</th>
+              <th scope="col">{t("common.correlationId")}</th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +105,7 @@ function HistoryContent() {
           </tbody>
         </table>
       </Section>
-    </>
+    </Page>
   );
 }
 
