@@ -1,3 +1,4 @@
+using System.Runtime.ExceptionServices;
 using Sgt.BuildingBlocks;
 
 namespace Sgt.DemoData.Steps;
@@ -39,10 +40,20 @@ public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, Da
                 ratedBefore.AddRange(rated.Except(ratedBefore).ToList());
             }
         }
-        finally
+        catch (Exception original)
         {
-            // Hata olsa da arka plan boşaltması beklenir; onun hatası gözden kaçmaz.
-            await drain.Pending;
+            // Arka plan boşaltması yine beklenir; onun hatası asıl hatayı örtmez, ikisi birlikte bildirilir.
+            try
+            {
+                await drain.Pending;
+            }
+            catch (Exception cleanup)
+            {
+                throw new AggregateException("Günlük hareket ve arka plan outbox boşaltması başarısız.", original, cleanup);
+            }
+
+            ExceptionDispatchInfo.Capture(original).Throw();
+            throw; // erişilmez
         }
 
         await closing.Finish(drain, ct);

@@ -52,6 +52,16 @@ public sealed class TenantMarkerTests
     }
 
     [Fact]
+    public async Task Concurrent_insert_detected_at_commit_is_reported_as_already_set()
+    {
+        // İki istek aynı anda Exists=false gördü; ikincisi commit'te benzersizlik ihlaline takılır.
+        var result = await new SetTenantMarkerHandler(_markers, _outbox, new ConflictingUnitOfWork(), new FixedClock())
+            .Handle(new SetTenantMarkerCommand(Tenant, "DEMO_DATA_V1", Audit), default);
+
+        Assert.Equal(ConfigurationErrors.MarkerAlreadySet, result.Error);
+    }
+
+    [Fact]
     public async Task Query_reports_marker_per_tenant()
     {
         await Set("DEMO_DATA_V1");
@@ -86,6 +96,11 @@ public sealed class TenantMarkerTests
     private sealed class NoopUnitOfWork : IConfigurationUnitOfWork
     {
         public Task Commit(CancellationToken ct) => Task.CompletedTask;
+    }
+
+    private sealed class ConflictingUnitOfWork : IConfigurationUnitOfWork
+    {
+        public Task Commit(CancellationToken ct) => throw new ConcurrencyConflictException("benzersizlik ihlali");
     }
 
     private sealed class FixedClock : IClock

@@ -5,6 +5,10 @@ namespace Sgt.DemoData.Steps;
 /// <summary>
 /// Bugünün canlı görüntüsü (Spec 012): saat gerçek ana gelir; bir kasa vardiyası açık kalır, masaların bir kısmı açılır
 /// ve birkaç oyuncunun rating'i sürer. Seçimler sabit tohumdan gelir (KK5).
+/// Tekrar güvenliği: çip satışı tohumdan türeyen idempotency anahtarı taşır. Vardiya açma, masa açma ve rating başlatma
+/// komutlarında anahtar yoktur; aynı kasiyer/terminalde ikinci vardiya, açık masayı tekrar açma ve süren rating'i olan
+/// oyuncuya ikinci rating modül kuralıyla reddedilir. Ayrıca kapı (<see cref="DemoSeedGate"/>) yarım yüklemede adımları
+/// hiç çalıştırmaz; bu adım bir tenant'ta yalnızca bir kez çalışır.
 /// </summary>
 public sealed class LiveFloor(CageDesk cage, PitDesk pit) : IDemoStep
 {

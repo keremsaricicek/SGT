@@ -27,7 +27,8 @@ Veri, modüllerin kendi komut handler'larından geçerek yazılır (K2); hiçbir
 - Bilinen istisna: demo tenant'ının lisansı ve ilk süper admini `IdentityDevelopmentSeed` ile yazılır; bu geliştirme tohumu
   denetim kaydı (audit) üretmez. Yalnızca veri yokken ve yükleme gerçekten yapılacakken çalışır. Diğer tüm demo verisi
   modül komutlarıyla, denetim kaydıyla yazılır.
-- Yükleme tamamlanınca Configuration modülünde `DEMO_DATA_V1` tenant işareti konur (KK5 idempotency); işaretsiz veri
-  varsa yükleme 1 ile durur ve `reset --yes` önerilir.
+- Yükleme ilk yazım olarak `DEMO_DATA_STARTED_V1`, son yazım olarak `DEMO_DATA_V1` tenant işaretini koyar (Configuration
+  modülü, append-only). Tamamlanmışsa ikinci çalıştırma hiçbir şey yazmaz (KK5); başlamış ama tamamlanmamışsa (veya
+  işaretsiz oyuncu verisi varsa) yükleme 1 ile durur ve `reset --yes` önerilir.
 - KK2 kapısı (inceleme sonrası): yalnızca `Development`/`Demo` ortamı + `DemoSeed:Enabled=true` + açık `DemoSeed:TenantId`;
   aksi 2.

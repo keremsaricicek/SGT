@@ -102,13 +102,31 @@ public sealed class DemoSeedTests(DemoSeedFixture fx)
     [Fact]
     public async Task KK5_completion_marker_is_written()
     {
-        Assert.True(await fx.Query<IsTenantMarkerSetQuery, bool>(new IsTenantMarkerSetQuery(Tenant, DemoDataGenerator.CompletionMarker)));
+        Assert.True(await fx.Query<IsTenantMarkerSetQuery, bool>(new IsTenantMarkerSetQuery(Tenant, DemoSeedGate.StartedMarker)));
+        Assert.True(await fx.Query<IsTenantMarkerSetQuery, bool>(new IsTenantMarkerSetQuery(Tenant, DemoCompletion.CompletedMarker)));
+    }
+
+    [Fact]
+    public async Task KK5_started_without_completed_marker_is_refused_as_half_load()
+    {
+        // Yükleme ilk yazımda (oyuncudan, kullanıcıdan önce) yarıda kesilmiş gibi: yalnızca başlangıç işareti var.
+        var other = new TenantId(Guid.NewGuid());
+        await using (var scope = fx.Api.Services.CreateAsyncScope())
+        {
+            var set = scope.ServiceProvider.GetRequiredService<Sgt.BuildingBlocks.ICommandHandler<SetTenantMarkerCommand>>();
+            await set.Handle(new SetTenantMarkerCommand(other, DemoSeedGate.StartedMarker, new AuditContext(DemoUsers.SuperAdmin.Id, "TEST", ReasonCode.Of("TEST"), Guid.NewGuid())), default);
+        }
+
+        var error = await Assert.ThrowsAsync<DemoSeedException>(() => fx.Generate(fx.Options with { Tenant = other }));
+
+        Assert.Contains("reset önerilir", error.Message, StringComparison.Ordinal);
+        Assert.Empty(await fx.Query<ListUsersQuery, IReadOnlyList<UserSummary>>(new ListUsersQuery(other)));
     }
 
     [Fact]
     public async Task R3_every_module_outbox_is_empty_after_seed()
     {
-        foreach (var drainer in fx.Api.Services.GetRequiredService<OutboxDrainers>())
+        foreach (var drainer in fx.Api.Services.GetRequiredService<OutboxDrainers>().All)
         {
             var backlog = await drainer.Backlog(Tenant, default);
             Assert.True(backlog.Pending == 0, $"{drainer.Module}: {backlog.Pending} işlenmemiş olay");
@@ -150,7 +168,7 @@ public sealed class DemoSeedTests(DemoSeedFixture fx)
     public async Task Concurrent_run_for_the_same_tenant_is_refused()
     {
         var locks = fx.Api.Services.GetRequiredService<IAdvisoryLock>();
-        await using var held = await locks.TryAcquire(DemoDataGenerator.LockName(Tenant), default);
+        await using var held = await locks.TryAcquire(DemoSeedGate.LockName(Tenant), default);
         Assert.NotNull(held);
 
         var error = await Assert.ThrowsAsync<DemoSeedException>(() => fx.Generate());

@@ -16,7 +16,7 @@ public sealed class DemoOutbox(OutboxDrainers drainers)
         do
         {
             // Modül outbox'ları birbirinden bağımsızdır; aynı anda boşaltılır.
-            dispatched = (await Task.WhenAll(drainers.Select(d => d.Drain(ct)))).Sum(r => r.Dispatched);
+            dispatched = (await Task.WhenAll(drainers.All.Select(d => d.Drain(ct)))).Sum(r => r.Dispatched);
         }
         while (dispatched > 0);
     }
@@ -25,7 +25,7 @@ public sealed class DemoOutbox(OutboxDrainers drainers)
     public async Task EnsureEmpty(TenantId tenantId, CancellationToken ct)
     {
         var problems = new List<string>();
-        foreach (var drainer in drainers)
+        foreach (var drainer in drainers.All)
         {
             var backlog = await drainer.Backlog(tenantId, ct);
             if (!backlog.IsEmpty)

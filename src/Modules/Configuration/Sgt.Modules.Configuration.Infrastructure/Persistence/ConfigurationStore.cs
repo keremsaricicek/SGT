@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.Configuration.Application.Ports;
@@ -60,7 +61,18 @@ internal sealed class ConfigurationOutbox(ConfigurationDbContext db, Integration
 
 internal sealed class ConfigurationUnitOfWork(ConfigurationDbContext db) : IConfigurationUnitOfWork
 {
-    public Task Commit(CancellationToken ct) => db.SaveChangesAsync(ct);
+    public async Task Commit(CancellationToken ct)
+    {
+        try
+        {
+            await db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException e) when (e.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            // Ör. aynı tenant işareti iki istekte aynı anda konmaya çalışıldı (Exists ikisinde de false gördü).
+            throw new ConcurrencyConflictException("Aynı kayıt aynı anda başka bir istekle eklendi.", e);
+        }
+    }
 }
 
 internal sealed class DesignTimeFactory : Microsoft.EntityFrameworkCore.Design.IDesignTimeDbContextFactory<ConfigurationDbContext>
