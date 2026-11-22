@@ -251,6 +251,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get colStatus => 'Durum';
 
   @override
+  String get colKind => 'Tür';
+
+  @override
   String get colRatings => 'Rating';
 
   @override

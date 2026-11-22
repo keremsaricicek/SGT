@@ -27,6 +27,9 @@ class SgtFormat {
     return negative && result != '0${_decimalMark}00' ? '-$result' : result;
   }
 
+  /// Masa limiti: tam sayıysa ondalıksız (`25.000`), değilse 2 ondalık (`2,50`).
+  String limit(Decimal value) => value.isInteger ? integer(value.toBigInt().toInt()) : amountOnly(value);
+
   String integer(int value) {
     final s = value.abs().toString();
     return '${value < 0 ? '-' : ''}${_grouped(s)}';

@@ -80,6 +80,7 @@
   "colTable": "Masa",
   "colGame": "Oyun",
   "colStatus": "Durum",
+  "colKind": "Tür",
   "colRatings": "Rating",
   "tablesSummary": "{open} açık / {total} masa",
   "@tablesSummary": {"placeholders": {"open": {"type": "int"}, "total": {"type": "int"}}},

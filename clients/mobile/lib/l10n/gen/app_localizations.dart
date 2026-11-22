@@ -566,6 +566,12 @@ abstract class AppLocalizations {
   /// **'Durum'**
   String get colStatus;
 
+  /// No description provided for @colKind.
+  ///
+  /// In tr, this message translates to:
+  /// **'Tür'**
+  String get colKind;
+
   /// No description provided for @colRatings.
   ///
   /// In tr, this message translates to:

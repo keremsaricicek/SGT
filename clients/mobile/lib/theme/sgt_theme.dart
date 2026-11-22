@@ -118,8 +118,8 @@ abstract final class SgtTheme {
         enabledBorder: border,
         focusedBorder: border.copyWith(borderSide: BorderSide(color: p.focus, width: 2)),
         errorBorder: border.copyWith(borderSide: BorderSide(color: p.negative)),
-        labelStyle: TextStyle(color: p.textMuted, fontSize: SgtTokens.fontBody),
-        hintStyle: TextStyle(color: p.textMuted, fontSize: SgtTokens.fontBody),
+        labelStyle: TextStyle(fontFamily: SgtTokens.fontFamily, color: p.textMuted, fontSize: SgtTokens.fontBody),
+        hintStyle: TextStyle(fontFamily: SgtTokens.fontFamily, color: p.textMuted, fontSize: SgtTokens.fontBody),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -128,7 +128,7 @@ abstract final class SgtTheme {
           minimumSize: const Size(0, SgtTokens.controlHeight),
           padding: const EdgeInsets.symmetric(horizontal: SgtTokens.space4),
           shape: _shape,
-          textStyle: const TextStyle(fontSize: SgtTokens.fontBody, fontWeight: FontWeight.w600),
+          textStyle: const TextStyle(fontFamily: SgtTokens.fontFamily, fontSize: SgtTokens.fontBody, fontWeight: FontWeight.w600),
           splashFactory: NoSplash.splashFactory,
         ),
       ),
@@ -139,7 +139,7 @@ abstract final class SgtTheme {
           padding: const EdgeInsets.symmetric(horizontal: SgtTokens.space4),
           side: BorderSide(color: p.borderStrong),
           shape: _shape,
-          textStyle: const TextStyle(fontSize: SgtTokens.fontBody, fontWeight: FontWeight.w500),
+          textStyle: const TextStyle(fontFamily: SgtTokens.fontFamily, fontSize: SgtTokens.fontBody, fontWeight: FontWeight.w500),
           splashFactory: NoSplash.splashFactory,
         ),
       ),
@@ -160,7 +160,7 @@ abstract final class SgtTheme {
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.fixed,
         backgroundColor: p.header,
-        contentTextStyle: TextStyle(color: p.onHeader, fontSize: SgtTokens.fontBody),
+        contentTextStyle: TextStyle(fontFamily: SgtTokens.fontFamily, color: p.onHeader, fontSize: SgtTokens.fontBody),
         shape: const RoundedRectangleBorder(),
       ),
       dialogTheme: DialogThemeData(backgroundColor: p.surface, shape: _shape),
@@ -171,8 +171,8 @@ abstract final class SgtTheme {
         indicatorColor: p.primary,
         dividerColor: p.border,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: const TextStyle(fontSize: SgtTokens.fontBody, fontWeight: FontWeight.w600),
-        unselectedLabelStyle: const TextStyle(fontSize: SgtTokens.fontBody),
+        labelStyle: const TextStyle(fontFamily: SgtTokens.fontFamily, fontSize: SgtTokens.fontBody, fontWeight: FontWeight.w600),
+        unselectedLabelStyle: const TextStyle(fontFamily: SgtTokens.fontFamily, fontSize: SgtTokens.fontBody),
       ),
     );
   }

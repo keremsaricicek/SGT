@@ -80,6 +80,7 @@
   "colTable": "Table",
   "colGame": "Game",
   "colStatus": "Status",
+  "colKind": "Type",
   "colRatings": "Ratings",
   "tablesSummary": "{open} open / {total} tables",
   "@tablesSummary": {"placeholders": {"open": {"type": "int"}, "total": {"type": "int"}}},

@@ -251,6 +251,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get colStatus => 'Status';
 
   @override
+  String get colKind => 'Type';
+
+  @override
   String get colRatings => 'Ratings';
 
   @override
