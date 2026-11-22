@@ -322,20 +322,24 @@ Satış ve deneme için, tamamen **sahte** (sentetik) veriyle dolu bir casino te
 Gerçek kişi, kart veya üretim verisi yoktur; isimler sabit listelerden üretilir.
 
 ```bash
-build/demo.sh up       # PostgreSQL + Keycloak + API; migration ve demo verisi (ilk açılış birkaç dakika)
-build/demo.sh down     # kapatır, veri kalır
-build/demo.sh reset    # TÜM VERİYİ SİLER, sıfırdan kurar ve yükler
+build/demo.sh up            # PostgreSQL + Keycloak + API; demo kullanıcıları, migration ve demo verisi (ilk açılış birkaç dakika)
+build/demo.sh down          # kapatır, veri kalır
+build/demo.sh reset --yes   # TÜM VERİYİ SİLER, sıfırdan kurar ve yükler
 ```
 
-- `deploy/.env` yoksa `demo.sh` onu **yalnızca demo için** rastgele şifre ve anahtarlarla üretir
-  (OTP isteğe bağlı: `SGT_OTP_REQUIREMENT=CONDITIONAL`). Bu dosya pilot/üretimde kullanılmaz.
+- `deploy/.env` yoksa `demo.sh` onu **yalnızca demo için** rastgele şifre ve anahtarlarla üretir ve `SGT_DEMO_ENV=1`
+  işaretini koyar (OTP isteğe bağlı: `SGT_OTP_REQUIREMENT=CONDITIONAL`). Bu işareti taşımayan bir `.env` ile (pilot,
+  geliştirme) `up` ve `reset` çalışmaz.
 - Veri: 500 oyuncu (kartlı, ~%2'si kısıtlı), 40 masa, 200 slot, TRY/EUR/GBP/USD kurları, puan kuralı ve
   son 30 günün hareketi (kasa vardiyaları, çip satış/bozdurma, döviz, rating'ler ve puanları, slot sayaçları,
-  comp talep/onayları). Her şey modüllerin kendi komutlarıyla yazılır; günlük özet son 30 günün her günü doludur.
-- Aynı komut aynı veriyi üretir; veri zaten varsa ikinci çalıştırma hiçbir şey yazmaz.
+  comp talep/onayları). Bugün için bir kasa vardiyası açık, birkaç masa açık ve birkaç rating sürüyor.
+  Her şey modüllerin kendi komutlarıyla yazılır; günlük özet son 30 günün her günü doludur.
+- Aynı komut aynı veriyi üretir. Yükleme bitince tenant'a "demo tamamlandı" işareti konur; işaret varsa ikinci
+  çalıştırma hiçbir şey yazmaz. İşaret yokken veri varsa (yarım kalmış yükleme) yükleme durur: `reset --yes` önerilir.
 - Daha küçük veri için `deploy/.env` içinde `SGT_DEMO_SCALE=Small`.
 
-Demo kullanıcıları (şifreler `deploy/.env` içinde):
+Demo kullanıcıları (6 kullanıcı; şifreler `deploy/.env` içinde). `superadmin` ve `kasiyer1` her kurulumun realm'indedir;
+diğer dördü `deploy/keycloak/demo-users.json`'dadır ve yalnızca `demo.sh` yükler (pilot kurulumda yoktur):
 
 | Kullanıcı | Rol | Şifre değişkeni |
 |---|---|---|
@@ -349,8 +353,10 @@ Demo kullanıcıları (şifreler `deploy/.env` içinde):
 Docker olmadan (yerel PostgreSQL ile) yalnızca veriyi yüklemek için:
 
 ```bash
-dotnet run --project src/Bootstrapper/Sgt.Api -- --seed-demo   # 0 başarı, 1 hata, 2 Production'da reddedildi
+DemoSeed__Enabled=true DemoSeed__TenantId=00000000-0000-0000-0000-0000000000a1 \
+  dotnet run --project src/Bootstrapper/Sgt.Api -- --seed-demo   # 0 başarı, 1 hata, 2 reddedildi
 ```
 
-Ayarlar: `DemoSeed:TenantId` (varsayılan geliştirme tenant'ı), `DemoSeed:Scale` (`Full` | `Small`).
-`--seed-demo` Production ortamında çalışmaz.
+`--seed-demo` yalnızca `Development` veya `Demo` ortamında, `DemoSeed:Enabled=true` ve açıkça verilmiş
+`DemoSeed:TenantId` ile çalışır; aksi halde hiçbir şeye dokunmadan 2 ile çıkar. Ölçek: `DemoSeed:Scale` (`Full` | `Small`).
+Aynı tenant'a iki yükleme aynı anda çalışamaz (PostgreSQL advisory lock).
