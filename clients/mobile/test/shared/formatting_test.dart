@@ -17,6 +17,11 @@ void main() {
     expect(tr.money(Decimal.parse('-0.001'), 'USD'), '0,00 USD');
   });
 
+  test('masa limiti tam sayıysa ondalıksız, değilse 2 ondalık', () {
+    expect(tr.limit(Decimal.parse('25000')), '25.000');
+    expect(tr.limit(Decimal.parse('2.5')), '2,50');
+  });
+
   test('tam sayı gruplanır', () {
     expect(tr.integer(84210), '84.210');
     expect(en.integer(-1500), '-1,500');
