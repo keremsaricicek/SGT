@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/io_client.dart';
 import 'package:sgt_mobile/config/app_config.dart';
@@ -50,6 +51,12 @@ void main() {
         () => AppConfig.from(apiBase: 'https://api.ornek/', issuer: 'http://giris.ornek/realms/sgt', production: true),
         throwsArgumentError,
       );
+    });
+
+    test('üretim varsayılanı derleme kipidir (release → üretim, yalnızca HTTPS)', () {
+      final c = AppConfig.from(apiBase: 'https://api.ornek/', issuer: 'https://giris.ornek/realms/sgt');
+      expect(c.production, kReleaseMode);
+      expect(AppConfig.productionFromEnvironment, kReleaseMode); // --dart-define=SGT_PRODUCTION verilmediğinde
     });
 
     test('adres verilmemişse açık hata', () {

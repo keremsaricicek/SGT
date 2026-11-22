@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart' show kReleaseMode;
+
 /// Ortam ayarları. Değerler derlemede `--dart-define` ile verilir; kodda adres veya secret yoktur (KK17).
 ///
 /// ```
@@ -18,7 +20,7 @@ class AppConfig {
     required String apiBase,
     required String issuer,
     String clientId = defaultClientId,
-    bool production = false,
+    bool production = kReleaseMode,
     String? pinnedCertAsset,
   }) {
     final api = Uri.tryParse(apiBase);
@@ -46,11 +48,14 @@ class AppConfig {
         apiBase: const String.fromEnvironment('SGT_API_BASE'),
         issuer: const String.fromEnvironment('SGT_AUTH_ISSUER'),
         clientId: const String.fromEnvironment('SGT_CLIENT_ID', defaultValue: defaultClientId),
-        production: const bool.fromEnvironment('SGT_PRODUCTION'),
+        production: productionFromEnvironment,
         pinnedCertAsset: const String.fromEnvironment('SGT_PINNED_CERT'),
       );
 
   static const defaultClientId = 'sgt-mobile';
+
+  /// Üretim kipi: `--dart-define=SGT_PRODUCTION` verilmezse release derlemede açık (yalnızca HTTPS).
+  static const productionFromEnvironment = bool.fromEnvironment('SGT_PRODUCTION', defaultValue: kReleaseMode);
   static const redirect = 'com.sentezgaming.sgt:/oauthredirect';
 
   final Uri apiBase;
