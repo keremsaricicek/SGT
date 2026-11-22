@@ -116,6 +116,45 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
+    public void DemoData_writes_only_through_module_contracts_and_application_commands()
+    {
+        // Spec 012: demo verisi modül komut handler'larıyla yazılır; DbContext/tablo erişimi (Infrastructure) ve HTTP katmanı (Api) yasak.
+        var forbidden = ModuleCatalog.All
+            .SelectMany(m => new[] { $"{m.RootNamespace}.Infrastructure", $"{m.RootNamespace}.Api" })
+            .Append("Microsoft.EntityFrameworkCore")
+            .Append("Npgsql")
+            .ToArray();
+
+        var result = Types.InAssembly(typeof(Sgt.DemoData.AssemblyMarker).Assembly)
+            .ShouldNot().HaveDependencyOnAny(forbidden)
+            .GetResult();
+
+        AssertNone(Describe(result, "K2: Sgt.DemoData modüllerin Infrastructure/Api koduna erişemez").ToList());
+    }
+
+    [Fact]
+    public void Only_DemoData_uses_outbox_drainers()
+    {
+        // Anında boşaltma yalnızca demo verisi içindir; üretim kodu olayları arka plan servisiyle dağıtır (Spec 012).
+        string[] drainerTypes =
+        [
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.IOutboxDrainer",
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainers",
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainer`1",
+        ];
+        var assemblies = ModuleCatalog.All
+            .SelectMany(m => new[] { m.Contracts, m.Domain, m.Application, m.Infrastructure, m.Api })
+            .Append(typeof(Sgt.BuildingBlocks.Web.SgtHeaders).Assembly)
+            .Append(typeof(Sgt.Api.IdentityDemoTenantBootstrap).Assembly);
+
+        var result = Types.InAssemblies(assemblies)
+            .ShouldNot().HaveDependencyOnAny(drainerTypes)
+            .GetResult();
+
+        AssertNone(Describe(result, "Spec 012: IOutboxDrainer yalnızca Sgt.DemoData'dan kullanılır").ToList());
+    }
+
+    [Fact]
     public void Domain_types_do_not_expose_public_setters()
     {
         var violations = ModuleCatalog.All

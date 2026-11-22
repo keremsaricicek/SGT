@@ -3,12 +3,14 @@ using Sgt.BuildingBlocks.Infrastructure.Messaging;
 
 namespace Sgt.Modules.Configuration.Infrastructure.Persistence;
 
-/// <summary>Configuration modülünün şeması. exchange_rates append-only'dir (Spec 004 KK3).</summary>
+/// <summary>Configuration modülünün şeması. exchange_rates ve tenant_markers append-only'dir (Spec 004 KK3, Spec 012).</summary>
 public sealed class ConfigurationDbContext(DbContextOptions<ConfigurationDbContext> options) : DbContext(options)
 {
     public const string Schema = "configuration";
 
     internal DbSet<ExchangeRateRow> ExchangeRates => Set<ExchangeRateRow>();
+
+    internal DbSet<TenantMarkerRow> TenantMarkers => Set<TenantMarkerRow>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,7 +28,33 @@ public sealed class ConfigurationDbContext(DbContextOptions<ConfigurationDbConte
             e.Property(x => x.Terminal).HasMaxLength(100);
             e.Property(x => x.ReasonCode).HasMaxLength(50);
         });
+
+        modelBuilder.Entity<TenantMarkerRow>(e =>
+        {
+            e.ToTable("tenant_markers");
+            e.HasKey(x => new { x.TenantId, x.Code });
+            e.Property(x => x.Code).HasMaxLength(50);
+            e.Property(x => x.Terminal).HasMaxLength(100);
+            e.Property(x => x.ReasonCode).HasMaxLength(50);
+        });
     }
+}
+
+internal sealed class TenantMarkerRow
+{
+    public Guid TenantId { get; set; }
+
+    public string Code { get; set; } = string.Empty;
+
+    public DateTimeOffset SetAt { get; set; }
+
+    public Guid ActorId { get; set; }
+
+    public string Terminal { get; set; } = string.Empty;
+
+    public string ReasonCode { get; set; } = string.Empty;
+
+    public Guid CorrelationId { get; set; }
 }
 
 internal sealed class ExchangeRateRow

@@ -79,6 +79,9 @@ services:
       Authentication__Audience: sgt-api
       DevelopmentSeed__TenantId: ${SGT_TENANT_ID:-}
       DevelopmentSeed__SuperAdminUserId: ${SGT_SUPERADMIN_USER_ID:-}
+      # "--seed-demo" ile çalıştırıldığında (yalnızca build/demo.sh; DemoSeed__Enabled=true komutla verilir)
+      DemoSeed__TenantId: ${SGT_TENANT_ID:-}
+      DemoSeed__Scale: ${SGT_DEMO_SCALE:-Full}
       Security__PersonalDataKey: ${SGT_PERSONAL_DATA_KEY:?deploy/.env eksik}
       Security__BlindIndexKey: ${SGT_BLIND_INDEX_KEY:?deploy/.env eksik}
     ports:

@@ -18,4 +18,10 @@ public static class ConfigurationErrors
 
     public static readonly Error TooManyDecimals =
         new("Configuration.TooManyDecimals", "Kur en çok 6 ondalık basamak içerebilir.");
+
+    public static readonly Error InvalidMarkerCode =
+        new("Configuration.InvalidMarkerCode", "İşaret kodu 2-50 karakter (büyük harf, rakam, _) olmalıdır.");
+
+    public static readonly Error MarkerAlreadySet =
+        new("Configuration.MarkerAlreadySet", "Bu işaret bu tenant'ta zaten konmuş.", ErrorKind.Conflict);
 }

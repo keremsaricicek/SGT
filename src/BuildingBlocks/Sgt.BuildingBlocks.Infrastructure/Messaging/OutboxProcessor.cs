@@ -14,7 +14,11 @@ public sealed class OutboxProcessor<TContext>(
     IClock clock)
     where TContext : DbContext
 {
-    public async Task<int> ProcessBatch(int batchSize, CancellationToken ct)
+    /// <summary>Ele alınan olay sayısı (başarılı + hatalı); arka plan servisi boşta beklemeye karar vermek için kullanır.</summary>
+    public async Task<int> ProcessBatch(int batchSize, CancellationToken ct) => (await Process(batchSize, ct)).Total;
+
+    /// <summary>Bir partiyi işler; dağıtılan ve hata alıp ertelenen olayları ayrı sayar.</summary>
+    public async Task<OutboxBatchResult> Process(int batchSize, CancellationToken ct)
     {
         await using var scope = scopes.CreateAsyncScope();
         var db = scope.ServiceProvider.GetRequiredService<TContext>();
@@ -37,6 +41,7 @@ public sealed class OutboxProcessor<TContext>(
             .ToListAsync(ct);
 #pragma warning restore EF1003
 
+        var failed = 0;
         foreach (var message in batch)
         {
             try
@@ -49,11 +54,18 @@ public sealed class OutboxProcessor<TContext>(
 #pragma warning restore CA1031
             {
                 message.MarkFailed($"{e.GetType().Name}: {e.Message}", clock.UtcNow);
+                failed++;
             }
         }
 
         await db.SaveChangesAsync(ct);
         await transaction.CommitAsync(ct);
-        return batch.Count;
+        return new OutboxBatchResult(batch.Count - failed, failed);
     }
+}
+
+/// <summary>Bir partinin sonucu: dağıtılan ve hata alıp yeniden denemeye bırakılan olaylar.</summary>
+public sealed record OutboxBatchResult(int Dispatched, int Failed)
+{
+    public int Total => Dispatched + Failed;
 }
