@@ -102,11 +102,21 @@ public sealed class DemoRun
         return items[_random.Next(items.Count)];
     }
 
-    /// <summary>Tohumdan türeyen kimlik (idempotency anahtarı, correlation): aynı çalıştırma aynı kimliği verir.</summary>
+    /// <summary>
+    /// Tohumdan türeyen kimlik (idempotency anahtarı, correlation): aynı çalıştırma aynı kimliği verir.
+    /// Tenant kimliğiyle karıştırılır; aynı veritabanındaki iki demo tenant'ı aynı anahtarı üretmez.
+    /// </summary>
     public Guid NextGuid()
     {
         Span<byte> bytes = stackalloc byte[16];
+        Span<byte> tenant = stackalloc byte[16];
         _random.NextBytes(bytes);
+        Tenant.Value.TryWriteBytes(tenant);
+        for (var i = 0; i < bytes.Length; i++)
+        {
+            bytes[i] ^= tenant[i];
+        }
+
         bytes[7] = (byte)((bytes[7] & 0x0F) | 0x40); // sürüm 4
         bytes[8] = (byte)((bytes[8] & 0x3F) | 0x80); // RFC 4122 varyantı
         return new Guid(bytes);

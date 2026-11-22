@@ -47,8 +47,8 @@ public sealed class SyntheticNames(int seed)
         var isLocal = set.Nationality is "TR" or "CY";
         var type = isLocal ? DocumentType.NationalId : DocumentType.Passport;
         var document = (isLocal ? "DM" : "DP") + sequence.ToString("D8", CultureInfo.InvariantCulture);
-        var phone = _random.Next(3) == 0 ? null : "+90548" + _random.Next(1_000_000, 9_999_999).ToString(CultureInfo.InvariantCulture);
-        return new SyntheticPerson(first, last, birth, set.Nationality, type, document, phone);
+        // Telefon üretilmez: rastgele numara gerçek bir aboneye ait olabilir (KK7).
+        return new SyntheticPerson(first, last, birth, set.Nationality, type, document, Phone: null);
     }
 
     /// <summary>Kart numarası: "SGT" + 8 hane, oyuncu sırasından türetilir (benzersiz).</summary>

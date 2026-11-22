@@ -6,11 +6,9 @@ namespace Sgt.DemoData.Steps;
 /// Geçmiş günlerin hareketi (Spec 012 KK3–KK4). Her gün, KKTC yerel saatiyle:
 /// 09:00 kurlar · 10:00 kasa vardiyası · 11:30 masalar açılır ·
 /// 12:30–23:15 oyuncu oturumları (döviz, çip satışı, rating, çip bozdurma) · 23:30 masalar kapanır · 23:40 vardiya kapanır ·
-/// 23:45 slot sayaç okuması · 23:47 comp talep/karar (önceki günlerin puanıyla) · 23:50 tüm outbox'lar boşaltılır
-/// (rating → puan, denetim kaydı). Boşaltma ertesi günün hareketiyle paralel sürer (KK8 süresi); comp'lar ve son adım
-/// onu bekler, böylece puan bakiyesi okunmadan önce kesinleşir.
+/// ardından gün sonu (<see cref="DayClosing"/>).
 /// </summary>
-public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, SlotMeterRound slots, CompDesk comps, DemoOutbox outbox) : IDemoStep
+public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, DayClosing closing) : IDemoStep
 {
     private const double OpenTableShare = 0.7;
     private const double ExchangeShare = 0.4;
@@ -30,7 +28,7 @@ public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, Sl
     {
         ArgumentNullException.ThrowIfNull(run);
         var ratedBefore = new List<Guid>();
-        var drain = new DrainHolder();
+        var drain = new BackgroundDrain();
         foreach (var day in run.Timeline.PastDays)
         {
             var plan = new DayPlan();
@@ -39,11 +37,10 @@ public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, Sl
             ratedBefore.AddRange(rated.Except(ratedBefore).ToList());
         }
 
-        await drain.Pending;
-        await outbox.DrainAll(ct);
+        await closing.Finish(drain, ct);
     }
 
-    private List<Guid> PlanDay(DemoRun run, DateOnly day, DayPlan plan, List<Guid> ratedBefore, DrainHolder drain)
+    private List<Guid> PlanDay(DemoRun run, DateOnly day, DayPlan plan, List<Guid> ratedBefore, BackgroundDrain drain)
     {
         DateTimeOffset At(int hour, int minute) => DemoTimeline.At(day, new TimeOnly(hour, minute));
 
@@ -72,26 +69,9 @@ public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, Sl
         }
 
         plan.At(At(23, 40), ct => cage.CloseShift(run, shift.Id, ct));
-        var readAt = At(23, 45);
-        plan.At(readAt, ct => slots.Read(run, readAt, ct));
-
         var compCount = ratedBefore.Count == 0 ? 0 : Math.Max(1, RatingsPerDay(run) / RatingsPerComp);
         var compPlayers = Enumerable.Range(0, compCount).Select(_ => run.Pick(ratedBefore)).ToList();
-        plan.At(At(23, 47), async ct =>
-        {
-            await drain.Pending; // dünkü puanlar yazılmış olmalı
-            foreach (var player in compPlayers)
-            {
-                await comps.Offer(run, player, ct);
-            }
-        });
-
-        // Beklenmez: bir sonraki günün hareketiyle paralel boşalır.
-        plan.At(At(23, 50), ct =>
-        {
-            drain.Pending = outbox.DrainAll(ct);
-            return Task.CompletedTask;
-        });
+        closing.Schedule(run, day, plan, compPlayers, drain);
         return rated;
     }
 
@@ -182,11 +162,6 @@ public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, Sl
     private sealed class ShiftHolder
     {
         public Guid Id { get; set; }
-    }
-
-    private sealed class DrainHolder
-    {
-        public Task Pending { get; set; } = Task.CompletedTask;
     }
 
     private sealed class RatingHolder

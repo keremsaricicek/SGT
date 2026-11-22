@@ -52,7 +52,9 @@ public static partial class DemoSeedCommand
             await scope.ServiceProvider.GetRequiredService<DemoDataGenerator>().Run(options, ct);
             return SuccessExitCode;
         }
-        catch (DemoSeedException e)
+#pragma warning disable CA1031 // Komut satırı aracı: her hata loglanır ve sözleşmedeki çıkış kodu 1 döner (contracts/demo-cli.md).
+        catch (Exception e) when (e is not OperationCanceledException)
+#pragma warning restore CA1031
         {
             LogFailed(logger, e);
             return FailedExitCode;
