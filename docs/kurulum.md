@@ -315,3 +315,42 @@ dotnet Sgt.Api.dll --migrate        # tüm modüllerin şemasını günceller ve
 
 Windows sunucuda API, "SGT API" adlı Windows servisi olarak kurulabilir:
 `sc.exe create "SGT API" binPath= "C:\sgt\Sgt.Api.exe"` (ortam değişkenleri sistem düzeyinde tanımlanır).
+
+## Demo ortamı (Spec 012)
+
+Satış ve deneme için, tamamen **sahte** (sentetik) veriyle dolu bir casino tek komutla açılır.
+Gerçek kişi, kart veya üretim verisi yoktur; isimler sabit listelerden üretilir.
+
+```bash
+build/demo.sh up       # PostgreSQL + Keycloak + API; migration ve demo verisi (ilk açılış birkaç dakika)
+build/demo.sh down     # kapatır, veri kalır
+build/demo.sh reset    # TÜM VERİYİ SİLER, sıfırdan kurar ve yükler
+```
+
+- `deploy/.env` yoksa `demo.sh` onu **yalnızca demo için** rastgele şifre ve anahtarlarla üretir
+  (OTP isteğe bağlı: `SGT_OTP_REQUIREMENT=CONDITIONAL`). Bu dosya pilot/üretimde kullanılmaz.
+- Veri: 500 oyuncu (kartlı, ~%2'si kısıtlı), 40 masa, 200 slot, TRY/EUR/GBP/USD kurları, puan kuralı ve
+  son 30 günün hareketi (kasa vardiyaları, çip satış/bozdurma, döviz, rating'ler ve puanları, slot sayaçları,
+  comp talep/onayları). Her şey modüllerin kendi komutlarıyla yazılır; günlük özet son 30 günün her günü doludur.
+- Aynı komut aynı veriyi üretir; veri zaten varsa ikinci çalıştırma hiçbir şey yazmaz.
+- Daha küçük veri için `deploy/.env` içinde `SGT_DEMO_SCALE=Small`.
+
+Demo kullanıcıları (şifreler `deploy/.env` içinde):
+
+| Kullanıcı | Rol | Şifre değişkeni |
+|---|---|---|
+| `superadmin` | Süper admin (yetki paneli) | `SGT_DEV_SUPERADMIN_PASSWORD` |
+| `kasiyer1` | Kasiyer | `SGT_DEV_KASIYER1_PASSWORD` |
+| `mudur` | Casino müdürü | `SGT_DEMO_PASSWORD` |
+| `pitboss` | Pit boss | `SGT_DEMO_PASSWORD` |
+| `slotmudur` | Slot müdürü | `SGT_DEMO_PASSWORD` |
+| `host` | Host | `SGT_DEMO_PASSWORD` |
+
+Docker olmadan (yerel PostgreSQL ile) yalnızca veriyi yüklemek için:
+
+```bash
+dotnet run --project src/Bootstrapper/Sgt.Api -- --seed-demo   # 0 başarı, 1 hata, 2 Production'da reddedildi
+```
+
+Ayarlar: `DemoSeed:TenantId` (varsayılan geliştirme tenant'ı), `DemoSeed:Scale` (`Full` | `Small`).
+`--seed-demo` Production ortamında çalışmaz.
