@@ -1,9 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../app/services.dart';
-import '../../shared/load_state.dart';
-import '../../ui/sgt_widgets.dart';
+import '../../../app/services.dart';
+import '../../../shared/load_state.dart';
+import '../../../ui/sgt_widgets.dart';
 import 'floor_view_models.dart';
 
 /// Slot salonu / makine durumu (S1, KK12). Salt okunur; alana göre gruplu.

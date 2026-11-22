@@ -2,13 +2,13 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../app/services.dart';
-import '../../shared/load_state.dart';
-import '../../theme/sgt_theme.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
-import 'player_header.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../app/services.dart';
+import '../../../shared/load_state.dart';
+import '../../../theme/sgt_theme.dart';
+import '../../../theme/sgt_tokens.dart';
+import '../../../ui/sgt_widgets.dart';
+import '../../../ui/player_header.dart';
 import 'player_view_model.dart';
 
 /// Oyuncu: şu an nerede (O2) ve puan (L1). Bölümler yetkiye göre görünür.
@@ -30,7 +30,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     super.didChangeDependencies();
     if (_vm == null) {
       final s = AppServices.of(context);
-      _vm = PlayerViewModel(playerId: widget.playerId, players: s.players, loyalty: s.loyalty, access: s.access.access)..load();
+      _vm = PlayerViewModel(playerId: widget.playerId, players: s.players, loyalty: s.loyaltyPoints, access: s.access.access)..load();
     }
   }
 

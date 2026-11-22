@@ -1,9 +1,9 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../theme/sgt_theme.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
+import '../api/generated/sgt_api.g.dart';
+import '../theme/sgt_theme.dart';
+import '../theme/sgt_tokens.dart';
+import 'sgt_widgets.dart';
 
 /// Seçilen oyuncunun kimlik satırı. Aramadan gelen özet yoksa (doğrudan bağlantı) yalnızca başlık gösterilir.
 class PlayerHeader extends StatelessWidget {

@@ -2,13 +2,13 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../app/services.dart';
-import '../../l10n/gen/app_localizations.dart';
-import '../../shared/load_state.dart';
-import '../../theme/sgt_theme.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../app/services.dart';
+import '../../../l10n/gen/app_localizations.dart';
+import '../../../shared/load_state.dart';
+import '../../../theme/sgt_theme.dart';
+import '../../../theme/sgt_tokens.dart';
+import '../../../ui/sgt_widgets.dart';
 import 'player_search_view_model.dart';
 
 /// Aramanın hangi menüden açıldığı: başlığı ve seçimden sonra gidilecek ekranı belirler.

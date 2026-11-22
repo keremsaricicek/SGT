@@ -1,16 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../shared/load_state.dart';
-
-class ReportsRepository {
-  const ReportsRepository(this._api);
-
-  final SgtApiClient _api;
-
-  /// [date] null ise sunucu bugünü (KKTC iş günü) döndürür.
-  Future<DailySummary> daily(DateTime? date) => _api.getReportsDaily(date: date);
-}
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../shared/load_state.dart';
+import '../domain/reports_repository.dart';
 
 /// Günlük casino özeti (R1, KK10).
 class DailySummaryViewModel extends ChangeNotifier {

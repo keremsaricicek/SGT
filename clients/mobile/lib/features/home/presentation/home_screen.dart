@@ -2,13 +2,13 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../access/user_access.dart';
-import '../../app/mobile_screens.dart';
-import '../../app/services.dart';
-import '../../shared/load_state.dart';
-import '../../theme/sgt_theme.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
+import '../../../access/user_access.dart';
+import '../../../app/mobile_screens.dart';
+import '../../../app/services.dart';
+import '../../../shared/load_state.dart';
+import '../../../theme/sgt_theme.dart';
+import '../../../theme/sgt_tokens.dart';
+import '../../../ui/sgt_widgets.dart';
 
 /// Ana menü (Y2, KK3): yalnızca yetkili ve mobilde karşılığı olan ekranlar, alanlara göre gruplu.
 class HomeScreen extends StatelessWidget {

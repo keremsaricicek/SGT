@@ -1,20 +1,9 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../shared/load_state.dart';
-
-class FloorRepository {
-  const FloorRepository(this._api);
-
-  final SgtApiClient _api;
-
-  Future<List<TableView>> tables() => _api.getFloorTables();
-
-  Future<List<RunningRatingView>> runningRatings() => _api.getFloorRatingsRunning();
-
-  Future<List<SlotFloorRow>> slots() => _api.getFloorSlots();
-}
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../shared/load_state.dart';
+import '../domain/floor_repository.dart';
 
 /// Masa satırı: masa + üzerinde süren rating sayısı.
 class FloorTableRow {

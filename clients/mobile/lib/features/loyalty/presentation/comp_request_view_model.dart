@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../api/api_exception.dart';
-import '../../api/generated/sgt_api.g.dart';
-import 'loyalty_repository.dart';
+import '../../../api/api_exception.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../domain/loyalty_repository.dart';
 
 enum CompField { points, text, reason }
 

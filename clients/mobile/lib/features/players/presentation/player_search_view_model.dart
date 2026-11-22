@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../shared/load_state.dart';
-import 'players_repository.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../shared/load_state.dart';
+import '../domain/players_repository.dart';
 
 /// Oyuncu arama (O1, KK6). En az 2 karakter; daha kısa aramada istek atılmaz.
 class PlayerSearchViewModel extends ChangeNotifier {

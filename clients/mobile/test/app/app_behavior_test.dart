@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:sgt_mobile/app/router.dart';
-import 'package:sgt_mobile/features/login/login_screen.dart';
+import 'package:sgt_mobile/features/login/presentation/login_screen.dart';
 import 'package:sgt_mobile/theme/sgt_theme.dart';
 import 'package:sgt_mobile/theme/sgt_tokens.dart';
 

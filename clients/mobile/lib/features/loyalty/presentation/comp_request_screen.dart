@@ -2,11 +2,11 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../app/services.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
-import '../players/player_header.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../app/services.dart';
+import '../../../theme/sgt_tokens.dart';
+import '../../../ui/sgt_widgets.dart';
+import '../../../ui/player_header.dart';
 import 'comp_request_view_model.dart';
 
 /// Comp talebi (L2, KK9). Onay ekranı yok: bekleyen talepleri listeleyen API ucu yok (spec 014, eksikler).

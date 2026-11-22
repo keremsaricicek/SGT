@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 
-import '../../access/screen_codes.dart';
-import '../../access/user_access.dart';
-import '../../api/generated/sgt_api.g.dart';
-import '../../shared/load_state.dart';
-import '../loyalty/loyalty_repository.dart';
-import 'players_repository.dart';
+import '../../../access/screen_codes.dart';
+import '../../../access/user_access.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../shared/load_state.dart';
+import '../../../core/loyalty_points.dart';
+import '../domain/players_repository.dart';
 
 /// Seçilen oyuncu: "şu an nerede" (O2, KK7) ve puan (L1, KK8). Yetkisi olmayan bölüm yüklenmez.
 class PlayerViewModel extends ChangeNotifier {
@@ -20,7 +20,7 @@ class PlayerViewModel extends ChangeNotifier {
 
   final String playerId;
   final PlayersRepository _players;
-  final LoyaltyRepository _loyalty;
+  final LoyaltyPointsReader _loyalty;
   final bool showLocation;
   final bool showLoyalty;
   final bool canRequestComp;

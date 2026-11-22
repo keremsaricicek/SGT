@@ -1,11 +1,11 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../app/services.dart';
-import '../../auth/auth_service.dart';
-import '../../theme/sgt_theme.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
+import '../../../app/services.dart';
+import '../../../auth/auth_service.dart';
+import '../../../theme/sgt_theme.dart';
+import '../../../theme/sgt_tokens.dart';
+import '../../../ui/sgt_widgets.dart';
 
 /// Giriş (Y1, KK1). Şifre alanı yoktur; Keycloak sayfası sistem tarayıcısında açılır.
 class LoginScreen extends StatefulWidget {

@@ -4,13 +4,15 @@ import 'package:sgt_mobile/access/access_controller.dart';
 import 'package:sgt_mobile/access/user_access.dart';
 import 'package:sgt_mobile/api/api_exception.dart';
 import 'package:sgt_mobile/api/generated/sgt_api.g.dart';
-import 'package:sgt_mobile/features/floor/floor_view_models.dart';
-import 'package:sgt_mobile/features/loyalty/comp_request_view_model.dart';
-import 'package:sgt_mobile/features/loyalty/loyalty_repository.dart';
-import 'package:sgt_mobile/features/players/player_search_view_model.dart';
-import 'package:sgt_mobile/features/players/player_view_model.dart';
-import 'package:sgt_mobile/features/players/players_repository.dart';
-import 'package:sgt_mobile/features/reports/daily_summary_view_model.dart';
+import 'package:sgt_mobile/features/floor/data/api_floor_repository.dart';
+import 'package:sgt_mobile/features/floor/presentation/floor_view_models.dart';
+import 'package:sgt_mobile/features/loyalty/presentation/comp_request_view_model.dart';
+import 'package:sgt_mobile/features/loyalty/data/api_loyalty_repository.dart';
+import 'package:sgt_mobile/features/players/presentation/player_search_view_model.dart';
+import 'package:sgt_mobile/features/players/presentation/player_view_model.dart';
+import 'package:sgt_mobile/features/players/data/api_players_repository.dart';
+import 'package:sgt_mobile/features/reports/data/api_reports_repository.dart';
+import 'package:sgt_mobile/features/reports/presentation/daily_summary_view_model.dart';
 import 'package:sgt_mobile/shared/load_state.dart';
 
 import '../support/fake_transport.dart';
@@ -51,7 +53,7 @@ void main() {
 
   group('Oyuncu arama (KK6)', () {
     test('2 karakterden kısa aramada istek atılmaz', () async {
-      final vm = PlayerSearchViewModel(PlayersRepository(api));
+      final vm = PlayerSearchViewModel(ApiPlayersRepository(api));
       await vm.search(' d ');
       expect(t.sent, isEmpty);
       expect(vm.tooShort, isTrue);
@@ -59,7 +61,7 @@ void main() {
 
     test('sonuçlar listelenir, sorgu kırpılır', () async {
       t.on('GET', '/api/v1/players', (q, _) => q['q'] == 'den' ? s.players : const []);
-      final vm = PlayerSearchViewModel(PlayersRepository(api));
+      final vm = PlayerSearchViewModel(ApiPlayersRepository(api));
       await vm.search(' den ');
       final r = vm.results as Loaded<List<PlayerSummary>>;
       expect(r.value.map((p) => p.playerNumber), ['P-004127', 'P-004188', 'P-005310']);
@@ -67,7 +69,7 @@ void main() {
 
     test('yetki hatası Failed(forbidden) olur', () async {
       t.fail('GET', '/api/v1/players', ApiFailure.forbidden);
-      final vm = PlayerSearchViewModel(PlayersRepository(api));
+      final vm = PlayerSearchViewModel(ApiPlayersRepository(api));
       await vm.search('deniz');
       expect((vm.results as Failed).error.kind, ApiFailure.forbidden);
     });
@@ -75,7 +77,7 @@ void main() {
 
   group('Oyuncu: konum ve puan (KK7, KK8)', () {
     PlayerViewModel vm(UserAccess access) =>
-        PlayerViewModel(playerId: s.p1, players: PlayersRepository(api), loyalty: LoyaltyRepository(api), access: access);
+        PlayerViewModel(playerId: s.p1, players: ApiPlayersRepository(api), loyalty: ApiLoyaltyRepository(api), access: access);
 
     test('oyundaysa masa kodu ve başlangıç; puan bakiyesi ve hareketler', () async {
       t.reply('GET', '/api/v1/floor/players/${s.p1}/location', s.location);
@@ -117,7 +119,7 @@ void main() {
     late int ids;
     CompRequestViewModel vm() {
       ids = 0;
-      return CompRequestViewModel(playerId: s.p1, repository: LoyaltyRepository(api), newId: () => 'req-${++ids}');
+      return CompRequestViewModel(playerId: s.p1, repository: ApiLoyaltyRepository(api), newId: () => 'req-${++ids}');
     }
 
     test('zorunlu alanlar ve pozitif puan doğrulanır, istek atılmaz', () async {
@@ -187,7 +189,7 @@ void main() {
   group('Günlük özet (KK10)', () {
     test('tarih verilmezse parametre gönderilmez; seçilen tarih yyyy-MM-dd gider', () async {
       t.reply('GET', '/api/v1/reports/daily', s.daily);
-      final vm = DailySummaryViewModel(ReportsRepository(api));
+      final vm = DailySummaryViewModel(ApiReportsRepository(api));
       await vm.load();
       expect(t.sent.last.query['date'], isNull);
       final d = (vm.summary as Loaded<DailySummary>).value;
@@ -203,7 +205,7 @@ void main() {
     test('masalar açık önce sıralanır, süren rating sayısı masaya eşlenir', () async {
       t.reply('GET', '/api/v1/floor/tables', s.tables());
       t.reply('GET', '/api/v1/floor/ratings/running', s.runningRatings());
-      final vm = TablesViewModel(FloorRepository(api), canSeeRatings: true);
+      final vm = TablesViewModel(ApiFloorRepository(api), canSeeRatings: true);
       await vm.load();
       final o = (vm.overview as Loaded<TablesOverview>).value;
       expect(o.rows.map((r) => r.table.code), ['BC-01', 'BJ-01', 'BJ-02', 'BJ-03', 'RL-01', 'PK-01', 'RL-02']);
@@ -213,7 +215,7 @@ void main() {
 
     test('rating yetkisi yoksa rating ucu çağrılmaz', () async {
       t.reply('GET', '/api/v1/floor/tables', s.tables());
-      final vm = TablesViewModel(FloorRepository(api), canSeeRatings: false);
+      final vm = TablesViewModel(ApiFloorRepository(api), canSeeRatings: false);
       await vm.load();
       expect(t.count('GET', '/api/v1/floor/ratings/running'), 0);
       expect((vm.overview as Loaded<TablesOverview>).value.rows.first.runningRatings, isNull);
@@ -221,7 +223,7 @@ void main() {
 
     test('slotlar alana göre gruplanır, toplamlar Decimal', () async {
       t.reply('GET', '/api/v1/floor/slots', s.slots());
-      final vm = SlotsViewModel(FloorRepository(api));
+      final vm = SlotsViewModel(ApiFloorRepository(api));
       await vm.load();
       final areas = (vm.areas as Loaded<List<SlotArea>>).value;
       expect(areas.map((a) => a.name), ['Salon A', 'Salon B (VIP)']);

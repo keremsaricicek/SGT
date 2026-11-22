@@ -1,12 +1,12 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../api/generated/sgt_api.g.dart';
-import '../../app/services.dart';
-import '../../shared/load_state.dart';
-import '../../theme/sgt_theme.dart';
-import '../../theme/sgt_tokens.dart';
-import '../../ui/sgt_widgets.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../../../app/services.dart';
+import '../../../shared/load_state.dart';
+import '../../../theme/sgt_theme.dart';
+import '../../../theme/sgt_tokens.dart';
+import '../../../ui/sgt_widgets.dart';
 import 'daily_summary_view_model.dart';
 
 /// Günlük casino özeti (R1, KK10).

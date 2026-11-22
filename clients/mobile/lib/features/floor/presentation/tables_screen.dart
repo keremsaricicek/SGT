@@ -1,10 +1,10 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../access/screen_codes.dart';
-import '../../app/services.dart';
-import '../../shared/load_state.dart';
-import '../../ui/sgt_widgets.dart';
+import '../../../access/screen_codes.dart';
+import '../../../app/services.dart';
+import '../../../shared/load_state.dart';
+import '../../../ui/sgt_widgets.dart';
 import 'floor_view_models.dart';
 
 /// Masa haritası / pit görünümü (C1, KK11). Salt okunur. Masa konum bilgisi API'de olmadığı için liste.

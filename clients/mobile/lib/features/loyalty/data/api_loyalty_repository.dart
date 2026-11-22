@@ -1,12 +1,14 @@
-import '../../api/generated/sgt_api.g.dart';
+import '../../../api/generated/sgt_api.g.dart';
+import '../domain/loyalty_repository.dart';
 
-/// Puan (L1) ve comp talebi (L2).
-class LoyaltyRepository {
-  const LoyaltyRepository(this._api);
+class ApiLoyaltyRepository implements LoyaltyRepository {
+  const ApiLoyaltyRepository(this._api);
 
   final SgtApiClient _api;
 
+  @override
   Future<LoyaltySummary> summary(String playerId) => _api.getLoyaltyPlayersByPlayerId(playerId: playerId);
 
+  @override
   Future<CreatedId> requestComp(PointsRequest request) => _api.postLoyaltyComps(body: request);
 }
