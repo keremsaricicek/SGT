@@ -21,6 +21,7 @@ public static class DemoDataServiceCollectionExtensions
         services.AddSingleton<PitDesk>();
         services.AddSingleton<SlotMeterRound>();
         services.AddSingleton<CompDesk>();
+        services.AddTransient<IDemoStep, IdentitySeeder>();
         services.AddTransient<IDemoStep, ConfigurationSeeder>();
         services.AddTransient<IDemoStep, LoyaltySeeder>();
         services.AddTransient<IDemoStep, PlayerSeeder>();
