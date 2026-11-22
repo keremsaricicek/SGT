@@ -14,7 +14,7 @@ public sealed record OutboxBacklog(int Pending, int DeadLettered)
 
 /// <summary>
 /// Bir modülün outbox'ını arka plan servisini beklemeden o an boşaltır (Spec 012 R3: demo verisi üretimi).
-/// Üretim DI'ında kayıtlı değildir; yalnızca <see cref="MessagingServiceCollectionExtensions.AddOutboxDrainers"/> ile açılır.
+/// Üretim DI'ında kayıtlı değildir; yalnızca <see cref="OutboxDrainerRegistration.AddOutboxDrainers"/> ile açılır.
 /// </summary>
 public interface IOutboxDrainer
 {
@@ -26,8 +26,11 @@ public interface IOutboxDrainer
     Task<OutboxBacklog> Backlog(TenantId tenantId, CancellationToken ct);
 }
 
-/// <summary>Kayıtlı tüm modül outbox'larının boşaltıcıları.</summary>
-public sealed class OutboxDrainers(IEnumerable<IOutboxDrainer> drainers) : List<IOutboxDrainer>(drainers);
+/// <summary>Kayıtlı tüm modül outbox'larının boşaltıcıları (salt okunur).</summary>
+public sealed class OutboxDrainers(IEnumerable<IOutboxDrainer> drainers)
+{
+    public IReadOnlyList<IOutboxDrainer> All { get; } = drainers.ToList();
+}
 
 /// <summary>
 /// <see cref="OutboxProcessor{TContext}.Process"/> olay kalmayana kadar çağırır. Hata alan olay geri çekilme süresi kadar

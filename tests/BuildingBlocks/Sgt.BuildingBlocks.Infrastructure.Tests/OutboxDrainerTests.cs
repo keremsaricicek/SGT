@@ -59,11 +59,11 @@ public sealed class OutboxDrainerTests(MessagingFixture fx) : IClassFixture<Mess
     {
         var services = new ServiceCollection();
         services.AddSingleton<IClock>(fx.Clock);
-        services.AddOutboxDrainers();
+        OutboxDrainerRegistration.AddOutboxDrainers(services);
         services.AddOutbox<TestDbContext>("A");
 
         using var provider = services.BuildServiceProvider();
-        var drainer = Assert.Single(provider.GetRequiredService<OutboxDrainers>());
+        var drainer = Assert.Single(provider.GetRequiredService<OutboxDrainers>().All);
         Assert.Equal("A", drainer.Module);
     }
 

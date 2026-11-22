@@ -141,6 +141,7 @@ public sealed class ArchitectureTests
             "Sgt.BuildingBlocks.Infrastructure.Messaging.IOutboxDrainer",
             "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainers",
             "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainer`1",
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainerRegistration",
         ];
         var assemblies = ModuleCatalog.All
             .SelectMany(m => new[] { m.Contracts, m.Domain, m.Application, m.Infrastructure, m.Api })

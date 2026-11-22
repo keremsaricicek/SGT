@@ -32,6 +32,8 @@ public static class DemoDataServiceCollectionExtensions
         services.AddTransient<IDemoStep, FloorSeeder>();
         services.AddTransient<IDemoStep, DaySimulator>();
         services.AddTransient<IDemoStep, LiveFloor>();
+        services.AddTransient<DemoSeedGate>();
+        services.AddTransient<DemoCompletion>();
         services.AddTransient<DemoDataGenerator>();
         return services;
     }
