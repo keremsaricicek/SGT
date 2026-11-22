@@ -31,7 +31,16 @@ public sealed class SetTenantMarkerHandler(
 
         markers.Add(m);
         outbox.Add(new TenantMarkerSetV1(Guid.NewGuid(), m.Audit.CorrelationId, m.SetAt, m.TenantId, m.Audit, m.Code));
-        await unitOfWork.Commit(ct);
+        try
+        {
+            await unitOfWork.Commit(ct);
+        }
+        catch (ConcurrencyConflictException)
+        {
+            // Bu commit'teki tek benzersiz kayıt işarettir: eşzamanlı başka bir istek aynı işareti koymuştur.
+            return ConfigurationErrors.MarkerAlreadySet;
+        }
+
         return Result.Success();
     }
 }
