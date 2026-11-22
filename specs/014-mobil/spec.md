@@ -1,7 +1,7 @@
 # Spec 014: S Plus mobil uygulama (A1 MVP)
 
 Modül: istemci (`clients/mobile`, Flutter) · Ürün: S Plus · Durum: Uygulandı (21.11.2026) · Dal: `faz1/mobil-a1`
-Ekranlar: Y1, Y2, O1, O2, L1, L2 (talep), C1, S1, R1 · Kararlar: `docs/kararlar.md` 2, 4, 9a · ADR-0003
+Ekranlar: Y1, Y2, O1, O2, L1, L2 (talep), C1, S1, R1 · Kararlar: `docs/kararlar.md` 2, 4, 9a · ADR-0003, ADR-0008
 
 ## Amaç
 Casino müdürü, pit/slot yöneticisi ve host sahada telefondan oyuncuyu bulur, nerede oynadığını ve puanını görür,
@@ -21,7 +21,8 @@ kullanır ve Windows/web ile aynı yetki modelini izler.
 - **KK2 Token:** Erişim token'ı yalnızca bellekte; yenileme token'ı yalnızca `flutter_secure_storage`
   (Android Keystore / iOS Keychain) içinde. `sub` veya `tenant_id` claim'i eksik token reddedilir, oturum açılmaz.
   Süresi dolmaya 30 sn kalan token istekten önce yenilenir; yenileme başarısızsa oturum kapanır ve giriş ekranı açılır.
-  Çıkışta saklanan token silinir ve Keycloak oturumu kapatılır.
+  `offline_access` istenmez; yenileme token'ı SSO oturum sınırlarına bağlıdır. Çıkışta saklanan token silinir,
+  yenileme token'ı Keycloak revocation ucunda iptal edilir, sonra Keycloak oturumu kapatılır (ADR-0008).
 - **KK3 Menü:** Menü `GET /api/v1/identity/me/menu` yanıtından kurulur. Yanıtta olmayan ekran menüde görünmez ve
   rotası doğrudan açılsa da "yetkiniz yok" gösterir. Bir eylem düğmesi (ör. comp talebi) yalnızca ilgili eylem
   (`loyalty.comp:request`) menü yanıtında varsa görünür. Mobilde karşılığı olmayan yetkili ekranlar listelenmez.
@@ -44,14 +45,22 @@ kullanır ve Windows/web ile aynı yetki modelini izler.
   masa kodu, oyun, para birimi, min–max, açık/kapalı, o masadaki süren rating sayısı. Salt okunur.
 - **KK12 Slot haritası (S1):** `GET /api/v1/floor/slots`; alana göre gruplu, varlık no, son okuma, bugünkü giren ve kazanç. Salt okunur.
 - **KK13 Para:** Tutarlar `Decimal` ile taşınır ve gösterilir; `double` kullanılmaz. Para birimi kodu her tutarın yanında yazılır.
+  API para alanını metin gönderirse metin kayıpsız çözülür; JSON sayısı gönderirse yalnızca birebir geri dönüşüyorsa
+  (üslü gösterim yok, ölçeklenmiş değer < 2^53) kabul edilir, değilse yanıt "beklenmeyen yanıt" sayılır.
 - **KK14 Tipli API istemcisi:** DTO'lar ve istek fonksiyonları `docs/api/openapi-v1.json` dosyasından `tool/gen_api.dart` ile üretilir;
   elle DTO yazılmaz. Üretilen dosya sözleşmeyle uyumsuzsa test kırılır.
 - **KK15 Dil:** Türkçe (varsayılan) ve İngilizce; tüm ekran metinleri ARB dosyalarındadır.
 - **KK16 Tasarım (9a):** Kurumsal, yoğun liste/tablo düzeni; köşe yarıçapı ≤ 3 px; hap düğme, büyük yuvarlak kart ve süs
   animasyonu yok; koyu ve açık tema. Tüm tema değerleri tek dosyada (`lib/theme/sgt_tokens.dart`).
-- **KK17 Güvenlik (MASVS temel):** Kodda secret yok (adresler `--dart-define`); üretimde HTTPS zorunlu; sertifika sabitleme
-  kancası (`SGT_PINNED_CERT` asset'i verilirse yalnızca o sertifikaya güvenilir); Android'de ekran görüntüsü/son uygulamalar
-  önizlemesi engellenir (FLAG_SECURE).
+- **KK17 Güvenlik (MASVS temel):** Kodda secret yok (adresler `--dart-define`, Android ayarları CI ortam değişkeni);
+  release derleme varsayılan olarak üretim kipindedir ve yalnızca HTTPS kullanır. Sertifika sabitleme (ADR-0008):
+  - Dart HTTP (API ve token iptali): `SGT_PINNED_CERT` PEM'i verilirse yalnızca o sertifikaya güvenilir (Android + iOS).
+  - Android yerel ağ yığını (AppAuth token/yenileme): `network_security_config` pin-set (API ve Keycloak hostu,
+    birincil + yedek SPKI SHA-256), derlemede üretilir; pin'ler verilmeden sürüm derlemesi kırılır.
+  - **iOS sınırı:** AppAuth'un yerel token istekleri (`URLSession`) henüz sabitlenmez (`NSPinnedDomains` açık iş);
+    sistem tarayıcısındaki Keycloak giriş sayfası her iki platformda da sabitleme kapsamı dışındadır.
+  Android: INTERNET izni, yedekleme kapalı, ekran görüntüsü/son uygulamalar önizlemesi engellenir (FLAG_SECURE);
+  sürüm imzası yalnızca CI secret'larından, debug anahtarı yalnızca debug derlemesinde.
 - **KK18 Doğrulama:** `flutter analyze` temiz; `flutter test` yeşil; her ekranın koyu ve açık golden görüntüsü (sentetik veri)
   `docs/ekran-goruntuleri/mobil/` altına kopyalanır.
 
