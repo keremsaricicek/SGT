@@ -267,9 +267,7 @@
         "roles",
         "email"
       ],
-      "optionalClientScopes": [
-        "offline_access"
-      ],
+      "optionalClientScopes": [],
       "protocolMappers": [
         {
           "name": "tenant_id",

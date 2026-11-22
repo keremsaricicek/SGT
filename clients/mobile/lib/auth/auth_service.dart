@@ -70,7 +70,15 @@ class AuthService extends ChangeNotifier {
 
   Future<void> signOut() async {
     final id = _idToken;
+    final rt = _refreshToken;
     await _clear();
+    if (rt != null) {
+      try {
+        await _oidc.revoke(rt);
+      } on Object {
+        // İptal edilemese de token yerelden silindi; SSO oturum süresiyle sona erer.
+      }
+    }
     if (id != null) {
       try {
         await _oidc.endSession(id);

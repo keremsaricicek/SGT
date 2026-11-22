@@ -20,15 +20,18 @@ Future<void> main() async {
   tzdata.initializeTimeZones();
 
   final config = AppConfig.fromEnvironment();
-  final auth = AuthService(
-    oidc: AppAuthOidcClient(OidcSettings(issuer: config.issuer, clientId: config.clientId, redirectUri: config.redirectUri)),
-    store: SecureRefreshTokenStore(),
-  );
   final terminalId = await TerminalId.load(const SecureTerminalIdStore());
   final pinned = config.pinnedCertAsset;
   final client = pinned == null
       ? http.Client()
       : PinnedHttpClientFactory.create((await rootBundle.load(pinned)).buffer.asUint8List());
+  final auth = AuthService(
+    oidc: AppAuthOidcClient(
+      OidcSettings(issuer: config.issuer, clientId: config.clientId, redirectUri: config.redirectUri),
+      http: client,
+    ),
+    store: SecureRefreshTokenStore(),
+  );
 
   const uuid = Uuid();
   final transport = HttpApiTransport(

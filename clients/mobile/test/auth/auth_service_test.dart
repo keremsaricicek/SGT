@@ -36,8 +36,20 @@ class FakeOidc implements OidcClient {
     return next!;
   }
 
+  final calls = <String>[];
+  Object? revokeError;
+
   @override
-  Future<void> endSession(String idToken) async => endedWith = idToken;
+  Future<void> endSession(String idToken) async {
+    calls.add('end:$idToken');
+    endedWith = idToken;
+  }
+
+  @override
+  Future<void> revoke(String refreshToken) async {
+    calls.add('revoke:$refreshToken');
+    if (revokeError != null) throw revokeError!;
+  }
 }
 
 class MemoryStore implements RefreshTokenStore {
@@ -145,6 +157,28 @@ void main() {
     expect(auth.session, isNull);
     expect(store.value, isNull);
     expect(oidc.endedWith, 'id-1');
+  });
+
+  test('çıkış: yenileme token\'ı endSession\'dan önce iptal edilir (revocation)', () async {
+    oidc.next = OidcTokens(accessToken: access(), refreshToken: 'rt-1', idToken: 'id-1');
+    await auth.signIn();
+    await auth.signOut();
+    expect(oidc.calls, ['revoke:rt-1', 'end:id-1']);
+  });
+
+  test('iptal ucu başarısız olsa da yerel oturum kapanır ve endSession denenir', () async {
+    oidc.next = OidcTokens(accessToken: access(), refreshToken: 'rt-1', idToken: 'id-1');
+    await auth.signIn();
+    oidc.revokeError = Exception('ağ yok');
+    await auth.signOut();
+    expect(auth.session, isNull);
+    expect(store.value, isNull);
+    expect(oidc.calls.last, 'end:id-1');
+  });
+
+  test('offline_access istenmez: yenileme token\'ı SSO oturum sınırına bağlı kalır', () {
+    expect(OidcSettings.scopes, isNot(contains('offline_access')));
+    expect(OidcSettings.scopes, containsAll(['openid', 'profile']));
   });
 
   test('401 bildirimi oturumu kapatır ve dinleyicileri uyarır', () async {

@@ -1,4 +1,5 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:http/http.dart' as http;
 
 /// Token üçlüsü (Keycloak yanıtı).
 class OidcTokens {
@@ -17,6 +18,9 @@ abstract interface class OidcClient {
   Future<OidcTokens> refresh(String refreshToken);
 
   Future<void> endSession(String idToken);
+
+  /// Yenileme token'ını sağlayıcıda iptal eder (RFC 7009). Çıkışta endSession'dan önce çağrılır.
+  Future<void> revoke(String refreshToken);
 }
 
 /// Keycloak OIDC ayarları (`--dart-define` ile verilir; kodda adres/secret yok).
@@ -27,15 +31,36 @@ class OidcSettings {
   final String clientId;
   final String redirectUri;
 
-  static const scopes = ['openid', 'profile', 'offline_access'];
+  /// `offline_access` istenmez: yenileme token'ı Keycloak SSO oturum sınırlarına (boşta 30 dk, en çok 10 sa) bağlıdır.
+  static const scopes = ['openid', 'profile'];
+
+  /// Keycloak token iptal ucu.
+  Uri get revocationEndpoint {
+    final base = issuer.endsWith('/') ? issuer.substring(0, issuer.length - 1) : issuer;
+    return Uri.parse('$base/protocol/openid-connect/revoke');
+  }
 }
 
 /// flutter_appauth adaptörü. PKCE'yi AppAuth kütüphanesi üretir; şifre uygulamaya hiç girmez (KK1).
+/// İptal isteği uygulamanın (sertifika sabitlemeli) HTTP istemcisiyle gönderilir.
 class AppAuthOidcClient implements OidcClient {
-  AppAuthOidcClient(this._settings, [FlutterAppAuth? appAuth]) : _appAuth = appAuth ?? const FlutterAppAuth();
+  AppAuthOidcClient(this._settings, {FlutterAppAuth? appAuth, required this._http})
+      : _appAuth = appAuth ?? const FlutterAppAuth();
 
   final OidcSettings _settings;
   final FlutterAppAuth _appAuth;
+  final http.Client _http;
+
+  @override
+  Future<void> revoke(String refreshToken) async {
+    final response = await _http.post(
+      _settings.revocationEndpoint,
+      body: {'token': refreshToken, 'token_type_hint': 'refresh_token', 'client_id': _settings.clientId},
+    );
+    if (response.statusCode != 200) {
+      throw StateError('Token iptali başarısız (${response.statusCode})');
+    }
+  }
 
   @override
   Future<OidcTokens> authorize() async {

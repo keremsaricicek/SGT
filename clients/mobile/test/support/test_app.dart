@@ -31,6 +31,9 @@ class _Oidc implements OidcClient {
 
   @override
   Future<void> endSession(String idToken) async {}
+
+  @override
+  Future<void> revoke(String refreshToken) async {}
 }
 
 class _Store implements RefreshTokenStore {
