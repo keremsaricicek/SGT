@@ -18,7 +18,7 @@ public sealed class RealmUsersTests
         Assert.Equal(RealmUsers.Order(StringComparer.Ordinal), users.Keys.Order(StringComparer.Ordinal));
         foreach (var demo in DemoUsers.All.Where(u => RealmUsers.Contains(u.UserName)))
         {
-            AssertUser(demo, users[demo.UserName], passwordPrefix: "${SGT_");
+            AssertUser(demo, users[demo.UserName], passwordPrefix: "${SGT_", tenant: "00000000-0000-0000-0000-0000000000a1");
         }
     }
 
@@ -33,14 +33,15 @@ public sealed class RealmUsersTests
         Assert.Equal(expected.Select(u => u.UserName).Order(StringComparer.Ordinal), users.Keys.Order(StringComparer.Ordinal));
         foreach (var demo in expected)
         {
-            AssertUser(demo, users[demo.UserName], passwordPrefix: "__SGT_DEMO_PASSWORD__");
+            // Tenant ve şifre build/demo.sh tarafından deploy/.env'den doldurulur.
+            AssertUser(demo, users[demo.UserName], passwordPrefix: "__SGT_DEMO_PASSWORD__", tenant: "__SGT_TENANT_ID__");
         }
     }
 
-    private static void AssertUser(DemoUser demo, JsonElement user, string passwordPrefix)
+    private static void AssertUser(DemoUser demo, JsonElement user, string passwordPrefix, string tenant)
     {
         Assert.Equal(demo.Id.Value, user.GetProperty("id").GetGuid());
-        Assert.Equal("00000000-0000-0000-0000-0000000000a1", user.GetProperty("attributes").GetProperty("tenant_id")[0].GetString());
+        Assert.Equal(tenant, user.GetProperty("attributes").GetProperty("tenant_id")[0].GetString());
         Assert.StartsWith(passwordPrefix, user.GetProperty("credentials")[0].GetProperty("value").GetString(), StringComparison.Ordinal);
     }
 

@@ -73,21 +73,20 @@ require_demo_env() {
 
 # Pilot realm'inde olmayan demo kullanıcıları (mudur, pitboss, slotmudur, host) Keycloak'a eklenir; varsa atlanır.
 import_demo_users() {
-  local rendered
-  rendered="$(mktemp)"
-  chmod 600 "$rendered"
-  P="$(get_var SGT_DEMO_PASSWORD)" awk '{ gsub(/__SGT_DEMO_PASSWORD__/, ENVIRON["P"]); print }' "$DEMO_USERS" > "$rendered"
-  # Yönetici bilgisi konteynere ortam değişkeniyle geçer; kcadm yapılandırması konteyner içinde geçici dosyadadır.
+  # Şablon (şifre + tenant) bellekte doldurulup doğrudan konteynere aktarılır; diskte şifreli kopya kalmaz.
+  # Değerler awk'a ENVIRON ile geçer (demo şifresi ve GUID; gsub için özel karakter içermez).
+  # Yönetici bilgisi konteynere ortam değişkeniyle geçer; kcadm yapılandırması konteyner içinde, trap ile silinir.
   # shellcheck disable=SC2016 # değişkenler bilerek konteyner içinde genişler
-  KC_USER="$(get_var KC_BOOTSTRAP_ADMIN_USERNAME)" KC_PASS="$(get_var KC_BOOTSTRAP_ADMIN_PASSWORD)" \
-    compose exec -T -e KC_USER -e KC_PASS keycloak bash -c '
-      set -euo pipefail
-      cfg="$(mktemp)"
-      /opt/keycloak/bin/kcadm.sh config credentials --config "$cfg" --server http://localhost:8080 --realm master \
-        --user "$KC_USER" --password "$KC_PASS" > /dev/null
-      /opt/keycloak/bin/kcadm.sh create partialImport --config "$cfg" -r sgt -f - > /dev/null
-      rm -f "$cfg"' < "$rendered"
-  rm -f "$rendered"
+  P="$(get_var SGT_DEMO_PASSWORD)" T="$(get_var SGT_TENANT_ID)" \
+    awk '{ gsub(/__SGT_DEMO_PASSWORD__/, ENVIRON["P"]); gsub(/__SGT_TENANT_ID__/, ENVIRON["T"]); print }' "$DEMO_USERS" |
+    KC_USER="$(get_var KC_BOOTSTRAP_ADMIN_USERNAME)" KC_PASS="$(get_var KC_BOOTSTRAP_ADMIN_PASSWORD)" \
+      compose exec -T -e KC_USER -e KC_PASS keycloak bash -c '
+        set -euo pipefail
+        cfg="$(mktemp)"
+        trap "rm -f \"$cfg\"" EXIT
+        /opt/keycloak/bin/kcadm.sh config credentials --config "$cfg" --server http://localhost:8080 --realm master \
+          --user "$KC_USER" --password "$KC_PASS" > /dev/null
+        /opt/keycloak/bin/kcadm.sh create partialImport --config "$cfg" -r sgt -f - > /dev/null'
 }
 
 wait_for_api() {

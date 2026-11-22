@@ -11,7 +11,7 @@
       "lastName": "Mudur",
       "attributes": {
         "tenant_id": [
-          "00000000-0000-0000-0000-0000000000a1"
+          "__SGT_TENANT_ID__"
         ]
       },
       "credentials": [
@@ -36,7 +36,7 @@
       "lastName": "Pitboss",
       "attributes": {
         "tenant_id": [
-          "00000000-0000-0000-0000-0000000000a1"
+          "__SGT_TENANT_ID__"
         ]
       },
       "credentials": [
@@ -61,7 +61,7 @@
       "lastName": "Slotmudur",
       "attributes": {
         "tenant_id": [
-          "00000000-0000-0000-0000-0000000000a1"
+          "__SGT_TENANT_ID__"
         ]
       },
       "credentials": [
@@ -86,7 +86,7 @@
       "lastName": "Host",
       "attributes": {
         "tenant_id": [
-          "00000000-0000-0000-0000-0000000000a1"
+          "__SGT_TENANT_ID__"
         ]
       },
       "credentials": [

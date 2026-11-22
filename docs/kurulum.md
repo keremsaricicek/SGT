@@ -222,6 +222,7 @@ gözden geçirmek, sonra uygulamak. Migration öncesi mutlaka yedek alınır (B-
 
 **Ne yedeklenir:** `sgt_dev` (üretimde SGT veritabanı adı) ve `keycloak` veritabanları. Şifreleme
 anahtarları ayrı yedeklenir (B-6.2).
+`pg_dump` tüm modül şemalarını alır; `configuration.tenant_markers` (kurulum ve demo tamamlanma işaretleri) de yedeğe dahildir.
 
 **Elle yedek:**
 
@@ -334,8 +335,9 @@ build/demo.sh reset --yes   # TÜM VERİYİ SİLER, sıfırdan kurar ve yükler
   son 30 günün hareketi (kasa vardiyaları, çip satış/bozdurma, döviz, rating'ler ve puanları, slot sayaçları,
   comp talep/onayları). Bugün için bir kasa vardiyası açık, birkaç masa açık ve birkaç rating sürüyor.
   Her şey modüllerin kendi komutlarıyla yazılır; günlük özet son 30 günün her günü doludur.
-- Aynı komut aynı veriyi üretir. Yükleme bitince tenant'a "demo tamamlandı" işareti konur; işaret varsa ikinci
-  çalıştırma hiçbir şey yazmaz. İşaret yokken veri varsa (yarım kalmış yükleme) yükleme durur: `reset --yes` önerilir.
+- Aynı komut aynı veriyi üretir. Yükleme ilk yazımda "başladı", bitince "tamamlandı" işaretini koyar
+  (`configuration.tenant_markers`); "tamamlandı" varsa ikinci çalıştırma hiçbir şey yazmaz. "Başladı" var ama
+  "tamamlandı" yoksa (yarım kalmış yükleme) yükleme durur: `reset --yes` önerilir.
 - Daha küçük veri için `deploy/.env` içinde `SGT_DEMO_SCALE=Small`.
 
 Demo kullanıcıları (6 kullanıcı; şifreler `deploy/.env` içinde). `superadmin` ve `kasiyer1` her kurulumun realm'indedir;
