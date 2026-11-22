@@ -3,6 +3,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -25,7 +26,7 @@ namespace Sgt.Api.Tests;
 /// Gerçek host + geçici PostgreSQL veritabanı. Keycloak yerine test kimlik şeması:
 /// istek "X-Test-User" ve "X-Test-Tenant" başlıklarıyla kimlik taşır.
 /// </summary>
-public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
+public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 {
     public static readonly TenantId Tenant = new(Guid.Parse("00000000-0000-0000-0000-0000000000a1"));
     public static readonly UserId SuperAdmin = new(Guid.Parse("00000000-0000-0000-0000-000000000001"));
@@ -94,6 +95,12 @@ public sealed class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             o.DefaultAuthenticateScheme = TestAuthHandler.SchemeName;
             o.DefaultChallengeScheme = TestAuthHandler.SchemeName;
         }));
+        builder.ConfigureTestServices(ConfigureTestServices);
+    }
+
+    /// <summary>Türetilen fabrikalar (ör. demo verisi) host servislerini burada değiştirir.</summary>
+    protected virtual void ConfigureTestServices(IServiceCollection services)
+    {
     }
 }
 
