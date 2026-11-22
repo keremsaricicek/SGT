@@ -55,6 +55,9 @@ API şu an CORS açmıyor; panel ile API farklı adreslerdeyse ya API'de CORS a�
 | `npm run typecheck` | TypeScript strict tip kontrolü |
 | `npm test` | Vitest birim testleri (servisler ve hook'lar, sahte fetch ile) |
 | `npm run gen:api` | `docs/api/openapi-v1.json`'dan tipleri yeniden üretir |
+| `npm run gen:tokens` | `design/tokens/sgt-tokens.json`'tan style-dictionary ile `src/app/tokens.css`, WPF XAML ve Flutter Dart çıktısını üretir (`-- --check`: yalnızca denetler) |
+| `npm run gen:icons` | Kullanılan Fluent UI System Icons çizimlerini `src/shared/ui/icons.generated.ts`'e çıkarır |
+| `node scripts/screenshots.mjs` | Ekran görüntüleri (koyu/açık, 1440×900, sentetik veri) → `docs/ekran-goruntuleri/web/`; ön koşullar betiğin başında |
 
 API sözleşmesi değişince `npm run gen:api` çalıştırılır ve `src/shared/api/generated/schema.d.ts`
 commit edilir. CI, üretilen dosyanın sözleşmeyle aynı olduğunu kontrol eder.
@@ -70,6 +73,14 @@ commit edilir. CI, üretilen dosyanın sözleşmeyle aynı olduğunu kontrol ede
 - **Gerekçe kodu:** Her değişiklik formunda zorunlu gerekçe kodu alanı vardır (ör. `ROLE_SETUP`).
 - **Hatalar:** API'nin döndürdüğü problem ayrıntısı (başlık/ayrıntı) ve işlem kimliği kullanıcıya gösterilir.
 - **Dil:** Türkçe varsayılan, İngilizce seçilebilir (`src/shared/i18n`).
+
+## Tasarım dili (Spec 013)
+
+Kurumsal masaüstü düzeni: uygulama çubuğu, gruplu yan menü (Alt+1…9), ekran araç çubuğu, paneller, yoğun grid ve
+durum çubuğu. Koyu tema varsayılan, açık tema durum çubuğundan seçilir ve tarayıcıda saklanır. Renk ve ölçüler elle
+yazılmaz: tek kaynak `design/tokens/sgt-tokens.json`, kontrast çiftleri `design/tokens/sgt-contrast.json` (WCAG AA,
+testle denetlenir). Köşe yarıçapı en çok 3px; gradyan ve animasyon yok (testle denetlenir). Ortak bileşenler
+`src/shared/ui` altında: `Button`, `Badge`, `DataGrid`, `Dialog`, `Tabs`, `Icon`, `Page`/`Section`, `Amount`.
 
 ## Ekranlar
 

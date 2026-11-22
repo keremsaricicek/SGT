@@ -144,6 +144,34 @@
     [
       "ink",
       "infoBg"
+    ],
+    [
+      "inkSecondary",
+      "canvas"
+    ],
+    [
+      "inkSecondary",
+      "rowHover"
+    ],
+    [
+      "link",
+      "panelHead"
+    ],
+    [
+      "inkMuted",
+      "well"
+    ],
+    [
+      "inkMuted",
+      "rowSelected"
+    ],
+    [
+      "success",
+      "panel"
+    ],
+    [
+      "warning",
+      "panel"
     ]
   ],
   "nonText": [

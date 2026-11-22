@@ -94,6 +94,7 @@ function SearchContent() {
       ) : null}
       <Dialog open={registering} title={t("players.register")} onClose={() => setRegistering(false)}>
         <RegisterPlayerForm
+          onCancel={() => setRegistering(false)}
           onRegistered={(r) => {
             setRegistering(false);
             router.push(routes.player(r.playerId));

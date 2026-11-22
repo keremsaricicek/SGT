@@ -6,6 +6,7 @@
  *   NEXT_PUBLIC_OIDC_AUTHORITY=http://127.0.0.1:9/realms/sgt NEXT_PUBLIC_OIDC_CLIENT_ID=sgt-web \
  *   NEXT_PUBLIC_DEFAULT_TERMINAL=KASA-01 npm run build && npx next start -p 3100
  * Kullanım: node scripts/screenshots.mjs [http://localhost:3100] [çıktı klasörü]
+ * Ortam: SGT_SCREENS=ad1,ad2 (yalnızca bu ekranlar), SGT_VIEWPORT=390x844 (varsayılan 1440x900).
  * Playwright projeye bağımlılık olarak eklenmez; ortamda kurulu olmalıdır (require('playwright')).
  */
 import { mkdirSync } from "node:fs";
@@ -297,7 +298,8 @@ const SCREENS = [
 ];
 
 async function shoot(browser, screen, theme) {
-  const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2, locale: "tr-TR", timezoneId: "Asia/Famagusta" });
+  const [width, height] = (process.env.SGT_VIEWPORT ?? "1440x900").split("x").map(Number);
+  const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 2, locale: "tr-TR", timezoneId: "Asia/Famagusta" });
   await context.addInitScript(
     ({ theme, anonymous, key, user }) => {
       window.localStorage.setItem("sgt.theme", theme);

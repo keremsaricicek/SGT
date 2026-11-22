@@ -155,7 +155,7 @@ abstract final class SgtMetrics {
   static const double gridCompactCellPaddingX = 6.0;
   static const double gridCompactFontSize = 12.0;
   static const double layoutTitleBarHeight = 36.0;
-  static const double layoutStatusBarHeight = 24.0;
+  static const double layoutStatusBarHeight = 28.0;
   static const double layoutSideNavWidth = 244.0;
   static const double layoutToolbarHeight = 44.0;
   static const double layoutContentMaxWidth = 1600.0;

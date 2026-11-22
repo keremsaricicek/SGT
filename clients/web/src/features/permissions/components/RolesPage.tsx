@@ -42,6 +42,7 @@ function CreateDefaultRolesForm({ onCreated }: { onCreated: () => void }) {
     <ActionForm
       title={t("permissions.roles.createDefaults")}
       submitLabel={t("permissions.roles.createDefaults")}
+      submitVariant="default"
       pending={create.pending}
       error={create.error}
       succeeded={create.succeeded}

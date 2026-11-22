@@ -51,7 +51,7 @@ export function PanelProviders({ children }: { children: ReactNode }) {
         <section className="panel login-panel" aria-labelledby="login-title">
           <header className="panel-head">
             <span className="brand-mark">SGT</span>
-            <h2 id="login-title">{t("app.title")}</h2>
+            <h2 id="login-title">{t("app.product")}</h2>
           </header>
           <div className="panel-body">
             <p>{t("auth.loginRequired")}</p>

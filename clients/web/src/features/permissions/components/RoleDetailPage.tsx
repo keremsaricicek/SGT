@@ -34,7 +34,7 @@ function RoleDetailContent({ roleId }: { roleId: string }) {
   return (
     <Page
       title={t("permissions.role.title", { name: role?.name ?? "…" })}
-      meta={role ? t("common.records", { count: role.permissions.length }) : null}
+      meta={role ? `${t("permissions.roles.permissionCount")}: ${role.permissions.length}` : null}
       actions={
         <Link className="btn" href={routes.roles}>
           <Icon name="back" />

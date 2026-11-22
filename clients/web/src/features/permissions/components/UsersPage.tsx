@@ -20,7 +20,7 @@ import { SCREEN_ROLES, SCREEN_USERS } from "./screens";
 
 const GUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function RegisterUserForm({ onDone }: { onDone: () => void }) {
+function RegisterUserForm({ onDone, onCancel }: { onDone: () => void; onCancel: () => void }) {
   const t = useT();
   const empty = { userId: "", displayName: "", employeeCode: "" };
   const [form, setForm] = useState(empty);
@@ -34,6 +34,7 @@ function RegisterUserForm({ onDone }: { onDone: () => void }) {
   return (
     <ActionForm
       submitLabel={t("permissions.users.register")}
+      secondary={<Button onClick={onCancel}>{t("common.cancel")}</Button>}
       pending={register.pending}
       error={register.error}
       succeeded={register.succeeded}
@@ -139,6 +140,7 @@ function UsersContent() {
       </Section>
       <Dialog open={registering} title={t("permissions.users.register")} onClose={() => setRegistering(false)}>
         <RegisterUserForm
+          onCancel={() => setRegistering(false)}
           onDone={() => {
             setRegistering(false);
             users.reload();

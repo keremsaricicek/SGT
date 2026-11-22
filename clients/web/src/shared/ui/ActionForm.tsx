@@ -16,12 +16,24 @@ interface ActionFormProps {
   /** Gerekçe kodu doğrulanmış ve büyük harfe çevrilmiş olarak verilir. */
   readonly onSubmit: (reasonCode: string) => void | Promise<unknown>;
   readonly children?: ReactNode;
+  /** Ekranda birden çok form varsa yalnızca ana işlem birincil (dolu) düğme olur. */
+  readonly submitVariant?: "primary" | "default";
   /** Gönder düğmesinin yanındaki ek düğmeler (ör. Vazgeç). */
   readonly secondary?: ReactNode;
 }
 
 /** Değişiklik formu: alanlar + zorunlu gerekçe kodu + API hatası gösterimi. */
-export function ActionForm({ title, submitLabel, pending, error, succeeded, onSubmit, children, secondary }: ActionFormProps) {
+export function ActionForm({
+  title,
+  submitLabel,
+  pending,
+  error,
+  succeeded,
+  onSubmit,
+  children,
+  secondary,
+  submitVariant = "primary",
+}: ActionFormProps) {
   const t = useT();
   const [reasonCode, setReasonCode] = useState("");
   const [missing, setMissing] = useState(false);
@@ -45,7 +57,7 @@ export function ActionForm({ title, submitLabel, pending, error, succeeded, onSu
       </div>
       {missing ? <p className="field-error">{t("common.reasonCode.required")}</p> : null}
       <div className="form-actions">
-        <Button type="submit" variant="primary" disabled={pending}>
+        <Button type="submit" variant={submitVariant} disabled={pending}>
           {submitLabel}
         </Button>
         {secondary}

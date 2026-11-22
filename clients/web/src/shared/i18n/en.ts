@@ -17,6 +17,7 @@ export const en: Record<MessageKey, string> = {
   "app.ready": "Ready",
   "app.busy": "Loading",
   "app.theme": "Theme",
+  "app.skipToContent": "Skip to content",
   "app.theme.dark": "Dark",
   "app.theme.light": "Light",
   "app.theme.switch": "Switch theme (dark/light)",

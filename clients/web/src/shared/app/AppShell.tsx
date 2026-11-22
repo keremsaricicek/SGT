@@ -75,7 +75,7 @@ function SideNav({ entries }: { entries: readonly NavEntry[] }) {
         <Link href="/" aria-current={current("/")}>
           <span className="nav-label">
             <Icon name="home" />
-            {t("app.home")}
+            <span className="nav-text">{t("app.home")}</span>
           </span>
         </Link>
       </div>
@@ -95,10 +95,11 @@ function SideNav({ entries }: { entries: readonly NavEntry[] }) {
                   href={entry.href}
                   aria-current={current(entry.href)}
                   aria-keyshortcuts={shortcut ?? undefined}
+                  title={screenLabel(t, entry.screen)}
                 >
                   <span className="nav-label">
                     <Icon name={entry.icon} />
-                    {screenLabel(t, entry.screen)}
+                    <span className="nav-text">{screenLabel(t, entry.screen)}</span>
                   </span>
                   {shortcut ? <kbd>{shortcut}</kbd> : null}
                 </Link>
@@ -166,6 +167,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   useNavShortcuts(entries);
   return (
     <div className="shell">
+      <a className="skip-link" href="#workspace">
+        {t("app.skipToContent")}
+      </a>
       <header className="titlebar">
         <Link href="/" className="brand">
           <span className="brand-mark">SGT</span>
@@ -183,7 +187,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <SideNav entries={entries} />
-      <main className="workspace">{children}</main>
+      <main className="workspace" id="workspace" tabIndex={-1}>{children}</main>
       <StatusBar entries={entries} />
     </div>
   );

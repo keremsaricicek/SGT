@@ -15,6 +15,7 @@ export const tr = {
   "app.ready": "Hazır",
   "app.busy": "Yükleniyor",
   "app.theme": "Tema",
+  "app.skipToContent": "İçeriğe geç",
   "app.theme.dark": "Koyu",
   "app.theme.light": "Açık",
   "app.theme.switch": "Temayı değiştir (koyu/açık)",

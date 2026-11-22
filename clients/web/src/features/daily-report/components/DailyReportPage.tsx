@@ -91,7 +91,7 @@ function SummaryView({ summary }: { summary: DailySummary }) {
             label={t("daily.live")}
             rows={summary.floor.live}
             columns={[
-              { label: "daily.theoreticalWin", value: (r) => r.theoreticalWin, signed: true },
+              { label: "daily.theoreticalWin", value: (r) => r.theoreticalWin },
               { label: "daily.casinoResult", value: (r) => r.casinoResult, signed: true },
             ]}
           />
