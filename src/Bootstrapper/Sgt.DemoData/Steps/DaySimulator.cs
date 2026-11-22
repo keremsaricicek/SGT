@@ -29,12 +29,20 @@ public sealed class DaySimulator(RateBoard rates, CageDesk cage, PitDesk pit, Da
         ArgumentNullException.ThrowIfNull(run);
         var ratedBefore = new List<Guid>();
         var drain = new BackgroundDrain();
-        foreach (var day in run.Timeline.PastDays)
+        try
         {
-            var plan = new DayPlan();
-            var rated = PlanDay(run, day, plan, ratedBefore, drain);
-            await plan.Run(run.Clock, ct);
-            ratedBefore.AddRange(rated.Except(ratedBefore).ToList());
+            foreach (var day in run.Timeline.PastDays)
+            {
+                var plan = new DayPlan();
+                var rated = PlanDay(run, day, plan, ratedBefore, drain);
+                await plan.Run(run.Clock, ct);
+                ratedBefore.AddRange(rated.Except(ratedBefore).ToList());
+            }
+        }
+        finally
+        {
+            // Hata olsa da arka plan boşaltması beklenir; onun hatası gözden kaçmaz.
+            await drain.Pending;
         }
 
         await closing.Finish(drain, ct);

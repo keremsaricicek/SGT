@@ -4,7 +4,15 @@ using Sgt.Modules.Configuration.Application.ExchangeRates;
 using Sgt.Modules.Configuration.Contracts;
 using Sgt.Modules.GamingFloor.Application.Slots;
 using Sgt.Modules.GamingFloor.Application.Tables;
+using Microsoft.Extensions.DependencyInjection;
+using Sgt.BuildingBlocks;
+using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.DemoData;
+using Sgt.Modules.CasinoPlayer.Application.Profile;
+using Sgt.Modules.CasinoPlayer.Domain;
+using Sgt.Modules.Configuration.Application.Markers;
+using Sgt.Modules.GamingFloor.Application.Ratings;
+using Sgt.Modules.Identity.Application.Panel;
 using Sgt.Modules.Reporting.Application.Daily;
 
 namespace Sgt.Api.Tests.DemoData;
@@ -89,6 +97,65 @@ public sealed class DemoSeedTests(DemoSeedFixture fx)
         Assert.Empty(await SearchPlayer($"P{DemoScale.Small.Players + 1:D6}"));
         Assert.Equal(before.Floor.RatingsFinished, after.Floor.RatingsFinished);
         Assert.Equal(before.Loyalty, after.Loyalty);
+    }
+
+    [Fact]
+    public async Task KK5_completion_marker_is_written()
+    {
+        Assert.True(await fx.Query<IsTenantMarkerSetQuery, bool>(new IsTenantMarkerSetQuery(Tenant, DemoDataGenerator.CompletionMarker)));
+    }
+
+    [Fact]
+    public async Task R3_every_module_outbox_is_empty_after_seed()
+    {
+        foreach (var drainer in fx.Api.Services.GetRequiredService<OutboxDrainers>())
+        {
+            var backlog = await drainer.Backlog(Tenant, default);
+            Assert.True(backlog.Pending == 0, $"{drainer.Module}: {backlog.Pending} işlenmemiş olay");
+            Assert.True(backlog.DeadLettered == 0, $"{drainer.Module}: {backlog.DeadLettered} dead-letter");
+        }
+    }
+
+    [Fact]
+    public async Task KK4_today_looks_alive_with_open_tables_running_ratings_and_an_open_shift()
+    {
+        var today = await fx.Query<GetDailySummaryQuery, DailySummary>(new GetDailySummaryQuery(Tenant, fx.Api.Timeline.Today));
+        var tables = await fx.Query<ListTablesQuery, IReadOnlyList<TableView>>(new ListTablesQuery(Tenant));
+        var running = await fx.Query<ListRunningRatingsQuery, IReadOnlyList<RunningRatingView>>(new ListRunningRatingsQuery(Tenant, null));
+
+        Assert.Equal(1, today.Cage.ShiftsOpen);
+        Assert.Contains(tables, t => t.IsOpen);
+        Assert.NotEmpty(running);
+        Assert.Equal(fx.Api.Timeline.Now, fx.Api.Clock.UtcNow);
+    }
+
+    [Fact]
+    public async Task KK5_data_without_completion_marker_is_refused_and_tenant_is_not_touched()
+    {
+        var other = new TenantId(Guid.NewGuid());
+        await using (var scope = fx.Api.Services.CreateAsyncScope())
+        {
+            var register = scope.ServiceProvider.GetRequiredService<Sgt.BuildingBlocks.ICommandHandler<RegisterPlayerCommand, PlayerRegistered>>();
+            var details = new PlayerDetails("Yarım", "Yükleme", new DateOnly(1980, 1, 1), "TR", DocumentType.NationalId, "DM99999999", null);
+            await register.Handle(new RegisterPlayerCommand(other, details, new AuditContext(DemoUsers.Host.Id, "TEST", ReasonCode.Of("TEST"), Guid.NewGuid())), default);
+        }
+
+        var error = await Assert.ThrowsAsync<DemoSeedException>(() => fx.Generate(fx.Options with { Tenant = other }));
+
+        Assert.Contains("reset önerilir", error.Message, StringComparison.Ordinal);
+        Assert.Empty(await fx.Query<ListUsersQuery, IReadOnlyList<UserSummary>>(new ListUsersQuery(other)));
+    }
+
+    [Fact]
+    public async Task Concurrent_run_for_the_same_tenant_is_refused()
+    {
+        var locks = fx.Api.Services.GetRequiredService<IAdvisoryLock>();
+        await using var held = await locks.TryAcquire(DemoDataGenerator.LockName(Tenant), default);
+        Assert.NotNull(held);
+
+        var error = await Assert.ThrowsAsync<DemoSeedException>(() => fx.Generate());
+
+        Assert.Contains("sürüyor", error.Message, StringComparison.Ordinal);
     }
 
     private Task<IReadOnlyList<PlayerSummary>> SearchPlayer(string number) =>

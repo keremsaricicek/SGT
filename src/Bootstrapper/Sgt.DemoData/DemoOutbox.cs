@@ -1,26 +1,42 @@
+using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Infrastructure.Messaging;
 
 namespace Sgt.DemoData;
 
 /// <summary>
 /// Tüm modüllerin outbox'larını boşaltır (Spec 012 R3). Bir olayın tüketicisi yeni olay yazabileceği için
-/// (ör. rating → puan → denetim kaydı), hiçbir modülde işlenecek olay kalmayana kadar tur atar.
+/// (ör. rating → puan → denetim kaydı), hiçbir modülde dağıtılacak olay kalmayana kadar tur atar.
 /// Boşaltma sürerken yeni olay yazılıyorsa onlar da alınır; döngü üretim durunca biter.
 /// </summary>
-public sealed class DemoOutbox(IEnumerable<IOutboxDrainer> drainers)
+public sealed class DemoOutbox(OutboxDrainers drainers)
 {
-    public async Task<int> DrainAll(CancellationToken ct)
+    public async Task DrainAll(CancellationToken ct)
     {
-        var total = 0;
-        int processed;
+        int dispatched;
         do
         {
             // Modül outbox'ları birbirinden bağımsızdır; aynı anda boşaltılır.
-            processed = (await Task.WhenAll(drainers.Select(d => d.Drain(ct)))).Sum();
-            total += processed;
+            dispatched = (await Task.WhenAll(drainers.Select(d => d.Drain(ct)))).Sum(r => r.Dispatched);
         }
-        while (processed > 0);
+        while (dispatched > 0);
+    }
 
-        return total;
+    /// <summary>Tenant'ın hiçbir modülünde işlenmemiş veya dead-letter olay kalmadığını doğrular.</summary>
+    public async Task EnsureEmpty(TenantId tenantId, CancellationToken ct)
+    {
+        var problems = new List<string>();
+        foreach (var drainer in drainers)
+        {
+            var backlog = await drainer.Backlog(tenantId, ct);
+            if (!backlog.IsEmpty)
+            {
+                problems.Add($"{drainer.Module}: {backlog.Pending} bekleyen, {backlog.DeadLettered} dead-letter");
+            }
+        }
+
+        if (problems.Count > 0)
+        {
+            throw new DemoSeedException("Olaylar işlenemedi (" + string.Join("; ", problems) + "). Veritabanını sıfırlayın: build/demo.sh reset --yes");
+        }
     }
 }

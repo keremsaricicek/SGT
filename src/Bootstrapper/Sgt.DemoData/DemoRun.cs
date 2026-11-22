@@ -91,7 +91,7 @@ public sealed class DemoRun
     /// <summary>[min, max) aralığında tamsayı.</summary>
     public int Next(int min, int max) => _random.Next(min, max);
 
-    /// <summary>[0, 1) aralığında oran.</summary>
+    /// <summary>[0, 1) aralığında oran. Yalnızca demo verisinin rastgeleliği içindir; para hesabı bununla yapılmaz, sonuç tutarlar yuvarlanır.</summary>
     public decimal NextRatio() => (decimal)_random.NextDouble();
 
     public bool Chance(double probability) => _random.NextDouble() < probability;

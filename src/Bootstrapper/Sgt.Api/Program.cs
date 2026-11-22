@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Sgt.BuildingBlocks;
+using Sgt.Api;
+using Sgt.BuildingBlocks.Infrastructure.Locking;
 using Sgt.BuildingBlocks.Infrastructure.Security;
 using Sgt.BuildingBlocks.Web;
 using Sgt.DemoData;
@@ -24,6 +26,20 @@ using Sgt.Modules.Identity.Infrastructure;
 
 // Tek host: modülleri kaydeder, kendi iş kodu yoktur (docs/kod-kurallari.md 3.2).
 var builder = WebApplication.CreateBuilder(args);
+
+// "--seed-demo": demo verisini yükleyip çıkar (Spec 012). Koşullar sağlanmazsa hiçbir şeye dokunmadan 2 ile çıkar.
+DemoSeedOptions? demoOptions = null;
+if (DemoSeedCommand.IsRequested(args))
+{
+    var decision = DemoSeedCommand.Evaluate(builder.Environment.EnvironmentName, builder.Configuration, new SystemClock().UtcNow);
+    if (decision.Options is null)
+    {
+        using var loggers = LoggerFactory.Create(l => l.AddConsole());
+        return DemoSeedCommand.Refuse(loggers.CreateLogger("Sgt.Api"), decision.Refusal!);
+    }
+
+    demoOptions = decision.Options;
+}
 builder.Host.UseWindowsService(o => o.ServiceName = "SGT API"); // Windows sunucuda servis olarak çalışır (ADR-0007)
 
 builder.Services.AddProblemDetails();
@@ -41,15 +57,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddScoped<IRequestContext, HttpRequestContext>();
 
-// "--seed-demo": demo verisini yükleyip çıkar (Spec 012). Saat, geçmiş günleri yazabilmek için DemoClock'tur.
-var seedDemo = DemoSeedCommand.IsRequested(args);
-DemoSeedOptions? demoOptions = null;
-if (seedDemo && DemoSeedCommand.IsAllowedIn(builder.Environment.EnvironmentName))
-{
-    demoOptions = DemoSeedCommand.Options(builder.Configuration, new SystemClock().UtcNow);
-    builder.Services.AddDemoData(new DemoClock(demoOptions.Timeline.SetupStart));
-}
-
 // Kimlik: Keycloak (OIDC) token'ı doğrulanır; yetki SGT yetki panelindedir (ADR-0003).
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -66,6 +73,14 @@ builder.Services.AddAuthorizationBuilder()
 var connectionString = builder.Configuration.GetConnectionString("Sgt")
     ?? throw new InvalidOperationException("ConnectionStrings:Sgt tanımlı değil.");
 builder.Services.AddIdentityModule(connectionString);
+if (demoOptions is not null)
+{
+    // Saat, geçmiş günleri yazabilmek için DemoClock'tur (SystemClock kaydının yerine geçer).
+    builder.Services.AddDemoData(new DemoClock(demoOptions.Timeline.SetupStart));
+    builder.Services.AddPostgresAdvisoryLock(connectionString);
+    builder.Services.AddScoped<IDemoTenantBootstrap, IdentityDemoTenantBootstrap>();
+}
+
 builder.Services.AddAuditModule(connectionString);
 builder.Services.AddConfigurationModule(connectionString);
 builder.Services.AddCasinoPlayerModule(connectionString);
@@ -101,14 +116,9 @@ app.MapLoyaltyEndpoints();
 app.MapReportingEndpoints();
 app.MapOutboxAdminEndpoints();
 
-if (seedDemo && !DemoSeedCommand.IsAllowedIn(app.Environment.EnvironmentName))
-{
-    return DemoSeedCommand.Refuse(app.Logger, app.Environment.EnvironmentName);
-}
-
 // "--migrate": yalnızca veritabanı şemasını günceller ve çıkar; üretimde dağıtım adımıdır (ADR-0007).
 var migrateOnly = args.Contains("--migrate", StringComparer.Ordinal);
-if (migrateOnly || seedDemo || app.Environment.IsDevelopment())
+if (migrateOnly || demoOptions is not null || app.Environment.IsDevelopment())
 {
     await using var scope = app.Services.CreateAsyncScope();
     await scope.ServiceProvider.MigrateIdentityDatabase(default);
@@ -126,8 +136,7 @@ if (migrateOnly || seedDemo || app.Environment.IsDevelopment())
 
     if (demoOptions is not null)
     {
-        // Demo tenant'ı S Plus lisansı ve süper adminle açılır; geri kalan her şey modül komutlarıyla yazılır.
-        await IdentityDevelopmentSeed.Run(scope.ServiceProvider, demoOptions.Tenant, DemoUsers.SuperAdmin.Id, [Product.SPlus], default);
+        // Lisans + süper admin yalnızca üretici gerçekten yükleyecekse yazılır (IDemoTenantBootstrap); geri kalan modül komutlarıyla.
         return await DemoSeedCommand.Run(scope.ServiceProvider, demoOptions, app.Logger, default);
     }
 

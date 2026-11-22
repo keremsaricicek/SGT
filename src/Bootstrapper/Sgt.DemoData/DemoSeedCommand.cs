@@ -1,14 +1,17 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Sgt.BuildingBlocks;
 
 namespace Sgt.DemoData;
 
+/// <summary>Bayrağın değerlendirmesi: ya çalıştırma seçenekleri ya da ret gerekçesi.</summary>
+public sealed record DemoSeedDecision(DemoSeedOptions? Options, string? Refusal);
+
 /// <summary>
 /// API'nin <c>--seed-demo</c> komutu (Spec 012 KK2, contracts/demo-cli.md): demo verisini yükleyip çıkar.
-/// Çıkış kodları: 0 başarı, 1 hata, 2 reddedildi (Production).
+/// Çıkış kodları: 0 başarı, 1 hata, 2 reddedildi. Yalnızca izin listesindeki ortamda (Development, Demo),
+/// <c>DemoSeed:Enabled=true</c> ve açıkça verilmiş <c>DemoSeed:TenantId</c> ile çalışır; varsayılan tenant yoktur.
 /// </summary>
 public static partial class DemoSeedCommand
 {
@@ -17,32 +20,41 @@ public static partial class DemoSeedCommand
     public const int FailedExitCode = 1;
     public const int RefusedExitCode = 2;
 
-    /// <summary>Yapılandırma yoksa geliştirme tenant'ı (deploy/.env.example SGT_TENANT_ID ile aynı).</summary>
-    private static readonly TenantId DefaultTenant = new(Guid.Parse("00000000-0000-0000-0000-0000000000a1"));
+    private static readonly string[] AllowedEnvironments = ["Development", "Demo"];
 
     public static bool IsRequested(IEnumerable<string> args) => args.Contains(Flag, StringComparer.Ordinal);
 
-    /// <summary>Gerçek veri ortamında sahte veri üretilmez.</summary>
-    public static bool IsAllowedIn(string environmentName) =>
-        !string.Equals(environmentName, Environments.Production, StringComparison.OrdinalIgnoreCase);
-
-    /// <summary><c>DemoSeed:TenantId</c> ve <c>DemoSeed:Scale</c> (Full | Small) okunur; zaman çizelgesi gerçek andan kurulur.</summary>
-    public static DemoSeedOptions Options(IConfiguration configuration, DateTimeOffset now)
+    /// <summary>Ortam, etkinleştirme ve tenant koşullarını denetler; zaman çizelgesi gerçek andan kurulur.</summary>
+    public static DemoSeedDecision Evaluate(string environmentName, IConfiguration configuration, DateTimeOffset now)
     {
         ArgumentNullException.ThrowIfNull(configuration);
+        if (!AllowedEnvironments.Contains(environmentName, StringComparer.OrdinalIgnoreCase))
+        {
+            return Refused($"--seed-demo yalnızca {string.Join(" / ", AllowedEnvironments)} ortamında çalışır; bu ortam: '{environmentName}'.");
+        }
+
         var section = configuration.GetSection("DemoSeed");
-        var tenant = Guid.TryParse(section["TenantId"], out var id) ? new TenantId(id) : DefaultTenant;
+        if (!bool.TryParse(section["Enabled"], out var enabled) || !enabled)
+        {
+            return Refused("Demo verisi kapalı: DemoSeed:Enabled=true verilmeli.");
+        }
+
+        if (!Guid.TryParse(section["TenantId"], out var tenant))
+        {
+            return Refused("Demo tenant'ı belirtilmeli: DemoSeed:TenantId (GUID).");
+        }
+
         var scale = DemoScale.Parse(section["Scale"]);
-        return new DemoSeedOptions(tenant, scale, DemoTimeline.Ending(now, scale));
+        return new DemoSeedDecision(new DemoSeedOptions(new TenantId(tenant), scale, DemoTimeline.Ending(now, scale)), null);
     }
 
-    public static int Refuse(ILogger logger, string environmentName)
+    public static int Refuse(ILogger logger, string reason)
     {
-        LogRefused(logger, environmentName);
+        LogRefused(logger, reason);
         return RefusedExitCode;
     }
 
-    /// <summary>Üreticiyi çalıştırır; modül kuralına takılan demo verisi 1 ile çıkar.</summary>
+    /// <summary>Üreticiyi çalıştırır; her hata loglanır ve 1 döner.</summary>
     public static async Task<int> Run(IServiceProvider services, DemoSeedOptions options, ILogger logger, CancellationToken ct)
     {
         ArgumentNullException.ThrowIfNull(services);
@@ -61,9 +73,11 @@ public static partial class DemoSeedCommand
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "--seed-demo {Environment} ortamında çalıştırılamaz; demo verisi yalnızca geliştirme/demo ortamı içindir.")]
-    private static partial void LogRefused(ILogger logger, string environment);
+    private static DemoSeedDecision Refused(string reason) => new(null, reason);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "Demo verisi yüklenemedi. Veritabanını sıfırlayıp tekrar deneyin (build/demo.sh reset).")]
+    [LoggerMessage(Level = LogLevel.Error, Message = "--seed-demo reddedildi: {Reason}")]
+    private static partial void LogRefused(ILogger logger, string reason);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Demo verisi yüklenemedi.")]
     private static partial void LogFailed(ILogger logger, Exception exception);
 }

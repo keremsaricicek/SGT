@@ -57,6 +57,8 @@ public sealed class MessagingFixture : IAsyncLifetime
         Database = $"sgt_msg_test_{Guid.NewGuid():N}",
     }.ConnectionString;
 
+    public string ConnectionString => _connectionString;
+
     public ManualClock Clock { get; } = new();
 
     public RecordingHandler Handler { get; } = new();

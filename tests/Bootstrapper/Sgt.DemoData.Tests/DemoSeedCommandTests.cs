@@ -1,11 +1,11 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 
 namespace Sgt.DemoData.Tests;
 
 public sealed class DemoSeedCommandTests
 {
     private static readonly DateTimeOffset Now = new(2026, 11, 21, 10, 0, 0, TimeSpan.Zero);
+    private const string Tenant = "11111111-1111-1111-1111-111111111111";
 
     [Theory]
     [InlineData(new[] { "--seed-demo" }, true)]
@@ -17,44 +17,63 @@ public sealed class DemoSeedCommandTests
     }
 
     [Theory]
-    [InlineData("Production", false)]
-    [InlineData("Development", true)]
-    [InlineData("Demo", true)]
-    public void KK2_flag_is_refused_in_production(string environment, bool allowed)
+    [InlineData("Production")]
+    [InlineData("prod")]
+    [InlineData("Staging")]
+    [InlineData("Testing")]
+    [InlineData("")]
+    public void KK2_only_development_or_demo_environment_is_allowed(string environment)
     {
-        Assert.Equal(allowed, DemoSeedCommand.IsAllowedIn(environment));
+        var decision = DemoSeedCommand.Evaluate(environment, Config(enabled: "true", tenant: Tenant), Now);
+
+        Assert.Null(decision.Options);
+        Assert.Contains("ortam", decision.Refusal, StringComparison.Ordinal);
         Assert.Equal(2, DemoSeedCommand.RefusedExitCode);
     }
 
-    [Fact]
-    public void Options_default_to_development_tenant_and_full_scale()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("false")]
+    [InlineData("yes")]
+    public void KK2_demo_seed_must_be_enabled_explicitly(string? enabled)
     {
-        var options = DemoSeedCommand.Options(new ConfigurationBuilder().Build(), Now);
+        var decision = DemoSeedCommand.Evaluate("Development", Config(enabled, Tenant), Now);
 
-        Assert.Equal(Guid.Parse("00000000-0000-0000-0000-0000000000a1"), options.Tenant.Value);
-        Assert.Equal(DemoScale.Full, options.Scale);
-        Assert.Equal(new DateOnly(2026, 11, 21), options.Timeline.Today);
-        Assert.Equal(30, options.Timeline.Days);
+        Assert.Null(decision.Options);
+        Assert.Contains("DemoSeed:Enabled", decision.Refusal, StringComparison.Ordinal);
     }
 
-    [Fact]
-    public void Options_read_demo_seed_section()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("not-a-guid")]
+    public void KK2_tenant_must_be_given_explicitly(string? tenant)
     {
-        var config = new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
+        var decision = DemoSeedCommand.Evaluate("Demo", Config("true", tenant), Now);
+
+        Assert.Null(decision.Options);
+        Assert.Contains("DemoSeed:TenantId", decision.Refusal, StringComparison.Ordinal);
+    }
+
+    [Theory]
+    [InlineData("Development")]
+    [InlineData("Demo")]
+    public void Allowed_environment_with_enabled_flag_and_tenant_yields_options(string environment)
+    {
+        var decision = DemoSeedCommand.Evaluate(environment, Config("true", Tenant, scale: "Small"), Now);
+
+        Assert.Null(decision.Refusal);
+        Assert.Equal(Guid.Parse(Tenant), decision.Options!.Tenant.Value);
+        Assert.Equal(DemoScale.Small, decision.Options.Scale);
+        Assert.Equal(new DateOnly(2026, 11, 21), decision.Options.Timeline.Today);
+        Assert.Equal(3, decision.Options.Timeline.Days);
+    }
+
+    private static IConfiguration Config(string? enabled, string? tenant, string? scale = null) =>
+        new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>
         {
-            ["DemoSeed:TenantId"] = "11111111-1111-1111-1111-111111111111",
-            ["DemoSeed:Scale"] = "Small",
+            ["DemoSeed:Enabled"] = enabled,
+            ["DemoSeed:TenantId"] = tenant,
+            ["DemoSeed:Scale"] = scale,
         }).Build();
-
-        var options = DemoSeedCommand.Options(config, Now);
-
-        Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), options.Tenant.Value);
-        Assert.Equal(DemoScale.Small, options.Scale);
-    }
-
-    [Fact]
-    public void Production_name_matches_host_constant()
-    {
-        Assert.False(DemoSeedCommand.IsAllowedIn(Environments.Production));
-    }
 }

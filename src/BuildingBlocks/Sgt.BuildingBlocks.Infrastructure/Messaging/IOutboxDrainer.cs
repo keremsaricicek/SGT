@@ -1,35 +1,68 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sgt.BuildingBlocks.Infrastructure.Messaging;
 
-/// <summary>
-/// Bir modülün outbox'ını arka plan servisini beklemeden o an boşaltır (Spec 012 R3: demo verisi üretimi).
-/// Modülden bağımsızdır; her <c>AddOutbox</c> çağrısı bir tane kaydeder.
-/// </summary>
-public interface IOutboxDrainer
+/// <summary>Boşaltma sonucu: dağıtılan olaylar ve hata alıp geri çekilme süresine bırakılan olaylar.</summary>
+public sealed record OutboxDrainResult(int Dispatched, int Failed);
+
+/// <summary>Bir tenant'ın outbox'ta kalan olayları: henüz işlenmemiş (hatalı olanlar dahil) ve dead-letter'a düşmüş.</summary>
+public sealed record OutboxBacklog(int Pending, int DeadLettered)
 {
-    /// <summary>İşlenmeye hazır olay kalmayana kadar dağıtır; ele alınan olay sayısını döner.</summary>
-    Task<int> Drain(CancellationToken ct);
+    public bool IsEmpty => Pending == 0 && DeadLettered == 0;
 }
 
 /// <summary>
-/// <see cref="OutboxProcessor{TContext}.ProcessBatch"/> 0 dönene kadar çağırır. Hata alan olay geri çekilme
-/// süresi kadar ertelendiği için aynı anda tekrar seçilmez; döngü sonlanır.
+/// Bir modülün outbox'ını arka plan servisini beklemeden o an boşaltır (Spec 012 R3: demo verisi üretimi).
+/// Üretim DI'ında kayıtlı değildir; yalnızca <see cref="MessagingServiceCollectionExtensions.AddOutboxDrainers"/> ile açılır.
 /// </summary>
-public sealed class OutboxDrainer<TContext>(OutboxProcessor<TContext> processor) : IOutboxDrainer
+public interface IOutboxDrainer
+{
+    string Module { get; }
+
+    /// <summary>İşlenmeye hazır olay kalmayana kadar dağıtır.</summary>
+    Task<OutboxDrainResult> Drain(CancellationToken ct);
+
+    Task<OutboxBacklog> Backlog(TenantId tenantId, CancellationToken ct);
+}
+
+/// <summary>Kayıtlı tüm modül outbox'larının boşaltıcıları.</summary>
+public sealed class OutboxDrainers(IEnumerable<IOutboxDrainer> drainers) : List<IOutboxDrainer>(drainers);
+
+/// <summary>
+/// <see cref="OutboxProcessor{TContext}.Process"/> olay kalmayana kadar çağırır. Hata alan olay geri çekilme süresi kadar
+/// ertelendiği için aynı anda tekrar seçilmez; döngü sonlanır ve olay <see cref="Backlog"/>'da görünür.
+/// </summary>
+public sealed class OutboxDrainer<TContext>(string module, OutboxProcessor<TContext> processor, IServiceScopeFactory scopes) : IOutboxDrainer
     where TContext : DbContext
 {
     private const int BatchSize = 200;
 
-    public async Task<int> Drain(CancellationToken ct)
-    {
-        var total = 0;
-        int processed;
-        while ((processed = await processor.ProcessBatch(BatchSize, ct)) > 0)
-        {
-            total += processed;
-        }
+    public string Module => module;
 
-        return total;
+    public async Task<OutboxDrainResult> Drain(CancellationToken ct)
+    {
+        var dispatched = 0;
+        var failed = 0;
+        OutboxBatchResult batch;
+        do
+        {
+            batch = await processor.Process(BatchSize, ct);
+            dispatched += batch.Dispatched;
+            failed += batch.Failed;
+        }
+        while (batch.Total > 0);
+
+        return new OutboxDrainResult(dispatched, failed);
+    }
+
+    public async Task<OutboxBacklog> Backlog(TenantId tenantId, CancellationToken ct)
+    {
+        await using var scope = scopes.CreateAsyncScope();
+        var messages = scope.ServiceProvider.GetRequiredService<TContext>().Set<OutboxMessage>().AsNoTracking()
+            .Where(m => m.TenantId == tenantId.Value && m.ProcessedAt == null);
+        return new OutboxBacklog(
+            await messages.CountAsync(m => !m.DeadLettered, ct),
+            await messages.CountAsync(m => m.DeadLettered, ct));
     }
 }

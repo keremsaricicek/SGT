@@ -1,7 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Sgt.Api;
 using Sgt.BuildingBlocks;
+using Sgt.BuildingBlocks.Infrastructure.Locking;
 using Sgt.DemoData;
 
 namespace Sgt.Api.Tests.DemoData;
@@ -19,6 +21,8 @@ public sealed class DemoApiFactory : ApiFactory
     {
         services.RemoveAll<IHostedService>();
         services.AddDemoData(Clock);
+        services.AddPostgresAdvisoryLock(ConnectionString);
+        services.AddScoped<IDemoTenantBootstrap, IdentityDemoTenantBootstrap>();
     }
 }
 
@@ -37,10 +41,10 @@ public sealed class DemoSeedFixture : IAsyncLifetime
         FirstRun = await Generate();
     }
 
-    public async Task<DemoSeedResult> Generate()
+    public async Task<DemoSeedResult> Generate(DemoSeedOptions? options = null)
     {
         await using var scope = Api.Services.CreateAsyncScope();
-        return await scope.ServiceProvider.GetRequiredService<DemoDataGenerator>().Run(Options, default);
+        return await scope.ServiceProvider.GetRequiredService<DemoDataGenerator>().Run(options ?? Options, default);
     }
 
     public async Task<TResult> Query<TQuery, TResult>(TQuery query)

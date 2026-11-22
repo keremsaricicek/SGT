@@ -133,6 +133,28 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
+    public void Only_DemoData_uses_outbox_drainers()
+    {
+        // Anında boşaltma yalnızca demo verisi içindir; üretim kodu olayları arka plan servisiyle dağıtır (Spec 012).
+        string[] drainerTypes =
+        [
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.IOutboxDrainer",
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainers",
+            "Sgt.BuildingBlocks.Infrastructure.Messaging.OutboxDrainer`1",
+        ];
+        var assemblies = ModuleCatalog.All
+            .SelectMany(m => new[] { m.Contracts, m.Domain, m.Application, m.Infrastructure, m.Api })
+            .Append(typeof(Sgt.BuildingBlocks.Web.SgtHeaders).Assembly)
+            .Append(typeof(Sgt.Api.IdentityDemoTenantBootstrap).Assembly);
+
+        var result = Types.InAssemblies(assemblies)
+            .ShouldNot().HaveDependencyOnAny(drainerTypes)
+            .GetResult();
+
+        AssertNone(Describe(result, "Spec 012: IOutboxDrainer yalnızca Sgt.DemoData'dan kullanılır").ToList());
+    }
+
+    [Fact]
     public void Domain_types_do_not_expose_public_setters()
     {
         var violations = ModuleCatalog.All
