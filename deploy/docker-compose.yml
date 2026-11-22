@@ -49,6 +49,8 @@ services:
       SGT_DEV_DIRECT_GRANT: ${SGT_DEV_DIRECT_GRANT:-false}
       SGT_DEV_SUPERADMIN_PASSWORD: ${SGT_DEV_SUPERADMIN_PASSWORD:?deploy/.env eksik}
       SGT_DEV_KASIYER1_PASSWORD: ${SGT_DEV_KASIYER1_PASSWORD:?deploy/.env eksik}
+      # Demo kullanıcıları (mudur, pitboss, slotmudur, host) ortak şifresi — Spec 012, build/demo.sh
+      SGT_DEMO_PASSWORD: ${SGT_DEMO_PASSWORD:?deploy/.env eksik}
     ports:
       - "127.0.0.1:${KEYCLOAK_PORT:-8080}:8080"
     volumes:
@@ -79,6 +81,9 @@ services:
       Authentication__Audience: sgt-api
       DevelopmentSeed__TenantId: ${SGT_TENANT_ID:-}
       DevelopmentSeed__SuperAdminUserId: ${SGT_SUPERADMIN_USER_ID:-}
+      # "--seed-demo" ile çalıştırıldığında (build/demo.sh) demo verisinin tenant'ı ve ölçeği (Full | Small)
+      DemoSeed__TenantId: ${SGT_TENANT_ID:-}
+      DemoSeed__Scale: ${SGT_DEMO_SCALE:-Full}
       Security__PersonalDataKey: ${SGT_PERSONAL_DATA_KEY:?deploy/.env eksik}
       Security__BlindIndexKey: ${SGT_BLIND_INDEX_KEY:?deploy/.env eksik}
     ports:

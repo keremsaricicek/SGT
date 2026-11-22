@@ -291,6 +291,106 @@
       "realmRoles": [
         "default-roles-sgt"
       ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000003",
+      "username": "mudur",
+      "enabled": true,
+      "email": "mudur@sgt.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Mudur",
+      "attributes": {
+        "tenant_id": [
+          "00000000-0000-0000-0000-0000000000a1"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SGT_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-sgt"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000004",
+      "username": "pitboss",
+      "enabled": true,
+      "email": "pitboss@sgt.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Pitboss",
+      "attributes": {
+        "tenant_id": [
+          "00000000-0000-0000-0000-0000000000a1"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SGT_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-sgt"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000005",
+      "username": "slotmudur",
+      "enabled": true,
+      "email": "slotmudur@sgt.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Slotmudur",
+      "attributes": {
+        "tenant_id": [
+          "00000000-0000-0000-0000-0000000000a1"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SGT_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-sgt"
+      ]
+    },
+    {
+      "id": "00000000-0000-0000-0000-000000000006",
+      "username": "host",
+      "enabled": true,
+      "email": "host@sgt.local",
+      "emailVerified": true,
+      "firstName": "Demo",
+      "lastName": "Host",
+      "attributes": {
+        "tenant_id": [
+          "00000000-0000-0000-0000-0000000000a1"
+        ]
+      },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${SGT_DEMO_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "requiredActions": [],
+      "realmRoles": [
+        "default-roles-sgt"
+      ]
     }
   ],
   "components": {
