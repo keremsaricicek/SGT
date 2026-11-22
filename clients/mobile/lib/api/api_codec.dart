@@ -47,10 +47,28 @@ abstract final class ApiCodec {
     throw const FormatException('Tam sayı bekleniyordu');
   }
 
+  /// IEEE double'ın tam sayıyı birebir taşıdığı sınır (2^53).
+  static final _maxExact = BigInt.two.pow(53);
+
+  /// Para okuması. Metin gelirse metin olduğu gibi (kayıpsız) çözülür. JSON sayısı ise `double`'dan geçtiği için
+  /// yalnızca birebir geri dönüşüyorsa kabul edilir: üslü gösterim yok ve ölçeklenmiş değer |x| < 2^53.
+  /// Aksi halde [FormatException] → yanıt `invalidResponse` sayılır (tutar sessizce yuvarlanmaz).
   static Decimal decimal(Object? value) {
-    if (value is int) return Decimal.fromInt(value);
-    if (value is num) return Decimal.parse(value.toString());
     if (value is String) return Decimal.parse(value);
+    if (value is num) {
+      final lexeme = value.toString();
+      if (lexeme.contains('e') || lexeme.contains('E')) {
+        throw const FormatException('Para alanı üslü gösterimle geldi (kayıplı)');
+      }
+      final d = Decimal.parse(lexeme);
+      final dot = lexeme.indexOf('.');
+      final scale = dot < 0 ? 0 : lexeme.length - dot - 1;
+      final scaled = (d * Decimal.ten.pow(scale).toDecimal()).toBigInt().abs();
+      if (scaled >= _maxExact) {
+        throw const FormatException('Para alanı double hassasiyetini aşıyor (kayıplı)');
+      }
+      return d;
+    }
     throw const FormatException('Ondalık sayı bekleniyordu');
   }
 

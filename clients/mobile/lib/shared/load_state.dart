@@ -31,5 +31,7 @@ Future<LoadState<T>> runLoad<T>(Future<T> Function() call) async {
     return Loaded(await call());
   } on ApiException catch (e) {
     return Failed(e);
+  } on Object {
+    return const Failed(ApiException(ApiFailure.invalidResponse));
   }
 }

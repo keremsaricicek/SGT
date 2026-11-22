@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sgt_mobile/api/api_codec.dart';
+import 'package:sgt_mobile/api/api_exception.dart';
 import 'package:sgt_mobile/api/generated/sgt_api.g.dart';
 
 void main() {
@@ -9,6 +12,34 @@ void main() {
       expect(ApiCodec.decimal(1250.75), Decimal.parse('1250.75'));
       expect(ApiCodec.decimal('0.10'), Decimal.parse('0.1'));
       expect(ApiCodec.decimal(3), Decimal.fromInt(3));
+    });
+
+    test('para metin olarak geldiyse metin tercih edilir (kayıpsız, 17+ hane dahil)', () {
+      expect(ApiCodec.decimal('12345678901234567.89'), Decimal.parse('12345678901234567.89'));
+      expect(ApiCodec.decimal('-0.000001'), Decimal.parse('-0.000001'));
+    });
+
+    test('para JSON sayısı ise yalnızca birebir geri dönüşüyorsa kabul edilir', () {
+      expect(ApiCodec.decimal(jsonDecode('1845000.25')), Decimal.parse('1845000.25'));
+      expect(ApiCodec.decimal(jsonDecode('9007199254740991')), Decimal.parse('9007199254740991'));
+    });
+
+    test('üslü gösterime düşen sayı (1e21) reddedilir', () {
+      expect(() => ApiCodec.decimal(jsonDecode('1e21')), throwsFormatException);
+      expect(() => ApiCodec.decimal(jsonDecode('1E-7')), throwsFormatException);
+    });
+
+    test('17 anlamlı haneli sayı (double hassasiyetini aşar) reddedilir', () {
+      expect(() => ApiCodec.decimal(jsonDecode('12345678901234567.0')), throwsFormatException);
+      expect(() => ApiCodec.decimal(jsonDecode('0.12345678901234567')), throwsFormatException);
+      expect(() => ApiCodec.decimal(jsonDecode('9007199254740993')), throwsFormatException);
+    });
+
+    test('kayıplı para alanı yanıtı invalidResponse yapar', () {
+      expect(
+        () => ApiCodec.decode(() => SlotCurrencyTotals.fromJson(jsonDecode('{"currency":"TRY","coinIn":1e21,"machineWin":0}'))),
+        throwsA(isA<ApiException>().having((e) => e.kind, 'kind', ApiFailure.invalidResponse)),
+      );
     });
 
     test('int64 alanı sayı veya metin olabilir', () {
