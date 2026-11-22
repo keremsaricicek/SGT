@@ -163,6 +163,47 @@ namespace Sgt.Modules.Configuration.Infrastructure.Persistence.Migrations
 
                     b.ToTable("exchange_rates", "configuration");
                 });
+
+            modelBuilder.Entity("Sgt.Modules.Configuration.Infrastructure.Persistence.TenantMarkerRow", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id");
+
+                    b.Property<string>("Code")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("code");
+
+                    b.Property<Guid>("ActorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("actor_id");
+
+                    b.Property<Guid>("CorrelationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("correlation_id");
+
+                    b.Property<string>("ReasonCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("reason_code");
+
+                    b.Property<DateTimeOffset>("SetAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("set_at");
+
+                    b.Property<string>("Terminal")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("terminal");
+
+                    b.HasKey("TenantId", "Code")
+                        .HasName("pk_tenant_markers");
+
+                    b.ToTable("tenant_markers", "configuration");
+                });
 #pragma warning restore 612, 618
         }
     }

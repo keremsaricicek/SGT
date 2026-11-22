@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Infrastructure.Messaging;
 using Sgt.Modules.Configuration.Application.ExchangeRates;
+using Sgt.Modules.Configuration.Application.Markers;
 using Sgt.Modules.Configuration.Application.Ports;
 using Sgt.Modules.Configuration.Contracts;
 using Sgt.Modules.Configuration.Infrastructure.Persistence;
@@ -19,14 +20,18 @@ public static class ConfigurationInfrastructureModule
 
         services.AddOutbox<ConfigurationDbContext>("Configuration");
         services.AddIntegrationEventType<ExchangeRateSetV1>();
+        services.AddIntegrationEventType<TenantMarkerSetV1>();
 
         services.AddScoped<IExchangeRateStore, ExchangeRateStore>();
         services.AddScoped<IConfigurationOutbox, ConfigurationOutbox>();
         services.AddScoped<IConfigurationUnitOfWork, ConfigurationUnitOfWork>();
         services.AddScoped<IExchangeRateQuery, ExchangeRateQuery>();
+        services.AddScoped<ITenantMarkerStore, TenantMarkerStore>();
 
         services.AddScoped<ICommandHandler<SetExchangeRateCommand>, SetExchangeRateHandler>();
         services.AddScoped<IQueryHandler<GetCurrentRatesQuery, IReadOnlyList<ExchangeRateDto>>, GetCurrentRatesHandler>();
+        services.AddScoped<ICommandHandler<SetTenantMarkerCommand>, SetTenantMarkerHandler>();
+        services.AddScoped<IQueryHandler<IsTenantMarkerSetQuery, bool>, IsTenantMarkerSetHandler>();
         return services;
     }
 

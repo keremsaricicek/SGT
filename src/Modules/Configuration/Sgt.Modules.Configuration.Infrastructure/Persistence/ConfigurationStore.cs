@@ -36,6 +36,23 @@ internal sealed class ExchangeRateStore(ConfigurationDbContext db) : IExchangeRa
     }
 }
 
+internal sealed class TenantMarkerStore(ConfigurationDbContext db) : ITenantMarkerStore
+{
+    public void Add(TenantMarker marker) => db.TenantMarkers.Add(new TenantMarkerRow
+    {
+        TenantId = marker.TenantId.Value,
+        Code = marker.Code,
+        SetAt = marker.SetAt,
+        ActorId = marker.Audit.Actor.Value,
+        Terminal = marker.Audit.Terminal,
+        ReasonCode = marker.Audit.Reason.Value,
+        CorrelationId = marker.Audit.CorrelationId,
+    });
+
+    public Task<bool> Exists(TenantId tenantId, string code, CancellationToken ct) =>
+        db.TenantMarkers.AnyAsync(m => m.TenantId == tenantId.Value && m.Code == code, ct);
+}
+
 internal sealed class ConfigurationOutbox(ConfigurationDbContext db, IntegrationEventSerializer serializer) : IConfigurationOutbox
 {
     public void Add(IIntegrationEvent integrationEvent) => db.Set<OutboxMessage>().Add(serializer.ToOutbox(integrationEvent));

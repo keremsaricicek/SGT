@@ -19,3 +19,11 @@ public interface IConfigurationOutbox
 public interface IConfigurationUnitOfWork : IUnitOfWork
 {
 }
+
+/// <summary>Tenant işaretleri (append-only).</summary>
+public interface ITenantMarkerStore
+{
+    void Add(TenantMarker marker);
+
+    Task<bool> Exists(TenantId tenantId, string code, CancellationToken ct);
+}
