@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Sgt.BuildingBlocks;
 using Sgt.BuildingBlocks.Infrastructure.Security;
 using Sgt.BuildingBlocks.Web;
+using Sgt.DemoData;
 using Sgt.Modules.Audit.Api;
 using Sgt.Modules.Audit.Infrastructure;
 using Sgt.Modules.CasinoPlayer.Api;
@@ -39,6 +40,15 @@ builder.Services.AddExceptionHandler<ConcurrencyConflictHandler>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddScoped<IRequestContext, HttpRequestContext>();
+
+// "--seed-demo": demo verisini yükleyip çıkar (Spec 012). Saat, geçmiş günleri yazabilmek için DemoClock'tur.
+var seedDemo = DemoSeedCommand.IsRequested(args);
+DemoSeedOptions? demoOptions = null;
+if (seedDemo && DemoSeedCommand.IsAllowedIn(builder.Environment.EnvironmentName))
+{
+    demoOptions = DemoSeedCommand.Options(builder.Configuration, new SystemClock().UtcNow);
+    builder.Services.AddDemoData(new DemoClock(demoOptions.Timeline.SetupStart));
+}
 
 // Kimlik: Keycloak (OIDC) token'ı doğrulanır; yetki SGT yetki panelindedir (ADR-0003).
 builder.Services
@@ -91,9 +101,14 @@ app.MapLoyaltyEndpoints();
 app.MapReportingEndpoints();
 app.MapOutboxAdminEndpoints();
 
+if (seedDemo && !DemoSeedCommand.IsAllowedIn(app.Environment.EnvironmentName))
+{
+    return DemoSeedCommand.Refuse(app.Logger, app.Environment.EnvironmentName);
+}
+
 // "--migrate": yalnızca veritabanı şemasını günceller ve çıkar; üretimde dağıtım adımıdır (ADR-0007).
 var migrateOnly = args.Contains("--migrate", StringComparer.Ordinal);
-if (migrateOnly || app.Environment.IsDevelopment())
+if (migrateOnly || seedDemo || app.Environment.IsDevelopment())
 {
     await using var scope = app.Services.CreateAsyncScope();
     await scope.ServiceProvider.MigrateIdentityDatabase(default);
@@ -106,7 +121,14 @@ if (migrateOnly || app.Environment.IsDevelopment())
 
     if (migrateOnly)
     {
-        return;
+        return 0;
+    }
+
+    if (demoOptions is not null)
+    {
+        // Demo tenant'ı S Plus lisansı ve süper adminle açılır; geri kalan her şey modül komutlarıyla yazılır.
+        await IdentityDevelopmentSeed.Run(scope.ServiceProvider, demoOptions.Tenant, DemoUsers.SuperAdmin.Id, [Product.SPlus], default);
+        return await DemoSeedCommand.Run(scope.ServiceProvider, demoOptions, app.Logger, default);
     }
 
     var seed = app.Configuration.GetSection("DevelopmentSeed");
@@ -117,6 +139,7 @@ if (migrateOnly || app.Environment.IsDevelopment())
 }
 
 await app.RunAsync();
+return 0;
 
 /// <summary>API testlerinin host'u başlatabilmesi için.</summary>
 public partial class Program;
