@@ -1,6 +1,6 @@
 # Spec 012: Demo ortamı (A2)
 
-Modül: Bootstrapper (tüm modüllerin komut handler'ları) · Ürün: S Plus · Durum: Taslak (21.11.2026)
+Modül: Bootstrapper (tüm modüllerin komut handler'ları) · Ürün: S Plus · Durum: Tamamlandı (22.11.2026; `build/demo.sh` Docker yolu bulut oturumunda çalıştırılamadı, kullanıcı makinesinde doğrulanacak)
 
 ## Amaç
 Proje sahibi ve satış, sistemi tek komutla açıp gerçekçi ama tamamen sahte veriyle dolu bir casino görür.
