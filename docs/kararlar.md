@@ -196,6 +196,12 @@ depozito, SPA, toplantı salonu, çamaşırhane: hepsi.
 9. Kesintide yerel mod: kasa sınırlı tutarla çalışır, sonra eşitler.
 10. Sabah otomatik yönetim raporu (PDF, telefona).
 Seçilmeyenler: oyuncu mobil uygulaması (5), QR menü (6).
+14. Oyuncu tercih kartı (içki, masa, krupiye, sigara).
+15. Chip envanter alarmı, chip yenileme/imha kaydı.
+16. Masa sonucu sapma grafiği (gerçek vs beklenen).
+18. Puan/comp dolandırıcılığı kontrolü (şişirilmiş rating, aynı kişiye sürekli comp).
+19. Doğum günü/özel gün comp önerisi ve host hatırlatması.
+20. Müdür için hızlı yanıt ekranı (oyuncu nerede, sonuç, comp).
 
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
