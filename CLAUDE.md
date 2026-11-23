@@ -71,6 +71,18 @@ her modülü `Add<Modül>Module(...)` + `Map<Modül>Endpoints()` ile bağlar.
 - Gerçek oyuncu/misafir/kart verisi, üretim bağlantısı, secret repoya/loga/agent bağlamına girmez; yalnızca sentetik veri.
 - Build analyzer'ları (BannedApiAnalyzers: `DateTime.Now` vb.) uyarıyı hata sayar; susturma gerekçeli olur.
 
+## Ajan ve kullanım hakkı kuralları (sahip kararı, 23.11.2026)
+
+- Kod yazan ajanlar **Sonnet** ile çalışır (`model: sonnet`); Opus yalnız koordinasyon ve finans denetimi.
+- En fazla **2 paralel ajan**; her biri yalnız kendi modülünde.
+- **Az okuma formülü:** koordinatör her ajana "bağlam paketi" verir (dokunacağı dosya listesi + ilgili imzalar + örnek
+  dilim yolu). Ajan önce `grep`/Glob ile yer bulur, dosyayı `offset/limit` ile parça parça okur, tüm klasör taramaz;
+  PDF/büyük doküman okumaz (gereken kısım pakette verilir). Varsa `graphify-out/` haritası kullanılır.
+- **Test:** iş sırasında yalnız değişen modülün testleri (`--filter`); `dotnet test Sgt.slnx` tamamı yalnız iş paketinin sonunda.
+- **Denetçiler** (`code-rules-reviewer`, `finans-denetci`, `veri-sagligi-denetci`) her iş parçasından sonra değil,
+  **3 spec'te bir veya aşama sonunda** toplu çalışır; birleştirmeden önce mutlaka bir kez.
+- Ajanlar sık commit eder (hak bitince iş kaybolmasın); ara rapor yazmaz.
+
 ## Çalışma akışı ve bitti tanımı
 
 Spec (Spec Kit) → plan → önce başarısız test → kod → inceleme → demo. Bitti: kabul kriterleri testli; build uyarısız ve
