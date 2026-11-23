@@ -185,6 +185,18 @@ depozito, SPA, toplantı salonu, çamaşırhane: hepsi.
 - İnternet kesintisi olmaz varsayımı, ama önlem alınır (yedek hat, yerel sunucu, kesintide kasa için sınırlı mod).
 - Modül sırası: koordinatör belirler (kolaydan zora).
 
+## 9d. Eklenen fikirler (23.11.2026, proje sahibi onayı)
+
+1. Oyuncu kaybı tahmini: ziyareti azalan değerli oyuncu için host'a uyarı.
+2. Canlı salon ekranı (büyük TV): masa doluluğu, kazanç, açık masa.
+3. Şüpheli davranış uyarısı (hile/iç işbirliği); **şartlar ve eşikler ayarlanabilir** olmalı.
+4. Inspector için sesle giriş (masaya mikrofon takılabilir).
+7. Akıllı comp önerisi: teorik kayba göre verilebilecek en fazla comp.
+8. Krupiye performansı: el hızı, hata, masa sonucu.
+9. Kesintide yerel mod: kasa sınırlı tutarla çalışır, sonra eşitler.
+10. Sabah otomatik yönetim raporu (PDF, telefona).
+Seçilmeyenler: oyuncu mobil uygulaması (5), QR menü (6).
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
