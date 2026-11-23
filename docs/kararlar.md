@@ -127,6 +127,64 @@ Fizibilite raporunu proje sahibi hazırlamadı; eksik veya bu kararlarla uyumsuz
 - **RFID cihazları:** Kart yazıcı ve okuyucu markasını proje sahibi iletecek; o gelene kadar cihaz bağımsız adaptör sözleşmesi.
 - **RFID:** Oyuncu kartı RFID'li (resepsiyonda basım, girişte ve masada okutma). RFID chip yok; otel oda kartı ayrı kalır.
 
+## 9c. Kapsam soru-cevabı (23.11.2026, proje sahibi; "karar" notları koordinatörün)
+
+**Kasa**
+- Ödeme: nakit (TRY/EUR/GBP/USD), kredi kartı (POS), banka havalesi, **kripto** (chip alımı ve kazanç ödemesi, aracı ödeme servisi üzerinden).
+- Oyuncu hesabı (front money), chip emaneti, kasa kutusu (safe deposit) var.
+- Belge: termal fiş, barkod/QR'lı fiş, büyük işlemde oyuncu imzası, e-posta/SMS dekont. Kasaya özel cihaz bağlantısı gerekmez.
+- **Marker (kredi) verilir**, tahsilat takibi var.
+- Dört göz: eşik üstü işlem, jackpot/el ödemesi, düzeltme/iptal, kasa devri.
+- Oyun günü 24 saat değildir (gün kapanış saati ayarlanabilir).
+
+**Canlı oyun / Inspector**
+- Oyunlar: rulet, blackjack, baccarat/punto banco, Ultimate poker, Rus pokeri, Trio poker ve diğer casinoya karşı poker türleri.
+- Oyuncu-oyuncu poker / turnuva: ayrı bir **turnuva modülü** olarak sonra.
+- Rating: ortalama bahis + süre.
+- Canlı takip: inspector her el sonu girdi/çıktı yapar; oyuncunun önündeki chip ve oynanan miktar anlık değişir.
+- Inspector'da oyuncu bulma: isimden arama ve fotoğraflı koltuk düzeni.
+- El sonu kaydı (karar): oyuncunun önündeki chip, bahis, kazanç/kayıp.
+- Krupiye rotasyonu: pit boss belirler, rotayı yayınlar, anlık görünür.
+
+**Slot**
+- Ödeme: kartla kredi yükleme (cashless). Oyuncu takibi: kart takınca oturum.
+- Bakım (karar): arıza kaydı + teknisyen ataması, sayaç okuma kontrolü.
+- Promosyon: biriken puanın karşılığı para olarak kasadan oyuncu hesabına yüklenir.
+
+**Oyuncu / PR / Loyalty**
+- Girişte: kimlik okutma, yaş kontrolü, fotoğraf, kara liste uyarısı.
+- Kara liste: casino listesi, devlet/yasal liste, kendi kendini kısıtlama.
+- Loyalty: puanla seviye, seviye ayrıcalıkları, puan süresi, ödül kataloğu.
+- Comp: yemek/içecek, otel odası, ulaşım/uçak, cashback.
+- Pazarlama (SMS/e-posta kampanyası) gerekmez.
+- Junket komisyon takibi ve grup gelişleri var.
+- Host: oyuncu portföyü, ziyaret planı.
+- Oyuncu servisleri: transfer, uçak bileti, vize/davet mektubu.
+
+**F&B**
+- Ödeme: comp ile ücretsiz (ve 9b'deki satış). Cihaz: mutfak yazıcısı/ekranı, bar ekranı.
+- Stok: depo, reçete ile otomatik düşüm, sayım ve fire, satın alma/tedarikçi.
+- Raporlar: ürün satış, comp maliyeti, stok değeri.
+
+**Muhasebe**
+- Cari, banka, demirbaş/amortisman, bütçe; kağıt fatura ve e-fatura.
+- Personel: bordro ve puantaj. Kur: günlük değerleme, dönem sonu kur farkı, merkez bankası kuru otomatik + elle.
+- Raporlar: mizan, bilanço, gelir tablosu, departman kârlılığı.
+
+**Otel (S Vista):** Rezervasyon, resepsiyon, kat hizmetleri, online kanallar, folio, comp → oda, acente faturası,
+depozito, SPA, toplantı salonu, çamaşırhane: hepsi.
+
+**Güvenlik / uyum / yönetim**
+- Kara para önleme modülü şimdilik yok.
+- CCTV: işlem anında kamera işareti, kamera sistemine bağlantı, olay notu.
+- Denetçi ekranı, günlük resmi rapor, vergi raporu, bağımsız denetim dökümü.
+- Kullanıcı girişi: parmak izi/yüz ve kartla giriş. Personel izleme: hepsi.
+- Yönetici paneli: canlı salon, günlük kâr/zarar, hedef/bütçe, mobil bildirim.
+- Çoklu tesis: birden çok casino tek şirket, merkezi oyuncu kartı, merkezi raporlama.
+- Dil: Türkçe ve İngilizce. Sunucu: casinoda kendi sunucusu.
+- İnternet kesintisi olmaz varsayımı, ama önlem alınır (yedek hat, yerel sunucu, kesintide kasa için sınırlı mod).
+- Modül sırası: koordinatör belirler (kolaydan zora).
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
