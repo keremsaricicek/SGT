@@ -216,6 +216,16 @@ Seçilmeyenler: oyuncu mobil uygulaması (5), QR menü (6).
   sistemi ve mobil uygulamayı kullanmaz. Mobildeki "comp talep et" kaldırılır.
 - Inspector: casinoya ait, kayıtlı tabletler casino cihazı sayılır ve işlem yapabilir; kişisel cihazdan işlem yasaktır.
 
+**Oyuncu para/chip akışı (23.11.2026, proje sahibi):**
+1. Oyuncu kasaya para verir; kasa parayı alır, oyuncunun hesabına chip veya **plak** (yüksek değerli plaque) girer.
+2. Oyuncu masada plağını bozdurur: inspector veya dealer plak karşılığı chip verir; sistemde oyuncunun plağı düşer, chip girer.
+3. Oyun boyunca canlı takip: kazandıkça/kaybettikçe oyuncunun chip'i sistemde artar/azalır (inspector el sonu girişi).
+4. Oyuncu kalkınca chip'ini alır, kasaya gider: nakde çevirir, ya da kaybettiyse casinonun onayladığı oranda
+   **discount (kayıp iadesi)** alır.
+- Marker ve kripto: kasa yürütür, müdürler onaylar.
+- Inspector el sonu rutini (koordinatör kararı): koltuk seç → chip değişimi (+/−) gir → tek dokunuşla kaydet;
+  ortalama bahis ve süre sistem tarafından hesaplanır. Pilotta inspector'larla birlikte sadeleştirilir.
+
 **Arayüz ilkesi (36 reddedildi):** Tek/genel arama kutusu yok. Program olay ve işlem bazlıdır: her işlem için ayrı ekran
 ve ayrı pencere. Arama yalnızca ilgili ekranın kendi bağlamında yapılır (oyuncu ekranında oyuncu, İK'da personel),
 tarih/takvim ile sınırlanır. Farklı alanların verisi tek listede karıştırılmaz.
