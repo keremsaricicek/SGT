@@ -56,7 +56,7 @@ a{color:inherit;text-decoration:none}
 
 /* toc */
 .toc{position:absolute;left:20mm;right:20mm;top:52mm;display:grid;grid-template-columns:1fr 1fr;column-gap:16mm}
-.toc a{display:grid;grid-template-columns:14mm 1fr 10mm;align-items:baseline;padding:2.9mm 0;border-bottom:.25mm solid var(--line)}
+.toc a{display:grid;grid-template-columns:14mm 1fr 10mm;align-items:baseline;padding:2.5mm 0;border-bottom:.25mm solid var(--line)}
 .toc .n{font-family:"Cormorant Garamond",serif;font-size:16pt;color:var(--gold);font-weight:600}
 .toc .t{font-size:10.5pt;font-weight:500}
 .toc .p{text-align:right;font-size:8pt;color:var(--mute);letter-spacing:.1em}
@@ -162,6 +162,19 @@ td b{font-weight:600}
 .mob{display:grid;grid-template-columns:1fr 0.95fr;gap:10mm;margin-top:2mm}
 .mf{display:grid;grid-template-columns:1fr 1fr;gap:4mm 6mm}
 .phones4{display:grid;grid-template-columns:repeat(3,1fr);gap:5mm;align-self:start;margin-top:-6mm}
+
+.asst{display:grid;grid-template-columns:1fr 1.05fr;gap:14mm;margin-top:2mm}
+.chat{border:.3mm solid #29a28f55;background:#0f1215;padding:6mm 6mm 5mm}
+.chat .hd{display:flex;align-items:center;gap:3mm;padding-bottom:4mm;border-bottom:.25mm solid #2b2f36;margin-bottom:4mm}
+.chat .hd img{height:7mm}
+.chat .hd b{font-size:9.5pt;color:#f3eee4;font-weight:600}
+.chat .hd small{display:block;font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.msg{font-size:9.2pt;line-height:1.45;padding:3mm 4mm;margin-bottom:3mm;max-width:88%}
+.msg.u{background:#1d2228;color:#e3ded4;margin-left:auto;border-left:.5mm solid #6d727a}
+.msg.a{background:#29a28f14;color:#e3ded4;border-left:.5mm solid var(--gold)}
+.msg .who{display:block;font-size:6.8pt;letter-spacing:.22em;text-transform:uppercase;color:#7e796f;margin-bottom:1mm}
+.steps{display:flex;gap:2mm;margin-top:2mm;flex-wrap:wrap}
+.steps span{font-size:7.2pt;letter-spacing:.12em;text-transform:uppercase;border:.25mm solid #29a28f66;color:var(--gold2);padding:1mm 2.5mm}
 </style>
 </head>
 <body>
@@ -194,18 +207,19 @@ td b{font-weight:600}
     <a href="#sorun"><span class="n">02</span><span class="t">Sektörün sorunu</span><span class="p">04</span></a>
     <a href="#cozum"><span class="n">03</span><span class="t">Çözüm: tek platform</span><span class="p">05</span></a>
     <a href="#urunler"><span class="n">04</span><span class="t">Ürün ailesi</span><span class="p">06</span></a>
-    <a href="#moduller"><span class="n">05</span><span class="t">Modüller</span><span class="p">07</span></a>
-    <a href="#mobil"><span class="n">06</span><span class="t">Mobil destek</span><span class="p">08</span></a>
-    <a href="#zeka"><span class="n">07</span><span class="t">Akıllı işletme</span><span class="p">09</span></a>
-    <a href="#guven"><span class="n">08</span><span class="t">Güven, güvenlik ve uyum</span><span class="p">10</span></a>
-    <a href="#arti"><span class="n">09</span><span class="t">Artılar ve eksiler</span><span class="p">11</span></a>
-    <a href="#swot"><span class="n">10</span><span class="t">SWOT analizi</span><span class="p">12</span></a>
-    <a href="#fizibilite"><span class="n">11</span><span class="t">Fizibilite özeti</span><span class="p">13</span></a>
-    <a href="#model"><span class="n">12</span><span class="t">İş modeli</span><span class="p">14</span></a>
-    <a href="#surec"><span class="n">13</span><span class="t">Geliştirme süreci ve yol haritası</span><span class="p">15</span></a>
-    <a href="#pazara"><span class="n">14</span><span class="t">Pilot ve pazara giriş</span><span class="p">16</span></a>
-    <a href="#yatirim"><span class="n">15</span><span class="t">Ekip ve yatırımın kullanımı</span><span class="p">17</span></a>
-    <a href="#neden"><span class="n">16</span><span class="t">Neden SGT, neden şimdi</span><span class="p">18</span></a>
+    <a href="#asistan"><span class="n">05</span><span class="t">Kişisel casino asistanı</span><span class="p">07</span></a>
+    <a href="#moduller"><span class="n">06</span><span class="t">Modüller</span><span class="p">08</span></a>
+    <a href="#mobil"><span class="n">07</span><span class="t">Mobil destek</span><span class="p">09</span></a>
+    <a href="#zeka"><span class="n">08</span><span class="t">Akıllı işletme</span><span class="p">10</span></a>
+    <a href="#guven"><span class="n">09</span><span class="t">Güven, güvenlik ve uyum</span><span class="p">11</span></a>
+    <a href="#arti"><span class="n">10</span><span class="t">Artılar ve eksiler</span><span class="p">12</span></a>
+    <a href="#swot"><span class="n">11</span><span class="t">SWOT analizi</span><span class="p">13</span></a>
+    <a href="#fizibilite"><span class="n">12</span><span class="t">Fizibilite özeti</span><span class="p">14</span></a>
+    <a href="#model"><span class="n">13</span><span class="t">İş modeli</span><span class="p">15</span></a>
+    <a href="#surec"><span class="n">14</span><span class="t">Geliştirme süreci ve yol haritası</span><span class="p">16</span></a>
+    <a href="#pazara"><span class="n">15</span><span class="t">Pilot ve pazara giriş</span><span class="p">17</span></a>
+    <a href="#yatirim"><span class="n">16</span><span class="t">Ekip ve yatırımın kullanımı</span><span class="p">18</span></a>
+    <a href="#neden"><span class="n">17</span><span class="t">Neden SGT, neden şimdi</span><span class="p">19</span></a>
   </nav>
   <div class="foot"><span style="display:flex;align-items:center;gap:2.5mm"><img src="sgt-logo-koyu.png" style="height:4.2mm" alt="">Sentez Gaming Technologies</span><span>02</span></div>
 </section>
@@ -264,7 +278,7 @@ td b{font-weight:600}
     <h2 class="h">Üç ürün, <em>modüler lisans</em></h2>
     <div class="g3" style="margin-top:8mm">
       <div class="prod"><div class="tag">Çekirdek</div><h3>S Plus</h3><p class="d">Casinonun tamamı. Tek başına çalışır.</p>
-        <ul><li>Kasa, oyuncu hesabı, marker, kripto</li><li>Canlı oyun ve inspector arayüzü</li><li>Oyuncu, resepsiyon, PR, loyalty, RFID kart</li><li>F&amp;B: bar ve restoran, stok</li><li>Muhasebe ve insan kaynakları</li></ul>
+        <ul><li>Kasa, oyuncu hesabı, marker, kripto</li><li>Canlı oyun ve inspector arayüzü</li><li>Oyuncu, resepsiyon, PR, loyalty, RFID kart</li><li>F&amp;B: bar ve restoran, stok</li><li>Kişisel casino asistanı</li><li>Muhasebe ve insan kaynakları</li></ul>
         <div class="foot2">Her tesis için temel lisans</div></div>
       <div class="prod"><div class="tag">Ek modül</div><h3>S Slot</h3><p class="d">Slot makinelerinden doğrudan veri.</p>
         <ul><li>Salon haritası ve makine durumu</li><li>Sayaç, olay ve alarm takibi</li><li>Kartla kredi, oyuncu oturumu</li><li>Arıza ve teknisyen yönetimi</li><li>Slot performans raporları</li></ul>
@@ -278,10 +292,36 @@ td b{font-weight:600}
 </section>
 
 
+<!-- ASİSTAN -->
+<section class="pg dark" id="asistan">
+  <div class="pad">
+    <p class="eyebrow">05 · Kişisel casino asistanı</p>
+    <h2 class="h" style="color:#f3eee4">Ekibinizin en çalışkan üyesi:<br><em>casino asistanı</em></h2>
+    <div class="asst">
+      <div>
+        <p class="lede" style="margin-bottom:8mm">Her personelin yanında, sistemi baştan sona bilen bir yardımcı. Ne istediğinizi söylemeniz yeterli: bilgiyi bulur, işi hazırlar, doğru kişiye iletir, sonucu takip eder. Herkese yalnızca kendi yetkisi kadar hizmet eder.</p>
+        <div class="mf">
+          <div class="col"><h4 style="color:#f3eee4">Anlar</h4><p>Günlük dille, yazarak ya da konuşarak verilen talimatı anlar.</p></div>
+          <div class="col"><h4 style="color:#f3eee4">Yapar</h4><p>Raporu hazırlar, kaydı açar, talebi oluşturur, işi başlatır.</p></div>
+          <div class="col"><h4 style="color:#f3eee4">Haber verir</h4><p>Onay gerekeni müdüre, işi başlayanı ilgili ekibe anında iletir.</p></div>
+          <div class="col"><h4 style="color:#f3eee4">Sınırını bilir</h4><p>Yetkinin dışına çıkmaz; parada son söz her zaman insanın.</p></div>
+        </div>
+      </div>
+      <div class="chat">
+        <div class="hd"><img src="sgt-logo-acik.png" alt=""><div><small>SGT Asistan</small><b>Marketing · mobil</b></div></div>
+        <div class="msg u"><span class="who">Marketing</span>S-1042 numaralı misafirimiz 5–8 Aralık'ta gelecek, 301'de kalacak. Yönetime sorar mısın?</div>
+        <div class="msg a"><span class="who">Asistan</span>Konaklama talebini hazırladım: S-1042, 5–8 Aralık, oda 301. Oyuncunun geçmişini ekleyip casino müdürüne onaya gönderdim.</div>
+        <div class="msg a"><span class="who">Asistan · 14:12</span>Müdür onayladı. PR ekibine iletildi; oda ayrıldı, transfer ve karşılama planlandı.</div>
+        <div class="steps"><span>Talep</span><span>Müdür onayı</span><span>PR iş listesi</span><span>Tamamlandı</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Kişisel casino asistanı · örnek senaryo</span><a href="#icerik">İçerik ↑ · 07</a></div>
+</section>
 <!-- MODÜLLER -->
 <section class="pg" id="moduller">
   <div class="pad" style="top:13mm">
-    <p class="eyebrow">05 · Modüller</p>
+    <p class="eyebrow">06 · Modüller</p>
     <h2 class="h" style="font-size:26pt;margin-bottom:4mm">Dokuz modül, <em>tek oyuncu, tek kasa</em></h2>
     <div class="tiles9">
       <div class="tile"><div class="k">S Plus</div><h4>Kasa ve hazine</h4><ul><li>Oyuncu hesabı, plak ve chip envanteri</li><li>Marker, kripto, emanet, kasa kutusu</li><li>Dört göz onayı, gün sonu kilidi</li></ul></div>
@@ -295,12 +335,12 @@ td b{font-weight:600}
       <div class="tile"><div class="k">Ortak</div><h4>Yönetim ve denetim</h4><ul><li>Yetki paneli, denetim izi, IT paneli</li><li>Gece mutabakatı, resmi raporlar</li><li>Çok tesisli merkezi raporlama</li></ul></div>
     </div>
   </div>
-  <div class="foot"><span>Modüller</span><a href="#icerik">İçerik ↑ · 07</a></div>
+  <div class="foot"><span>Modüller</span><a href="#icerik">İçerik ↑ · 08</a></div>
 </section>
 <!-- MOBİL -->
 <section class="pg dark" id="mobil">
   <div class="pad">
-    <p class="eyebrow">06 · Mobil destek</p>
+    <p class="eyebrow">07 · Mobil destek</p>
     <h2 class="h" style="color:#f3eee4">Casino, <em>yöneticinin cebinde</em></h2>
     <div class="mob">
       <div>
@@ -321,13 +361,13 @@ td b{font-weight:600}
       </div>
     </div>
   </div>
-  <div class="foot"><span>Mobil destek · örnek veri</span><a href="#icerik">İçerik ↑ · 08</a></div>
+  <div class="foot"><span>Mobil destek · örnek veri</span><a href="#icerik">İçerik ↑ · 09</a></div>
 </section>
 
 <!-- 9 ZEKA -->
 <section class="pg dark" id="zeka">
   <div class="pad">
-    <p class="eyebrow">07 · Akıllı işletme</p>
+    <p class="eyebrow">08 · Akıllı işletme</p>
     <h2 class="h" style="color:#f3eee4">Kayıt tutmaktan öte:<br><em>önceden görür, uyarır</em></h2>
     <div class="g3" style="margin-top:10mm;row-gap:9mm">
       <div class="col"><h4 style="color:#f3eee4">Oyuncu kaybı tahmini</h4><p>Ziyareti azalan değerli oyuncuyu fark eder, host'u harekete geçirir.</p></div>
@@ -338,13 +378,13 @@ td b{font-weight:600}
       <div class="col"><h4 style="color:#f3eee4">Sabah yönetim raporu</h4><p>Günün özeti, yöneticinin telefonuna otomatik olarak düşer.</p></div>
     </div>
   </div>
-  <div class="foot"><span>Akıllı işletme</span><a href="#icerik">İçerik ↑ · 09</a></div>
+  <div class="foot"><span>Akıllı işletme</span><a href="#icerik">İçerik ↑ · 10</a></div>
 </section>
 
 <!-- 10 GÜVEN -->
 <section class="pg" id="guven">
   <div class="pad">
-    <p class="eyebrow">08 · Güven, güvenlik ve uyum</p>
+    <p class="eyebrow">09 · Güven, güvenlik ve uyum</p>
     <h2 class="h">Güven, <em>tasarımın kendisi</em></h2>
     <div class="hair"></div>
     <div class="g2" style="margin-top:6mm">
@@ -363,14 +403,14 @@ td b{font-weight:600}
       </div>
     </div>
   </div>
-  <div class="foot"><span>Güven, güvenlik ve uyum</span><a href="#icerik">İçerik ↑ · 10</a></div>
+  <div class="foot"><span>Güven, güvenlik ve uyum</span><a href="#icerik">İçerik ↑ · 11</a></div>
 </section>
 
 
 <!-- ARTILAR EKSİLER -->
 <section class="pg" id="arti">
   <div class="pad">
-    <p class="eyebrow">09 · Artılar ve eksiler</p>
+    <p class="eyebrow">10 · Artılar ve eksiler</p>
     <h2 class="h">Dengeli bir <em>bakış</em></h2>
     <div class="hair"></div>
     <div class="g2 pc" style="gap:14mm">
@@ -379,6 +419,7 @@ td b{font-weight:600}
         <li><span class="plus">+</span>Silinemez kayıt ve dört göz: iç kayba karşı güçlü kontrol</li>
         <li><span class="plus">+</span>Yerel: dört para birimi, Türkçe, Tek Düzen, adada destek</li>
         <li><span class="plus">+</span>Modüler lisans: düşük giriş maliyeti, büyüdükçe artan gelir</li>
+        <li><span class="plus">+</span>Kişisel casino asistanı: her personelin yanında dijital yardımcı</li>
         <li><span class="plus">+</span>Mobil yönetim ve masa başı tablet</li>
         <li><span class="plus">+</span>Yapay zekâ destekli hızlı geliştirme, çalışan ilk sürüm hazır</li>
       </ul></div>
@@ -392,26 +433,26 @@ td b{font-weight:600}
       </ul></div>
     </div>
   </div>
-  <div class="foot"><span>Artılar ve eksiler</span><a href="#icerik">İçerik ↑ · 11</a></div>
+  <div class="foot"><span>Artılar ve eksiler</span><a href="#icerik">İçerik ↑ · 12</a></div>
 </section>
 <!-- SWOT -->
 <section class="pg" id="swot">
   <div class="pad" style="top:13mm">
-    <p class="eyebrow">10 · SWOT analizi</p>
+    <p class="eyebrow">11 · SWOT analizi</p>
     <h2 class="h" style="font-size:26pt;margin-bottom:4mm">Güçlü, zayıf, <em>fırsat, tehdit</em></h2>
     <div class="swot">
-      <div class="sw s"><span class="L">S</span><h4>Güçlü yönler</h4><ul><li>Uçtan uca bütünleşik ürün ailesi</li><li>Para doğruluğu: silinemez kayıt, gece mutabakatı</li><li>Yerel dil, para birimi ve muhasebe uyumu</li><li>Mobil ve tablet desteği</li><li>Hızlı ve düşük maliyetli geliştirme modeli</li></ul></div>
+      <div class="sw s"><span class="L">S</span><h4>Güçlü yönler</h4><ul><li>Uçtan uca bütünleşik ürün ailesi</li><li>Kişisel casino asistanı</li><li>Para doğruluğu: silinemez kayıt, gece mutabakatı</li><li>Yerel dil, para birimi ve muhasebe uyumu</li><li>Mobil ve tablet desteği</li><li>Hızlı ve düşük maliyetli geliştirme modeli</li></ul></div>
       <div class="sw w"><span class="L">W</span><h4>Zayıf yönler</h4><ul><li>Referans müşteri ve saha geçmişi yok</li><li>Küçük ekip</li><li>Donanım entegrasyonlarında dış bağımlılık</li><li>Yeni marka, tanınırlık düşük</li></ul></div>
       <div class="sw o"><span class="L">O</span><h4>Fırsatlar</h4><ul><li>Parçalı yabancı sistemlerin yerine tek yerli platform</li><li>Casino-otel gruplarında merkezi yönetim ihtiyacı</li><li>Sıkılaşan denetim ve iç kontrol beklentisi</li><li>Ek modüllerle aynı müşteride büyüme</li></ul></div>
       <div class="sw t"><span class="L">T</span><h4>Tehditler</h4><ul><li>Köklü uluslararası rakipler</li><li>Mevzuat değişiklikleri</li><li>Mevcut sistemlerden veri erişiminin kısıtlanması</li><li>Siber saldırı ve veri güvenliği riski</li><li>Ekonomik dalgalanma ve kur riski</li></ul></div>
     </div>
   </div>
-  <div class="foot"><span>SWOT analizi</span><a href="#icerik">İçerik ↑ · 12</a></div>
+  <div class="foot"><span>SWOT analizi</span><a href="#icerik">İçerik ↑ · 13</a></div>
 </section>
 <!-- FİZİBİLİTE -->
 <section class="pg" id="fizibilite">
   <div class="pad" style="top:13mm">
-    <p class="eyebrow">11 · Fizibilite özeti</p>
+    <p class="eyebrow">12 · Fizibilite özeti</p>
     <h2 class="h" style="font-size:26pt;margin-bottom:4mm">Yapılabilir mi? <em>Evet, koşullarıyla</em></h2>
     <table class="feas">
       <thead><tr><th style="width:30mm">Boyut</th><th>Değerlendirme</th><th>Gerekçe ve koşul</th></tr></thead>
@@ -426,12 +467,12 @@ td b{font-weight:600}
     </table>
     <div class="verdict"><div class="t">Sonuç</div><p>Proje teknik olarak yüksek, ticari olarak orta-yüksek yapılabilirlikte. Başarının üç anahtarı: bir pilot casino, cihaz üreticileriyle anlaşma ve resmi rapor kurallarının netleşmesi.</p></div>
   </div>
-  <div class="foot"><span>Fizibilite özeti</span><a href="#icerik">İçerik ↑ · 13</a></div>
+  <div class="foot"><span>Fizibilite özeti</span><a href="#icerik">İçerik ↑ · 14</a></div>
 </section>
 <!-- 12 İŞ MODELİ -->
 <section class="pg" id="model">
   <div class="pad">
-    <p class="eyebrow">12 · İş modeli</p>
+    <p class="eyebrow">13 · İş modeli</p>
     <h2 class="h">Tesis başına lisans,<br><em>modülle büyüyen gelir</em></h2>
     <div class="hair"></div>
     <div class="g4" style="margin-top:8mm">
@@ -442,13 +483,13 @@ td b{font-weight:600}
     </div>
     <p class="quote" style="margin-top:14mm">Bir casino tek modülle başlar; oyuncu, otel ve slot büyüdükçe aynı platformda kalır. Geçiş maliyeti düşük, bağlılık yüksek.</p>
   </div>
-  <div class="foot"><span>İş modeli</span><a href="#icerik">İçerik ↑ · 14</a></div>
+  <div class="foot"><span>İş modeli</span><a href="#icerik">İçerik ↑ · 15</a></div>
 </section>
 
 <!-- 13 SÜREÇ -->
 <section class="pg" id="surec">
   <div class="pad">
-    <p class="eyebrow">13 · Geliştirme süreci</p>
+    <p class="eyebrow">14 · Geliştirme süreci</p>
     <h2 class="h">Aşama aşama, <em>her adımda demo</em></h2>
     <p class="lede" style="margin-bottom:12mm">Her aşama, denenebilir bir demo ve ekran onayıyla kapanır. Para ile ilgili her parça insan uzman onayından geçmeden ürüne girmez.</p>
     <div class="tl">
@@ -464,13 +505,13 @@ td b{font-weight:600}
       <div class="col"><h4>Ekranla teslim</h4><p>Her aşama sonunda ekran görüntüleri ve denenebilir demo.</p></div>
     </div>
   </div>
-  <div class="foot"><span>Geliştirme süreci</span><a href="#icerik">İçerik ↑ · 15</a></div>
+  <div class="foot"><span>Geliştirme süreci</span><a href="#icerik">İçerik ↑ · 16</a></div>
 </section>
 
 <!-- 14 PAZARA GİRİŞ -->
 <section class="pg dark" id="pazara">
   <div class="pad">
-    <p class="eyebrow">14 · Pilot ve pazara giriş</p>
+    <p class="eyebrow">15 · Pilot ve pazara giriş</p>
     <h2 class="h" style="color:#f3eee4">Önce bir casino,<br><em>sonra bütün ada</em></h2>
     <div class="g4" style="margin-top:12mm">
       <div class="col"><div class="idx">I</div><h4 style="color:#f3eee4">Pilot casino</h4><p>Mevcut sistemlerle paralel çalışma; kabul testi ve canlıya geçiş.</p></div>
@@ -480,13 +521,13 @@ td b{font-weight:600}
     </div>
     <div class="balance" style="margin-top:16mm"><div class="t">Geçiş<br>yaklaşımı</div><p>Casino mevcut düzenini bozmadan başlar: önce paralel çalışma, sonra departman departman geçiş. Mevcut slot sisteminden veri alınabildiği için slotlara ilk gün dokunmak gerekmez.</p></div>
   </div>
-  <div class="foot"><span>Pilot ve pazara giriş</span><a href="#icerik">İçerik ↑ · 16</a></div>
+  <div class="foot"><span>Pilot ve pazara giriş</span><a href="#icerik">İçerik ↑ · 17</a></div>
 </section>
 
 <!-- 15 YATIRIM -->
 <section class="pg" id="yatirim">
   <div class="pad">
-    <p class="eyebrow">15 · Ekip ve yatırımın kullanımı</p>
+    <p class="eyebrow">16 · Ekip ve yatırımın kullanımı</p>
     <h2 class="h">Küçük çekirdek ekip,<br><em>güçlü üretim kapasitesi</em></h2>
     <div class="g2" style="margin-top:8mm">
       <table>
@@ -512,13 +553,13 @@ td b{font-weight:600}
       </table>
     </div>
   </div>
-  <div class="foot"><span>Ekip ve yatırımın kullanımı</span><a href="#icerik">İçerik ↑ · 17</a></div>
+  <div class="foot"><span>Ekip ve yatırımın kullanımı</span><a href="#icerik">İçerik ↑ · 18</a></div>
 </section>
 
 <!-- 16 NEDEN -->
 <section class="pg dark" id="neden">
   <div class="pad">
-    <p class="eyebrow">16 · Neden SGT, neden şimdi</p>
+    <p class="eyebrow">17 · Neden SGT, neden şimdi</p>
     <div class="g2" style="margin-top:10mm;gap:16mm">
       <div>
         <p class="statement" style="font-size:27pt">Yerel pazarı bilen, casinonun parasını kuruşu kuruşuna izleyen ve bütün departmanları tek çatıda toplayan <em>ilk yerli platform.</em></p>
@@ -527,11 +568,12 @@ td b{font-weight:600}
         <div class="col"><h4 style="color:#f3eee4">Yerel ve yakın</h4><p>KKTC'nin para birimleri, dili, muhasebesi ve işleyişi için baştan tasarlandı; destek adada.</p></div>
         <div class="col"><h4 style="color:#f3eee4">Bütünleşik</h4><p>Casino, slot, otel, restoran ve muhasebe aynı oyuncu ve aynı kasa üzerinde.</p></div>
         <div class="col"><h4 style="color:#f3eee4">Güvenilir</h4><p>Silinemez kayıt, dört göz, gece mutabakatı: denetim ve iç kontrol tasarımın parçası.</p></div>
+        <div class="col"><h4 style="color:#f3eee4">Akıllı</h4><p>Her personelin yanında, sistemi bilen kişisel casino asistanı.</p></div>
         <div class="col"><h4 style="color:#f3eee4">Hızlı üretim</h4><p>Yapay zekâ destekli geliştirme ile geleneksel yazılım projelerinin çok altında süre.</p></div>
       </div>
     </div>
   </div>
-  <div class="foot"><span>Sentez Gaming Technologies</span><a href="#icerik">İçerik ↑ · 18</a></div>
+  <div class="foot"><span>Sentez Gaming Technologies</span><a href="#icerik">İçerik ↑ · 19</a></div>
 </section>
 
 <!-- 17 ARKA KAPAK -->
