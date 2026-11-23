@@ -210,6 +210,12 @@ Seçilmeyenler: oyuncu mobil uygulaması (5), QR menü (6).
 33. IT kontrol paneli: sunucu/veritabanı/yedek sağlığı ve **bağlı cihaz takibi** (elektrik var mı, cihaz ayakta mı).
 35. Olay defteri ve vardiya devir notu.
 
+**Comp ve mobil (23.11.2026):**
+- Comp talep edilmez; yetkili personel açıklama yazarak **doğrudan verir** (talep → onay akışı kaldırılır). Casino PC'sinden yapılır.
+- Mobil uygulama yalnızca casino personeli (yönetici, host) içindir ve **yalnızca görüntüleme** yapar; müşteriler
+  sistemi ve mobil uygulamayı kullanmaz. Mobildeki "comp talep et" kaldırılır.
+- Inspector: casinoya ait, kayıtlı tabletler casino cihazı sayılır ve işlem yapabilir; kişisel cihazdan işlem yasaktır.
+
 **Arayüz ilkesi (36 reddedildi):** Tek/genel arama kutusu yok. Program olay ve işlem bazlıdır: her işlem için ayrı ekran
 ve ayrı pencere. Arama yalnızca ilgili ekranın kendi bağlamında yapılır (oyuncu ekranında oyuncu, İK'da personel),
 tarih/takvim ile sınırlanır. Farklı alanların verisi tek listede karıştırılmaz.
