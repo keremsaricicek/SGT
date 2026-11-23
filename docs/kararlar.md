@@ -121,6 +121,10 @@ Fizibilite raporunu proje sahibi hazırlamadı; eksik veya bu kararlarla uyumsuz
 - **Muhasebe:** Tam muhasebe: hesap planı, yevmiye, mizan, bilanço; kasa, F&B ve otel hareketleri otomatik yevmiye kaydı üretir.
 - **Inspector (masa denetçisi) arayüzü:** Ayrı, tablet uyumlu arayüz: oyuncu bahis takibi, masa chip sayımı ve fill/credit
   isteği, krupiye rotasyonu.
+- **F&B yerleri:** Casino barı (salon içi, masaya/makineye servis) ve restoran (adisyonlu masa servisi). Oda servisi yok.
+- **Muhasebe hesap planı:** Türkiye Tek Düzen Hesap Planı.
+- **Inspector cihazı:** Hem tablet (mobil uygulamada ayrı arayüz) hem masa başı dokunmatik PC (Windows uygulamasında).
+- **RFID cihazları:** Kart yazıcı ve okuyucu markasını proje sahibi iletecek; o gelene kadar cihaz bağımsız adaptör sözleşmesi.
 - **RFID:** Oyuncu kartı RFID'li (resepsiyonda basım, girişte ve masada okutma). RFID chip yok; otel oda kartı ayrı kalır.
 
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
