@@ -202,6 +202,17 @@ Seçilmeyenler: oyuncu mobil uygulaması (5), QR menü (6).
 18. Puan/comp dolandırıcılığı kontrolü (şişirilmiş rating, aynı kişiye sürekli comp).
 19. Doğum günü/özel gün comp önerisi ve host hatırlatması.
 20. Müdür için hızlı yanıt ekranı (oyuncu nerede, sonuç, comp).
+25. Otomatik çapraz mutabakat (kasa ↔ drop ↔ muhasebe ↔ F&B ↔ folio), sabah fark listesi.
+26. Veri sağlığı bekçisi: kapanmamış/eksik kayıtları bulur, sorumlusuna iş atar.
+27. Ana veri onayı: kritik ayar değişikliği dört göz + önce/sonra kaydı.
+29. İşlem yalnızca yetki + casino PC'sinden: **mobilden işlem yapılmaz**, casino bilgisayarı şarttır.
+32. Anlık ekran güncellemesi.
+33. IT kontrol paneli: sunucu/veritabanı/yedek sağlığı ve **bağlı cihaz takibi** (elektrik var mı, cihaz ayakta mı).
+35. Olay defteri ve vardiya devir notu.
+
+**Arayüz ilkesi (36 reddedildi):** Tek/genel arama kutusu yok. Program olay ve işlem bazlıdır: her işlem için ayrı ekran
+ve ayrı pencere. Arama yalnızca ilgili ekranın kendi bağlamında yapılır (oyuncu ekranında oyuncu, İK'da personel),
+tarih/takvim ile sınırlanır. Farklı alanların verisi tek listede karıştırılmaz.
 
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
