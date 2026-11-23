@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>SGT · Yatırımcı Sunumu</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+@page{size:297mm 210mm;margin:0}
+:root{
+  --black:#0a0b0d; --coal:#121418; --coal2:#1a1d22; --ivory:#f6f2ea; --paper:#fbf9f5;
+  --ink:#16181c; --ink2:#4a4f57; --mute:#8a8f97; --line:#e3ddd1; --line2:#2b2f36;
+  --gold:#29a28f; --gold2:#6fd0bd; --emerald:#1f5c4a;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Inter,sans-serif;color:var(--ink);font-size:10pt;line-height:1.55;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:inherit;text-decoration:none}
+.pg{width:297mm;height:210mm;position:relative;overflow:hidden;page-break-after:always;background:var(--paper)}
+.pg:last-child{page-break-after:auto}
+.dark{background:var(--black);color:#e9e4da}
+.serif{font-family:"Cormorant Garamond",serif}
+.pad{position:absolute;inset:18mm 20mm 18mm 20mm}
+
+/* chrome */
+.foot{position:absolute;left:20mm;right:20mm;bottom:8mm;display:flex;justify-content:space-between;font-size:7pt;letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.foot a{color:var(--gold)}
+.dark .foot{color:#6d727a}
+.eyebrow{font-size:7.5pt;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);font-weight:600;margin:0 0 4mm}
+.h{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:34pt;line-height:1.02;margin:0 0 5mm;letter-spacing:-.005em}
+.h em{font-style:italic;color:var(--gold)}
+.lede{font-size:11.5pt;color:var(--ink2);font-weight:300;max-width:150mm;margin:0}
+.dark .lede{color:#b8b2a6}
+.hair{height:.4mm;background:var(--gold);width:16mm;margin:0 0 7mm}
+
+/* cover */
+.cover .bg{position:absolute;inset:0;background:
+  radial-gradient(120mm 120mm at 85% 20%,#29a28f26,transparent 70%),
+  radial-gradient(160mm 120mm at 10% 110%,#1f5c4a30,transparent 70%),var(--black)}
+.cover .wm{position:absolute;right:26mm;top:22mm;height:96mm;opacity:.09}
+.cover .frame{position:absolute;inset:10mm;border:.3mm solid #29a28f55}
+.cover .mono{position:absolute;left:22mm;top:22mm;display:flex;gap:5mm;align-items:center}
+.cover .mono .lg{height:17mm;width:auto}
+.cover .mono .m{width:15mm;height:15mm;border:.35mm solid var(--gold);display:grid;place-items:center;font-family:"Cormorant Garamond",serif;font-size:17pt;font-weight:700;color:var(--gold2)}
+.cover .mono .t{font-size:7.5pt;letter-spacing:.38em;text-transform:uppercase;color:#a7a196;line-height:1.7}
+.cover .mono .t b{color:#efe9dd;font-weight:600}
+.cover .title{position:absolute;left:22mm;bottom:42mm;right:110mm}
+.cover .title .k{font-size:8pt;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:6mm}
+.cover h1{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:58pt;line-height:.95;margin:0 0 7mm;color:#f3eee4}
+.cover h1 em{color:var(--gold2)}
+.cover .title p{font-size:11.5pt;color:#b3ada2;font-weight:300;max-width:140mm;margin:0}
+.cover .side{position:absolute;right:22mm;bottom:42mm;width:72mm;border-left:.3mm solid #29a28f66;padding-left:7mm}
+.cover .side div{margin-bottom:5mm}
+.cover .side small{display:block;font-size:6.8pt;letter-spacing:.3em;text-transform:uppercase;color:#7d786f;margin-bottom:1mm}
+.cover .side span{font-family:"Cormorant Garamond",serif;font-size:15pt;color:#efe9dd}
+.cover .bottom{position:absolute;left:22mm;right:22mm;bottom:20mm;display:flex;justify-content:space-between;font-size:7pt;letter-spacing:.3em;text-transform:uppercase;color:#6f6a62}
+
+/* toc */
+.toc{position:absolute;left:20mm;right:20mm;top:58mm;display:grid;grid-template-columns:1fr 1fr;column-gap:16mm}
+.toc a{display:grid;grid-template-columns:14mm 1fr 10mm;align-items:baseline;padding:3.4mm 0;border-bottom:.25mm solid var(--line)}
+.toc .n{font-family:"Cormorant Garamond",serif;font-size:16pt;color:var(--gold);font-weight:600}
+.toc .t{font-size:10.5pt;font-weight:500}
+.toc .p{text-align:right;font-size:8pt;color:var(--mute);letter-spacing:.1em}
+
+/* divider */
+.divider .num{position:absolute;right:16mm;bottom:-24mm;font-family:"Cormorant Garamond",serif;font-size:300pt;line-height:1;color:#ffffff07;font-weight:600}
+.divider .in{position:absolute;left:22mm;top:50%;transform:translateY(-50%);width:170mm}
+.divider .in .h{font-size:46pt;color:#f3eee4}
+
+/* statement */
+.statement{font-family:"Cormorant Garamond",serif;font-weight:500;font-size:30pt;line-height:1.18;color:#f0ebe1;max-width:215mm;margin:0}
+.statement em{color:var(--gold2)}
+
+/* grids */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10mm}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:7mm}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:6mm}
+.col{border-top:.3mm solid var(--ink);padding-top:4mm}
+.dark .col{border-color:#3a3e45}
+.col .idx{font-family:"Cormorant Garamond",serif;font-size:22pt;color:var(--gold);line-height:1;margin-bottom:3mm;font-weight:600}
+.col h4{margin:0 0 2mm;font-size:11pt;font-weight:600}
+.col p{margin:0;font-size:9pt;color:var(--ink2)}
+.dark .col p{color:#a9a399}
+.col ul{margin:2mm 0 0;padding-left:4mm;font-size:8.8pt;color:var(--ink2)}
+.col li{margin-bottom:.8mm}
+
+/* product cards */
+.prod{background:var(--black);color:#e9e4da;padding:7mm 7mm 6mm;position:relative;min-height:112mm}
+.prod .tag{font-size:7pt;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.prod h3{font-family:"Cormorant Garamond",serif;font-size:34pt;font-weight:600;margin:2mm 0 1mm;color:#f3eee4}
+.prod .d{font-size:9.5pt;color:#b8b2a6;margin:0 0 5mm;font-weight:300}
+.prod ul{list-style:none;margin:0;padding:0;font-size:8.8pt}
+.prod li{padding:1.7mm 0;border-top:.25mm solid #2b2f36;color:#d8d2c6}
+.prod .foot2{position:absolute;left:7mm;right:7mm;bottom:5mm;font-size:7pt;letter-spacing:.2em;text-transform:uppercase;color:#7e796f}
+
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);margin-top:4mm}
+.fs{padding:0 6mm 0 0;position:relative}
+.fs .dot{width:10mm;height:10mm;border:.35mm solid var(--gold);display:grid;place-items:center;font-family:"Cormorant Garamond",serif;font-size:14pt;color:var(--gold2);margin-bottom:5mm;background:var(--black);position:relative;z-index:2}
+.fs:not(:last-child):before{content:"";position:absolute;left:10mm;right:0;top:5mm;height:.25mm;background:#29a28f66}
+.fs h4{margin:0 0 2mm;font-size:11pt;color:#f3eee4;font-weight:600}
+.fs p{margin:0;font-size:9pt;color:#a9a399;padding-right:4mm}
+.balance{margin-top:12mm;border:.3mm solid #29a28f66;padding:6mm 8mm;display:grid;grid-template-columns:60mm 1fr;gap:8mm;align-items:center}
+.balance .t{font-family:"Cormorant Garamond",serif;font-size:22pt;color:var(--gold2);line-height:1.05}
+.balance p{margin:0;color:#b8b2a6;font-size:9.6pt}
+
+/* module tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:.3mm solid var(--ink);border-left:.25mm solid var(--line)}
+.tile{border-right:.25mm solid var(--line);border-bottom:.25mm solid var(--line);padding:5mm 5mm 4mm;min-height:62mm}
+.tile .k{font-size:6.8pt;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.tile h4{font-family:"Cormorant Garamond",serif;font-size:18pt;font-weight:600;margin:1mm 0 2mm;line-height:1.05}
+.tile ul{margin:0;padding-left:3.6mm;font-size:8.3pt;color:var(--ink2)}
+.tile li{margin-bottom:.6mm}
+
+/* big numbers */
+.big{font-family:"Cormorant Garamond",serif;font-size:46pt;line-height:.9;color:var(--gold);font-weight:600}
+
+/* screenshots */
+.shot{border:.3mm solid #2b2f36;background:#0c0f12;padding:1.2mm}
+.shot img{display:block;width:100%}
+.ph{border:.3mm solid #3a3e45;background:#0c0f12;padding:1mm}
+.ph img{display:block;width:100%}
+.cap{font-size:7.5pt;letter-spacing:.18em;text-transform:uppercase;color:#7e796f;margin-top:2mm}
+
+/* timeline */
+.tl{display:grid;grid-template-columns:repeat(5,1fr);border-top:.3mm solid var(--ink);margin-top:2mm}
+.tl .c{padding:4mm 4mm 0 0;position:relative}
+.tl .c:before{content:"";position:absolute;top:-1.9mm;left:0;width:3.4mm;height:3.4mm;background:var(--paper);border:.35mm solid var(--gold);transform:rotate(45deg)}
+.tl .c.on:before{background:var(--gold)}
+.tl .ph2{font-size:6.8pt;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-top:2mm}
+.tl h4{font-family:"Cormorant Garamond",serif;font-size:16pt;margin:1mm 0 1.5mm;font-weight:600;line-height:1.05}
+.tl p{font-size:8.4pt;color:var(--ink2);margin:0}
+.tl .dur{font-size:8pt;color:var(--ink);font-weight:600;margin-top:2mm}
+
+/* table */
+table{width:100%;border-collapse:collapse;font-size:9pt}
+th{text-align:left;font-size:6.8pt;letter-spacing:.24em;text-transform:uppercase;color:var(--mute);font-weight:600;padding:2mm 3mm;border-bottom:.35mm solid var(--ink)}
+td{padding:2.6mm 3mm;border-bottom:.25mm solid var(--line);vertical-align:top}
+td b{font-weight:600}
+.quote{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:15pt;color:var(--ink);border-left:.4mm solid var(--gold);padding-left:6mm;margin:0}
+</style>
+</head>
+<body>
+
+<!-- 1 KAPAK -->
+<section class="pg dark cover" id="kapak">
+  <div class="bg"></div><img class="wm" src="sgt-logo-acik.png" alt=""><div class="frame"></div>
+  <div class="mono"><img class="lg" src="sgt-logo-acik.png" alt="SGT"><div class="t"><b>Sentez Gaming</b><br>Technologies</div></div>
+  <div class="title">
+    <div class="k">Yatırımcı Sunumu · 2026</div>
+    <h1>Casino ve otelin<br><em>tek işletim sistemi</em></h1>
+    <p>Kasadan masaya, slottan otele, mutfaktan muhasebeye: KKTC'nin casino-otel işletmeleri için tasarlanan, silinemez kayıtlı ve uçtan uca denetlenebilir yönetim platformu.</p>
+  </div>
+  <div class="side">
+    <div><small>Ürün ailesi</small><span>S Plus · S Slot · S Vista</span></div>
+    <div><small>Pazar</small><span>Kuzey Kıbrıs</span></div>
+    <div><small>Model</small><span>Tesis ve modül lisansı</span></div>
+  </div>
+  <div class="bottom"><span>Gizli · Yatırımcı bilgilendirme</span><span>Kasım 2026</span></div>
+</section>
+
+<!-- 2 İÇİNDEKİLER -->
+<section class="pg" id="icerik">
+  <div class="pad">
+    <p class="eyebrow">İçerik</p>
+    <h2 class="h">Bu sunumda</h2>
+  </div>
+  <nav class="toc">
+    <a href="#vizyon"><span class="n">01</span><span class="t">Vizyon ve misyon</span><span class="p">03</span></a>
+    <a href="#sorun"><span class="n">02</span><span class="t">Sektörün sorunu</span><span class="p">04</span></a>
+    <a href="#cozum"><span class="n">03</span><span class="t">Çözüm: tek platform</span><span class="p">05</span></a>
+    <a href="#urunler"><span class="n">04</span><span class="t">Ürün ailesi</span><span class="p">06</span></a>
+    <a href="#kalp"><span class="n">05</span><span class="t">Sistemin kalbi: oyuncu hesabı</span><span class="p">07</span></a>
+    <a href="#moduller"><span class="n">06</span><span class="t">Modüller</span><span class="p">08</span></a>
+    <a href="#zeka"><span class="n">07</span><span class="t">Akıllı işletme</span><span class="p">09</span></a>
+    <a href="#guven"><span class="n">08</span><span class="t">Güven, güvenlik ve uyum</span><span class="p">10</span></a>
+    <a href="#gorunum"><span class="n">09</span><span class="t">Ürün görünümü</span><span class="p">11</span></a>
+    <a href="#model"><span class="n">10</span><span class="t">İş modeli</span><span class="p">12</span></a>
+    <a href="#surec"><span class="n">11</span><span class="t">Geliştirme süreci ve yol haritası</span><span class="p">13</span></a>
+    <a href="#pazara"><span class="n">12</span><span class="t">Pilot ve pazara giriş</span><span class="p">14</span></a>
+    <a href="#yatirim"><span class="n">13</span><span class="t">Ekip ve yatırımın kullanımı</span><span class="p">15</span></a>
+    <a href="#neden"><span class="n">14</span><span class="t">Neden SGT, neden şimdi</span><span class="p">16</span></a>
+  </nav>
+  <div class="foot"><span style="display:flex;align-items:center;gap:2.5mm"><img src="sgt-logo-koyu.png" style="height:4.2mm" alt="">Sentez Gaming Technologies</span><span>02</span></div>
+</section>
+
+<!-- 3 VİZYON -->
+<section class="pg dark" id="vizyon">
+  <div class="pad">
+    <p class="eyebrow">01 · Vizyon ve misyon</p>
+    <p class="statement" style="margin-top:14mm">Kuzey Kıbrıs'taki her casino ve otelin, parasını, oyuncusunu ve misafirini <em>tek bir doğru kaynaktan</em> yönettiği yerli işletim standardı olmak.</p>
+    <div class="g3" style="margin-top:22mm">
+      <div class="col"><div class="idx">Misyon</div><p>Casino-otel operasyonunun her adımını, hiçbir kuruşun kaybolmadığı, her hareketin izlenebildiği tek bir sistemde birleştirmek.</p></div>
+      <div class="col"><div class="idx">Değer</div><p>Yönetime anlık görünürlük, kasaya kesin mutabakat, personele hızlı ve sade ekranlar, denetçiye eksiksiz kayıt.</p></div>
+      <div class="col"><div class="idx">İlke</div><p>Önce güven: silinemez kayıt, dört göz onayı, yetkiye bağlı erişim. Güzellik değil işlev; ama işlev kusursuz.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Vizyon ve misyon</span><a href="#icerik">İçerik ↑ · 03</a></div>
+</section>
+
+<!-- 4 SORUN -->
+<section class="pg" id="sorun">
+  <div class="pad">
+    <p class="eyebrow">02 · Sektörün sorunu</p>
+    <h2 class="h">Parçalı sistemler,<br><em>görünmeyen para</em></h2>
+    <div class="hair"></div>
+    <p class="lede">Bugün bir casino-otel işletmesi slot, canlı oyun, kasa, otel, restoran ve muhasebe için ayrı ve çoğu zaman yabancı yazılımlar kullanıyor. Bu sistemler birbiriyle konuşmuyor.</p>
+    <div class="g4" style="margin-top:12mm">
+      <div class="col"><div class="idx">01</div><h4>Tek oyuncu, beş kayıt</h4><p>Aynı oyuncu slotta, masada, otelde ve restoranda ayrı kişi gibi görünür. Gerçek değeri hesaplanamaz.</p></div>
+      <div class="col"><div class="idx">02</div><h4>Elle mutabakat</h4><p>Kasa, masa sonucu ve muhasebe her gece elle karşılaştırılır. Hata ve kayıp geç fark edilir.</p></div>
+      <div class="col"><div class="idx">03</div><h4>Zayıf denetim izi</h4><p>Kimin, ne zaman, neyi değiştirdiği her zaman bilinmez. İç kayıp ve suiistimal riski büyür.</p></div>
+      <div class="col"><div class="idx">04</div><h4>Yerel ihtiyaca uzak</h4><p>Dört para birimi, Türkçe arayüz, yerel muhasebe ve yerel destek ihtiyacı tam karşılanmaz.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Sektörün sorunu</span><a href="#icerik">İçerik ↑ · 04</a></div>
+</section>
+
+<!-- 5 ÇÖZÜM -->
+<section class="pg dark" id="cozum">
+  <div class="pad">
+    <p class="eyebrow">03 · Çözüm</p>
+    <h2 class="h" style="color:#f3eee4">Tek platform,<br><em>tek doğru kaynak</em></h2>
+    <div class="hair"></div>
+    <p class="lede">SGT, casino-otel işletmesinin bütün departmanlarını aynı oyuncu, aynı kasa ve aynı muhasebe üzerinde birleştirir. Her departman kendi ekranında çalışır; veri tek yerde, tutarlı ve silinemez durur.</p>
+    <div class="g3" style="margin-top:12mm">
+      <div class="col"><div class="idx">Birleşik</div><h4 style="color:#f3eee4">Bir oyuncu, bir hesap</h4><p>Kasa, masa, slot, otel ve restoran aynı oyuncu hesabına yazar. Oyuncunun gerçek değeri ilk kez tek ekranda.</p></div>
+      <div class="col"><div class="idx">Kesin</div><h4 style="color:#f3eee4">Kendi kendini denetleyen kasa</h4><p>Kasa, masalar ve oyuncu hesapları her an birbirini tutar; sistem her gece kendi mutabakatını yapar.</p></div>
+      <div class="col"><div class="idx">Yerel</div><h4 style="color:#f3eee4">KKTC için tasarlandı</h4><p>TRY, EUR, GBP, USD; Türkçe ve İngilizce; Tek Düzen Hesap Planı; casinonun kendi sunucusunda çalışır.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Çözüm</span><a href="#icerik">İçerik ↑ · 05</a></div>
+</section>
+
+<!-- 6 ÜRÜNLER -->
+<section class="pg" id="urunler">
+  <div class="pad">
+    <p class="eyebrow">04 · Ürün ailesi</p>
+    <h2 class="h">Üç ürün, <em>modüler lisans</em></h2>
+    <div class="g3" style="margin-top:8mm">
+      <div class="prod"><div class="tag">Çekirdek</div><h3>S Plus</h3><p class="d">Casinonun tamamı. Tek başına çalışır.</p>
+        <ul><li>Kasa, oyuncu hesabı, marker, kripto</li><li>Canlı oyun ve inspector arayüzü</li><li>Oyuncu, resepsiyon, PR, loyalty, RFID kart</li><li>F&amp;B: bar ve restoran, stok</li><li>Muhasebe ve yönetim raporları</li></ul>
+        <div class="foot2">Her tesis için temel lisans</div></div>
+      <div class="prod"><div class="tag">Ek modül</div><h3>S Slot</h3><p class="d">Slot makinelerinden doğrudan veri.</p>
+        <ul><li>Salon haritası ve makine durumu</li><li>Sayaç, olay ve alarm takibi</li><li>Kartla kredi, oyuncu oturumu</li><li>Arıza ve teknisyen yönetimi</li><li>Slot performans raporları</li></ul>
+        <div class="foot2">Ek lisans</div></div>
+      <div class="prod"><div class="tag">Ek modül</div><h3>S Vista</h3><p class="d">Otel yönetimi, casinoyla bütünleşik.</p>
+        <ul><li>Rezervasyon ve resepsiyon</li><li>Folio, depozito, acente faturası</li><li>Casino ikramı otomatik odaya</li><li>Kat hizmetleri, SPA, toplantı</li><li>Online satış kanalları</li></ul>
+        <div class="foot2">Ek lisans</div></div>
+    </div>
+  </div>
+  <div class="foot"><span>Ürün ailesi</span><a href="#icerik">İçerik ↑ · 06</a></div>
+</section>
+
+<!-- 7 KALP -->
+<section class="pg dark" id="kalp">
+  <div class="pad">
+    <p class="eyebrow">05 · Sistemin kalbi</p>
+    <h2 class="h" style="color:#f3eee4">Her lira bir oyuncuya,<br><em>her chip bir masaya</em></h2>
+    <div class="flow" style="margin-top:10mm">
+      <div class="fs"><div class="dot">1</div><h4>Kasada giriş</h4><p>Oyuncu nakit, kart, havale veya kriptoyla öder. Para kasaya, karşılığı plak veya chip olarak oyuncu hesabına girer.</p></div>
+      <div class="fs"><div class="dot">2</div><h4>Masada bozdurma</h4><p>Inspector plak karşılığı chip verir; sistemde plak düşer, chip girer. Masa ve oyuncu aynı anda güncellenir.</p></div>
+      <div class="fs"><div class="dot">3</div><h4>Canlı takip</h4><p>Her el sonunda oyuncunun chip'i artar ya da azalır. Yönetim salonu anlık izler.</p></div>
+      <div class="fs"><div class="dot">4</div><h4>Kasada çıkış</h4><p>Oyuncu nakde çevirir veya casinonun onayladığı oranda kayıp iadesi (discount) alır.</p></div>
+    </div>
+    <div class="balance"><div class="t">Üçlü denge<br>kuralı</div><p>Kasa, masalar ve oyuncu hesaplarının toplamı her an birbirine eşittir. Fark oluştuğu anda sistem uyarır. Hiçbir kayıt silinmez ya da değiştirilmez; düzeltme yalnızca onaylı ters kayıtla yapılır.</p></div>
+  </div>
+  <div class="foot"><span>Sistemin kalbi</span><a href="#icerik">İçerik ↑ · 07</a></div>
+</section>
+
+<!-- 8 MODÜLLER -->
+<section class="pg" id="moduller">
+  <div class="pad" style="top:14mm">
+    <p class="eyebrow">06 · Modüller</p>
+    <h2 class="h" style="font-size:28pt;margin-bottom:5mm">Her departmana <em>kendi ekranı</em></h2>
+    <div class="tiles">
+      <div class="tile"><div class="k">Kasa</div><h4>Kasa ve hazine</h4><ul><li>Ana kasa, kupür ve chip envanteri</li><li>Marker, kripto, emanet, kasa kutusu</li><li>Dört göz onayı, gün sonu kilidi</li></ul></div>
+      <div class="tile"><div class="k">Salon</div><h4>Canlı oyun</h4><ul><li>Rulet, blackjack, baccarat, poker türleri</li><li>Pit haritası, masa limitleri</li><li>Fill/credit, drop ve sayım odası</li></ul></div>
+      <div class="tile"><div class="k">Salon</div><h4>Inspector</h4><ul><li>Masa başı tablet ve dokunmatik PC</li><li>El sonu canlı chip takibi</li><li>Sesle giriş, krupiye rotasyonu</li></ul></div>
+      <div class="tile"><div class="k">Salon</div><h4>Slot</h4><ul><li>Makine durumu ve alarmlar</li><li>Kartla kredi ve oturum</li><li>Bakım ve performans</li></ul></div>
+      <div class="tile"><div class="k">Misafir</div><h4>Oyuncu ve PR</h4><ul><li>RFID kart, girişte kontrol</li><li>Loyalty, comp, host portföyü</li><li>Junket, transfer, vize desteği</li></ul></div>
+      <div class="tile"><div class="k">Hizmet</div><h4>F&amp;B</h4><ul><li>Bar ve restoran satış noktası</li><li>Reçeteyle otomatik stok düşümü</li><li>Satın alma ve maliyet</li></ul></div>
+      <div class="tile"><div class="k">Finans</div><h4>Muhasebe</h4><ul><li>Tek Düzen Hesap Planı</li><li>Otomatik yevmiye, mizan, bilanço</li><li>Cari, banka, bordro, e-fatura</li></ul></div>
+      <div class="tile"><div class="k">Konaklama</div><h4>Otel</h4><ul><li>Rezervasyon, resepsiyon, folio</li><li>Kat hizmetleri, kanallar</li><li>Casino ikramı odaya</li></ul></div>
+    </div>
+  </div>
+  <div class="foot"><span>Modüller</span><a href="#icerik">İçerik ↑ · 08</a></div>
+</section>
+
+<!-- 9 ZEKA -->
+<section class="pg dark" id="zeka">
+  <div class="pad">
+    <p class="eyebrow">07 · Akıllı işletme</p>
+    <h2 class="h" style="color:#f3eee4">Kayıt tutmaktan öte:<br><em>önceden görür, uyarır</em></h2>
+    <div class="g3" style="margin-top:10mm;row-gap:9mm">
+      <div class="col"><h4 style="color:#f3eee4">Oyuncu kaybı tahmini</h4><p>Ziyareti azalan değerli oyuncuyu fark eder, host'u harekete geçirir.</p></div>
+      <div class="col"><h4 style="color:#f3eee4">Akıllı ikram önerisi</h4><p>Oyuncunun beklenen değerine göre verilebilecek en doğru ikramı hesaplar.</p></div>
+      <div class="col"><h4 style="color:#f3eee4">Şüpheli davranış alarmı</h4><p>Hile ve iç işbirliği örüntülerini, casinonun belirlediği eşiklerle izler.</p></div>
+      <div class="col"><h4 style="color:#f3eee4">Gece mutabakatı</h4><p>Kasa, masa, muhasebe, restoran ve otel her gece karşılaştırılır; farklar sabah yönetimde.</p></div>
+      <div class="col"><h4 style="color:#f3eee4">Canlı salon ekranı</h4><p>Masa doluluğu, kazanç ve açık masalar büyük ekranda, anlık.</p></div>
+      <div class="col"><h4 style="color:#f3eee4">Sabah yönetim raporu</h4><p>Günün özeti, yöneticinin telefonuna otomatik olarak düşer.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Akıllı işletme</span><a href="#icerik">İçerik ↑ · 09</a></div>
+</section>
+
+<!-- 10 GÜVEN -->
+<section class="pg" id="guven">
+  <div class="pad">
+    <p class="eyebrow">08 · Güven, güvenlik ve uyum</p>
+    <h2 class="h">Güven, <em>tasarımın kendisi</em></h2>
+    <div class="hair"></div>
+    <div class="g2" style="margin-top:6mm">
+      <div>
+        <p class="quote">Para ve puan kayıtları veritabanı seviyesinde silinemez. Hiç kimse, yönetici dahil, bir kaydı geri dönüşsüz değiştiremez.</p>
+        <div class="g2" style="margin-top:10mm;gap:7mm">
+          <div class="col"><h4>Dört göz</h4><p>Yüksek tutar, jackpot, düzeltme ve kasa devri ikinci onay ister.</p></div>
+          <div class="col"><h4>Tam iz</h4><p>Her işlemde kişi, terminal, gerekçe ve zaman damgası.</p></div>
+        </div>
+      </div>
+      <div class="g2" style="gap:7mm">
+        <div class="col"><h4>Yetkiye bağlı erişim</h4><p>Ekran ekran görme ve işlem yetkisi; işlemler yalnız casino bilgisayarlarından.</p></div>
+        <div class="col"><h4>Kişisel veri koruması</h4><p>Oyuncu verisi şifreli saklanır, kayıtlara ve raporlara sızmaz.</p></div>
+        <div class="col"><h4>Kesintisiz çalışma</h4><p>Casinonun kendi sunucusu, yedekleme ve kesinti anında sınırlı kasa modu.</p></div>
+        <div class="col"><h4>Denetime hazır</h4><p>Resmi denetçi ekranı, günlük resmi rapor ve bağımsız denetim dökümü.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Güven, güvenlik ve uyum</span><a href="#icerik">İçerik ↑ · 10</a></div>
+</section>
+
+<!-- 11 GÖRÜNÜM -->
+<section class="pg dark" id="gorunum">
+  <div class="pad">
+    <p class="eyebrow">09 · Ürün görünümü</p>
+    <h2 class="h" style="color:#f3eee4;font-size:28pt">Personelin alıştığı düzen, <em>modern disiplin</em></h2>
+    <div style="display:grid;grid-template-columns:2.15fr 1fr;gap:8mm;margin-top:6mm;align-items:start">
+      <div><div class="shot"><img src="w-oyuncu-arama-dark.jpg" alt=""></div><div class="cap">Yönetim ekranı · oyuncu arama</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm">
+        <div><div class="ph"><img src="m-oyuncu-konum-puan-dark.jpg" alt=""></div><div class="cap">Mobil · oyuncu</div></div>
+        <div><div class="ph"><img src="m-gunluk-ozet-dark.jpg" alt=""></div><div class="cap">Mobil · özet</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Ürün görünümü · örnek veri</span><a href="#icerik">İçerik ↑ · 11</a></div>
+</section>
+
+<!-- 12 İŞ MODELİ -->
+<section class="pg" id="model">
+  <div class="pad">
+    <p class="eyebrow">10 · İş modeli</p>
+    <h2 class="h">Tesis başına lisans,<br><em>modülle büyüyen gelir</em></h2>
+    <div class="hair"></div>
+    <div class="g4" style="margin-top:8mm">
+      <div class="col"><div class="big">01</div><h4 style="margin-top:4mm">Temel lisans</h4><p>Her tesis S Plus temel lisansıyla başlar: casinonun bütün çekirdek operasyonu.</p></div>
+      <div class="col"><div class="big">02</div><h4 style="margin-top:4mm">Ek modüller</h4><p>S Slot ve S Vista ayrı lisanslanır. Müşteri büyüdükçe gelir büyür.</p></div>
+      <div class="col"><div class="big">03</div><h4 style="margin-top:4mm">Kurulum ve eğitim</h4><p>Casinonun kendi sunucusuna kurulum, veri aktarımı ve rol bazlı eğitim.</p></div>
+      <div class="col"><div class="big">04</div><h4 style="margin-top:4mm">Destek ve bakım</h4><p>Sürekli güncelleme, uzaktan izleme ve yerel destek ile tekrarlayan gelir.</p></div>
+    </div>
+    <p class="quote" style="margin-top:14mm">Bir casino tek modülle başlar; oyuncu, otel ve slot büyüdükçe aynı platformda kalır. Geçiş maliyeti düşük, bağlılık yüksek.</p>
+  </div>
+  <div class="foot"><span>İş modeli</span><a href="#icerik">İçerik ↑ · 12</a></div>
+</section>
+
+<!-- 13 SÜREÇ -->
+<section class="pg" id="surec">
+  <div class="pad">
+    <p class="eyebrow">11 · Geliştirme süreci</p>
+    <h2 class="h">Aşama aşama, <em>her adımda demo</em></h2>
+    <p class="lede" style="margin-bottom:12mm">Her aşama, denenebilir bir demo ve ekran onayıyla kapanır. Para ile ilgili her parça insan uzman onayından geçmeden ürüne girmez.</p>
+    <div class="tl">
+      <div class="c on"><div class="ph2">Aşama 1</div><h4>Temel ve tasarım</h4><p>Ortak tasarım dili, web ve mobil yönetim, demo ortamı.</p><div class="dur">Tamamlandı</div></div>
+      <div class="c"><div class="ph2">Aşama 2</div><h4>Kasa ve oyuncu hesabı</h4><p>Para, plak, chip, marker, kripto, gün sonu.</p><div class="dur">~1 ay</div></div>
+      <div class="c"><div class="ph2">Aşama 3</div><h4>Salon</h4><p>Canlı oyun, inspector, RFID, slot ekranları.</p><div class="dur">~1,5 ay</div></div>
+      <div class="c"><div class="ph2">Aşama 4</div><h4>Hizmet ve finans</h4><p>Oyuncu ve PR, F&amp;B, muhasebe.</p><div class="dur">~3 ay</div></div>
+      <div class="c"><div class="ph2">Aşama 5</div><h4>Otel ve slot</h4><p>S Vista, makineden doğrudan veri, turnuva.</p><div class="dur">~2–3 ay</div></div>
+    </div>
+    <div class="g3" style="margin-top:14mm">
+      <div class="col"><h4>Tanım ve onay</h4><p>Her işlev yazılı tanımla başlar, işletme sahibinin onayıyla kesinleşir.</p></div>
+      <div class="col"><h4>Test önce, kod sonra</h4><p>Her kural önce testle tanımlanır; otomatik denetçiler her değişikliği kontrol eder.</p></div>
+      <div class="col"><h4>Ekranla teslim</h4><p>Her aşama sonunda ekran görüntüleri ve denenebilir demo.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Geliştirme süreci</span><a href="#icerik">İçerik ↑ · 13</a></div>
+</section>
+
+<!-- 14 PAZARA GİRİŞ -->
+<section class="pg dark" id="pazara">
+  <div class="pad">
+    <p class="eyebrow">12 · Pilot ve pazara giriş</p>
+    <h2 class="h" style="color:#f3eee4">Önce bir casino,<br><em>sonra bütün ada</em></h2>
+    <div class="g4" style="margin-top:12mm">
+      <div class="col"><div class="idx">I</div><h4 style="color:#f3eee4">Pilot casino</h4><p>Mevcut sistemlerle paralel çalışma; kabul testi ve canlıya geçiş.</p></div>
+      <div class="col"><div class="idx">II</div><h4 style="color:#f3eee4">Referans</h4><p>Pilot sonuçları ve ölçülen kazanımlar ilk satış referansı olur.</p></div>
+      <div class="col"><div class="idx">III</div><h4 style="color:#f3eee4">Casino-otel zincirleri</h4><p>Çok tesisli gruplar için merkezi oyuncu kartı ve merkezi raporlama.</p></div>
+      <div class="col"><div class="idx">IV</div><h4 style="color:#f3eee4">Ada standardı</h4><p>Kuzey Kıbrıs casino-otel işletmeleri için yerli işletim standardı.</p></div>
+    </div>
+    <div class="balance" style="margin-top:16mm"><div class="t">Geçiş<br>yaklaşımı</div><p>Casino mevcut düzenini bozmadan başlar: önce paralel çalışma, sonra departman departman geçiş. Mevcut slot sisteminden veri alınabildiği için slotlara ilk gün dokunmak gerekmez.</p></div>
+  </div>
+  <div class="foot"><span>Pilot ve pazara giriş</span><a href="#icerik">İçerik ↑ · 14</a></div>
+</section>
+
+<!-- 15 YATIRIM -->
+<section class="pg" id="yatirim">
+  <div class="pad">
+    <p class="eyebrow">13 · Ekip ve yatırımın kullanımı</p>
+    <h2 class="h">Küçük çekirdek ekip,<br><em>güçlü üretim kapasitesi</em></h2>
+    <div class="g2" style="margin-top:8mm">
+      <table>
+        <thead><tr><th>Rol</th><th>Sorumluluk</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ürün sahibi</b></td><td>Saha bilgisi, öncelikler, müşteri ilişkisi</td></tr>
+          <tr><td><b>Teknik lider</b></td><td>Mimari, para akışlarının son onayı</td></tr>
+          <tr><td><b>Yazılım geliştirme</b></td><td>Yapay zekâ destekli üretim, yüksek hız</td></tr>
+          <tr><td><b>Entegrasyon mühendisi</b></td><td>Slot, RFID, kapı kilidi, cihazlar</td></tr>
+          <tr><td><b>Saha ve destek</b></td><td>Pilot, eğitim, canlı destek</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th>Yatırımın kullanım alanı</th><th>Tür</th></tr></thead>
+        <tbody>
+          <tr><td><b>Ekip</b></td><td>Aylık</td></tr>
+          <tr><td><b>Geliştirme araçları ve sunucular</b></td><td>Aylık</td></tr>
+          <tr><td><b>Slot arayüz kartları, test makinesi</b></td><td>Tek seferlik</td></tr>
+          <tr><td><b>RFID ve kapı kilidi test donanımı</b></td><td>Tek seferlik</td></tr>
+          <tr><td><b>Bağımsız güvenlik testi</b></td><td>Pilot öncesi</td></tr>
+          <tr><td><b>Hukuk, mali müşavirlik, marka tescili</b></td><td>Tek seferlik</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="foot"><span>Ekip ve yatırımın kullanımı</span><a href="#icerik">İçerik ↑ · 15</a></div>
+</section>
+
+<!-- 16 NEDEN -->
+<section class="pg dark" id="neden">
+  <div class="pad">
+    <p class="eyebrow">14 · Neden SGT, neden şimdi</p>
+    <div class="g2" style="margin-top:10mm;gap:16mm">
+      <div>
+        <p class="statement" style="font-size:27pt">Yerel pazarı bilen, casinonun parasını kuruşu kuruşuna izleyen ve bütün departmanları tek çatıda toplayan <em>ilk yerli platform.</em></p>
+      </div>
+      <div style="display:grid;gap:6mm">
+        <div class="col"><h4 style="color:#f3eee4">Yerel ve yakın</h4><p>KKTC'nin para birimleri, dili, muhasebesi ve işleyişi için baştan tasarlandı; destek adada.</p></div>
+        <div class="col"><h4 style="color:#f3eee4">Bütünleşik</h4><p>Casino, slot, otel, restoran ve muhasebe aynı oyuncu ve aynı kasa üzerinde.</p></div>
+        <div class="col"><h4 style="color:#f3eee4">Güvenilir</h4><p>Silinemez kayıt, dört göz, gece mutabakatı: denetim ve iç kontrol tasarımın parçası.</p></div>
+        <div class="col"><h4 style="color:#f3eee4">Hızlı üretim</h4><p>Yapay zekâ destekli geliştirme ile geleneksel yazılım projelerinin çok altında süre.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sentez Gaming Technologies</span><a href="#icerik">İçerik ↑ · 16</a></div>
+</section>
+
+<!-- 17 ARKA KAPAK -->
+<section class="pg dark cover">
+  <div class="bg"></div><img class="wm" src="sgt-logo-acik.png" alt=""><div class="frame"></div>
+  <div class="mono"><img class="lg" src="sgt-logo-acik.png" alt="SGT"><div class="t"><b>Sentez Gaming</b><br>Technologies</div></div>
+  <div class="title" style="bottom:70mm">
+    <h1 style="font-size:46pt">Teşekkürler.</h1>
+    <p>Casino ve otelin tek işletim sistemi.</p>
+  </div>
+  <div class="bottom"><span>S Plus · S Slot · S Vista</span><span>Gizli · Yatırımcı bilgilendirme</span></div>
+</section>
+
+</body>
+</html>
