@@ -115,6 +115,14 @@ Fizibilite raporunu proje sahibi hazırlamadı; eksik veya bu kararlarla uyumsuz
 - **Araç kullanımı:** Kurulu skill ve ajanlar işin her adımında aktif kullanılır (spec/plan skill'leri, TDD,
   tasarım skill'leri, paralel worktree ajanları, `code-rules-reviewer`, `finans-denetci`, `veri-sagligi-denetci`).
 
+## 9b. Modül kapsamı genişletmesi (23.11.2026, proje sahibi)
+
+- **F&B:** Tam POS + stok: bar/restoran satış ekranı, adisyon/masa, comp ile ikram düşme, stok ve reçete takibi.
+- **Muhasebe:** Tam muhasebe: hesap planı, yevmiye, mizan, bilanço; kasa, F&B ve otel hareketleri otomatik yevmiye kaydı üretir.
+- **Inspector (masa denetçisi) arayüzü:** Ayrı, tablet uyumlu arayüz: oyuncu bahis takibi, masa chip sayımı ve fill/credit
+  isteği, krupiye rotasyonu.
+- **RFID:** Oyuncu kartı RFID'li (resepsiyonda basım, girişte ve masada okutma). RFID chip yok; otel oda kartı ayrı kalır.
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
