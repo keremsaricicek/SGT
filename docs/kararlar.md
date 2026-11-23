@@ -230,6 +230,15 @@ Seçilmeyenler: oyuncu mobil uygulaması (5), QR menü (6).
 ve ayrı pencere. Arama yalnızca ilgili ekranın kendi bağlamında yapılır (oyuncu ekranında oyuncu, İK'da personel),
 tarih/takvim ile sınırlanır. Farklı alanların verisi tek listede karıştırılmaz.
 
+## 9e. Casino asistanı (23.11.2026, proje sahibi)
+
+- Programda yapay zekâ destekli **kişisel casino asistanı** olur: personel yazarak/konuşarak iş yaptırır.
+- Asistan yalnızca konuşan kişinin yetkisiyle çalışır; her adımı denetim kaydına "asistan aracılığıyla" yazılır.
+- Model **casinonun kendi sunucusunda (yerel)** çalışır; veri dışarı çıkmaz (GPU'lu sunucu gerekir).
+- Mobilden **talep ve onay akışı** başlatılabilir (ör. marketing → oyuncu konaklama talebi → müdür onayı → PR iş listesi).
+  Para hareketi (kasa, chip, ödeme) yalnızca casino bilgisayarından; para işlemlerinde son onay insandadır.
+- Aşamalar: okuma/soru-cevap → onaylı işlem → sesli komut ve çok adımlı işler (modüller bittikçe genişler).
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
