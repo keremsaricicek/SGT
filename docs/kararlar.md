@@ -249,6 +249,13 @@ tarih/takvim ile sınırlanır. Farklı alanların verisi tek listede karıştı
   Krupiye oyun yetkinliği seçilmedi (rotasyon kontrolü ayrıca gerekirse eklenir).
 - Bekleyenler (sahip "söyleyene kadar sorma" dedi): teknik lider adı, RFID cihaz markası, NEXIO erişimi.
 
+## 9g. Açık soruların durumu (24.11.2026, proje sahibi)
+
+- **Teknik lider: proje sahibidir.** Para/değer koduna (kasa, ledger, chip, comp, loyalty, folio) onay ve `finans` etiketi sahipten gelir.
+- **RFID cihaz markası:** belli değil. Cihaz bağımsız `ICardReader`/kart yazıcı adaptör arayüzü yazılır, marka gelince adaptör eklenir.
+- **NEXIO erişimi:** belirsiz ("sallantıda"). NEXIO'ya bağlı işler bekler; slot verisi manuel/`SlotMetersReportedV1` ile ilerler, NEXIO adaptörü erişim netleşince.
+- **Vergi ve resmi rapor kuralları:** şimdilik boş bırakıldı. Vergi alanları kapalı/ayarlanabilir, resmi raporlar sonra.
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
@@ -278,5 +285,5 @@ adaptörü → (3) Windows + mobil + web istemcileri → (4) S Vista → (5) S S
   POS, santral ve minibar bağlantısı yok. Açık kalan: hangi kapı kilidi markası/markaları?
 - [x] Lisanslama ve fiyat modeli → **Modül + tesis başına**: her tesis için S Plus temel lisansı, S Slot ve S Vista ek lisans (26.10.2026).
 - [x] İlk teslim edilecek ürün → **S Plus + NEXIO adaptörü** (26.10.2026). Pilot müşterinin adı henüz belirlenmedi.
-- [ ] Teknik lider / entegrasyon mühendisi kim olacak? → Proje sahibi belli bir kişi olduğunu belirtti; ad/rol bekleniyor.
+- [x] Teknik lider kim? → Proje sahibi (24.11.2026).
 - [ ] Vergi ve resmi raporlama yükümlülükleri → Proje sahibi biliyor; ayrıntıları yazacak.
