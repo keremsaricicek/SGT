@@ -239,6 +239,16 @@ tarih/takvim ile sınırlanır. Farklı alanların verisi tek listede karıştı
   Para hareketi (kasa, chip, ödeme) yalnızca casino bilgisayarından; para işlemlerinde son onay insandadır.
 - Aşamalar: okuma/soru-cevap → onaylı işlem → sesli komut ve çok adımlı işler (modüller bittikçe genişler).
 
+## 9f. İnsan kaynakları modülü (24.11.2026, proje sahibi)
+
+- **Personel kaydı:** özlük dosyası ve belgeler, sözleşme ve pozisyon, çalışma izni/vize takibi, lisans ve sertifika süresi (bitmeden uyarı).
+- **Vardiya ve devam:** vardiya planlama, kart ile giriş-çıkış, izin ve rapor, fazla mesai.
+- **Ücret:** bordro, bahşiş (tronc) dağıtımı, avans ve kesinti. (Prim/hedef yok.)
+- **Gelişim:** performans değerlendirme, disiplin kayıtları, işe alım ve aday takibi. (Eğitim kaydı yok.)
+- **Casinoya özel:** personel geçmiş kontrolü, personel oyun yasağı, personel kara listesi.
+  Krupiye oyun yetkinliği seçilmedi (rotasyon kontrolü ayrıca gerekirse eklenir).
+- Bekleyenler (sahip "söyleyene kadar sorma" dedi): teknik lider adı, RFID cihaz markası, NEXIO erişimi.
+
 ## 10. Fizibilite raporunda güncellenmesi gerekenler
 
 | Rapor ne diyor | Karar / güncelleme |
