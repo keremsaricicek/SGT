@@ -1,0 +1,80 @@
+<!-- Oyuncu rating (C3): solda başlat (masa + oyuncu), sağda bu terminaldeki aktif ratingleri bitir. -->
+<UserControl x:Class="Sgt.Windows.App.Features.Floor.RatingView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             xmlns:floor="clr-namespace:Sgt.Windows.Core.Features.Floor;assembly=Sgt.Windows.Core"
+             xmlns:players="clr-namespace:Sgt.Windows.App.Features.Players"
+             xmlns:controls="clr-namespace:Sgt.Windows.App.Controls"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=floor:RatingViewModel}">
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding LoadCommand}" />
+    </UserControl.InputBindings>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <StackPanel Orientation="Horizontal">
+                <Label Target="{Binding ElementName=ReasonBox}" Content="{x:Static loc:Strings.Cage_Reason}" />
+                <TextBox x:Name="ReasonBox" Width="160" Text="{Binding ReasonCode, UpdateSourceTrigger=PropertyChanged}"
+                         CharacterCasing="Upper" MaxLength="50" />
+            </StackPanel>
+            <controls:MessageBar />
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <Grid DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Target="{Binding ElementName=TableBox}" Content="{x:Static loc:Strings.Floor_Table}" />
+                    <ComboBox x:Name="TableBox" Grid.Column="1" ItemsSource="{Binding OpenTables}"
+                              SelectedItem="{Binding SelectedTable}" DisplayMemberPath="Code" />
+                </Grid>
+                <Button DockPanel.Dock="Bottom" Command="{Binding StartCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left">
+                    <AccessText Text="{x:Static loc:Strings.Floor_Start}" />
+                </Button>
+                <players:PlayerPickerView DataContext="{Binding Player}" />
+            </DockPanel>
+            <DockPanel Grid.Column="2">
+                <TextBlock DockPanel.Dock="Top" Text="{x:Static loc:Strings.Floor_ActiveRatings}" Style="{StaticResource SectionHeader}" />
+                <StackPanel DockPanel.Dock="Bottom">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Label Target="{Binding ElementName=BetBox}" Content="{x:Static loc:Strings.Floor_AverageBet}" />
+                        <TextBox x:Name="BetBox" Grid.Column="1" Text="{Binding AverageBetText, UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalContentAlignment="Right" />
+                        <Label Grid.Row="1" Target="{Binding ElementName=ResultBox}" Content="{x:Static loc:Strings.Floor_PlayerResult}" />
+                        <TextBox x:Name="ResultBox" Grid.Row="1" Grid.Column="1" Text="{Binding PlayerResultText, UpdateSourceTrigger=PropertyChanged}"
+                                 HorizontalContentAlignment="Right" />
+                    </Grid>
+                    <Button Command="{Binding FinishCommand}" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left">
+                        <AccessText Text="{x:Static loc:Strings.Floor_Finish}" />
+                    </Button>
+                </StackPanel>
+                <DataGrid ItemsSource="{Binding ActiveRatings}" SelectedItem="{Binding SelectedRating}" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Floor_Code}" Binding="{Binding TableCode}" Width="70" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Players_Name}" Binding="{Binding PlayerName}" Width="*" />
+                        <DataGridTextColumn Header="{x:Static loc:Strings.Floor_StartedAt}" Binding="{Binding StartedAt, StringFormat=t}" Width="70" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

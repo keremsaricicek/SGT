@@ -1,0 +1,8 @@
+P:System.DateTime.Now;Saat icin IClock kullanin (K1/DIP, test edilebilirlik)
+P:System.DateTime.UtcNow;Saat icin IClock kullanin (K1/DIP)
+P:System.DateTime.Today;Saat icin IClock kullanin (K1/DIP)
+P:System.DateTimeOffset.Now;Saat icin IClock kullanin (K1/DIP)
+P:System.DateTimeOffset.UtcNow;Saat icin IClock kullanin (K1/DIP)
+T:System.Console;Loglama icin ILogger<T> kullanin
+T:System.Net.Http.HttpClient;Domain/Application HTTP bilmez; Contracts arayuzu veya Infrastructure adaptoru kullanin (K1/DIP, K2)
+M:System.Threading.Thread.Sleep(System.Int32);Bekleme icin await Task.Delay ve CancellationToken kullanin

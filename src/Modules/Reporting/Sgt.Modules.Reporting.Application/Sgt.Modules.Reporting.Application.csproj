@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Sgt.BuildingBlocks\Sgt.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.Reporting.Domain\Sgt.Modules.Reporting.Domain.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.Reporting.Contracts\Sgt.Modules.Reporting.Contracts.csproj" />
+    <ProjectReference Include="..\..\Finance\Sgt.Modules.Finance.Contracts\Sgt.Modules.Finance.Contracts.csproj" />
+    <ProjectReference Include="..\..\GamingFloor\Sgt.Modules.GamingFloor.Contracts\Sgt.Modules.GamingFloor.Contracts.csproj" />
+    <ProjectReference Include="..\..\Loyalty\Sgt.Modules.Loyalty.Contracts\Sgt.Modules.Loyalty.Contracts.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

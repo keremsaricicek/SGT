@@ -1,0 +1,30 @@
+<Window x:Class="Sgt.Windows.App.Windows.LoginWindow"
+        x:ClassModifier="internal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+        xmlns:login="clr-namespace:Sgt.Windows.Core.Features.Login;assembly=Sgt.Windows.Core"
+        xmlns:controls="clr-namespace:Sgt.Windows.App.Controls"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=login:LoginViewModel}"
+        Style="{StaticResource {x:Type Window}}"
+        Title="{x:Static loc:Strings.Login_Title}"
+        Width="440" SizeToContent="Height" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        FocusManager.FocusedElement="{Binding ElementName=LoginButton}">
+    <StackPanel Margin="16">
+        <TextBlock Text="{x:Static loc:Strings.Login_Heading}" FontSize="18" FontWeight="SemiBold" />
+        <TextBlock Text="{x:Static loc:Strings.Login_Explain}" Style="{StaticResource Hint}" Margin="0,6,0,10" />
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="LoginButton" Style="{StaticResource PrimaryButton}" IsDefault="True"
+                    Command="{Binding LoginCommand}">
+                <AccessText Text="{x:Static loc:Strings.Login_Button}" />
+            </Button>
+            <Button Content="Esc" IsCancel="True" Command="{Binding LoginCancelCommand}"
+                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibility}}" />
+        </StackPanel>
+        <controls:MessageBar Margin="0,8,0,0" />
+    </StackPanel>
+</Window>

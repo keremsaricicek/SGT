@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\Sgt.BuildingBlocks\Sgt.BuildingBlocks.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.Audit.Domain\Sgt.Modules.Audit.Domain.csproj" />
+    <ProjectReference Include="..\Sgt.Modules.Audit.Contracts\Sgt.Modules.Audit.Contracts.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

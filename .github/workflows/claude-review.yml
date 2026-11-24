@@ -1,0 +1,33 @@
+name: Claude kod incelemesi
+
+# Her PR'da Claude kodu inceler (claude-code-action). Depo ayarlarında
+# ANTHROPIC_API_KEY sırrı tanımlı değilse iş atlanır.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+  id-token: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - id: key
+        env:
+          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: echo "present=${{ env.KEY != '' }}" >> "$GITHUB_OUTPUT"
+      - if: steps.key.outputs.present == 'true'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - if: steps.key.outputs.present == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Bu PR'ı CLAUDE.md, docs/kod-kurallari.md ve .specify/memory/constitution.md kurallarına göre incele.
+            .claude/agents/code-rules-reviewer.md içindeki kontrol listesini uygula. Değer hareketi bulgusu varsa BLOKER yaz.
+            Ayrıca /security-review ile güvenlik taraması yap. Bulguları Türkçe, dosya:satır ile yorum olarak bırak.

@@ -1,0 +1,14 @@
+bin/
+obj/
+*.user
+.vs/
+TestResults/
+.claude/worktrees/
+
+# Yerel ortam secret dosyalari (docs/kurulum.md)
+deploy/.env
+# demo.sh'nin geçici .env dosyaları; şablon repoda kalır
+deploy/.env.*
+!deploy/.env.example
+*.env.local
+.serena/

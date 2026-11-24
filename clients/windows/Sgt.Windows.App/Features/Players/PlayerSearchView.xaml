@@ -1,0 +1,26 @@
+<!-- Oyuncu arama ekranı (O1). Seçili oyuncu Enter/çift tık ile kart penceresinde açılır. -->
+<UserControl x:Class="Sgt.Windows.App.Features.Players.PlayerSearchView"
+             x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:loc="clr-namespace:Sgt.Windows.Core.Localization;assembly=Sgt.Windows.Core"
+             xmlns:players="clr-namespace:Sgt.Windows.Core.Features.Players;assembly=Sgt.Windows.Core"
+             xmlns:local="clr-namespace:Sgt.Windows.App.Features.Players"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance Type=players:PlayerSearchViewModel}">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Enter" Modifiers="Ctrl" Command="{Binding OpenDetailCommand}" />
+        <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding OpenDetailCommand}" />
+    </UserControl.InputBindings>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal"
+                    Visibility="{Binding CanOpenProfile, Converter={StaticResource BoolToVisibility}}">
+            <Button Command="{Binding OpenDetailCommand}" Style="{StaticResource PrimaryButton}">
+                <AccessText Text="{x:Static loc:Strings.Players_OpenProfile}" />
+            </Button>
+        </StackPanel>
+        <local:PlayerPickerView DataContext="{Binding Picker}" />
+    </DockPanel>
+</UserControl>

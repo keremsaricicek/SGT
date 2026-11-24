@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+**/TestResults/
+**/*.user
+**/.vs/
+.git/
+.claude/
+.github/
+.specify/
+docs/
+specs/
+tests/
+deploy/
+**/.env

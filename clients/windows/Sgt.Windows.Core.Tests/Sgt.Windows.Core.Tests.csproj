@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="NSubstitute" Version="5.3.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sgt.Windows.Core\Sgt.Windows.Core.csproj" />
+  </ItemGroup>
+
+  <!-- Sözleşme testi DTO'ları API sözleşmesiyle (docs/api/openapi-v1.json) karşılaştırır. -->
+  <ItemGroup>
+    <None Include="..\..\..\docs\api\openapi-v1.json" Link="Contract\openapi-v1.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
